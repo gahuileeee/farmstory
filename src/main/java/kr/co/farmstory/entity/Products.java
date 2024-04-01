@@ -27,4 +27,5 @@ public class Products {
     private int point;
     private String etc;
     private int delivery;
+
 }

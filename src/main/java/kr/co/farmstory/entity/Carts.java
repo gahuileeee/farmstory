@@ -22,4 +22,5 @@ public class Carts {
     private int prodNo;
     private int cartProdCount;
     private LocalDateTime cartProdDate;
+
 }

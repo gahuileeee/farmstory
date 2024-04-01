@@ -22,4 +22,5 @@ public class ProductsDTO {
     private int point;
     private String etc;
     private int delivery;
+
 }
