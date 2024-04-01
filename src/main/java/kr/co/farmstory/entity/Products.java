@@ -26,5 +26,6 @@ public class Products {
     private String image3;
     private int point;
     private String etc;
-    private int delievery;
+    private int delivery;
+
 }

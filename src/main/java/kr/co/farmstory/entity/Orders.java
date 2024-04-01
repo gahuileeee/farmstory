@@ -1,5 +1,6 @@
 package kr.co.farmstory.entity;
 
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 
 public class Orders {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int orderNo;
     private String userId;
     private int orderTotalPrice;
