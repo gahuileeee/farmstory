@@ -16,7 +16,7 @@ public class ArticleController {
     private final ArticleService articleService;
     
     // market 리스트 출력
-    @GetMapping("/market/list")
+    @GetMapping("/article/list") //나중에 이름 수정하세요~ 제가 임의로 바꿨습니다 by 혜지
     public String list(Model model, PageRequestDTO pageRequestDTO){
         PageResponseDTO pageResponseDTO = articleService.findByParentAndCate(pageRequestDTO);
         log.info("pageResponseDTO : " + pageResponseDTO);
