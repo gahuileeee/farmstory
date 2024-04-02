@@ -1,115 +1,67 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>팜스토리::약관</title>
-    <link rel="stylesheet" href="../../static/css/style.css"/>
-    <style>
-        #user > img {
-            display: block;
-            margin: 20px auto;
-        }
-    </style>
-</head>
-<body>
-    <div id="container">
-        <header>
-            <a href="../user/index" class="logo"><img src="../../static/assets/img/logo.png" alt="로고"/></a>
-            <p>
-                <a href="#">HOME |</a>
-                <a href="#">로그인 |</a>
-                <a href="#">회원가입 |</a>
-                <a href="#">관리자 |</a>
-                <a href="#">고객센터</a>
-            </p>
-            <img src="../../static/assets/img/head_txt_img.png" alt="3만원 이상 무료배송"/>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/userLayout.html}">
 
-            <ul class="gnb">
-                <li><a href="#">팜스토리소개</a></li>
-                <li><a href="#"><img src="../../static/assets/img/head_menu_badge.png" alt="30%"/>장보기</a></li>
-                <li><a href="#">농작물이야기</a></li>
-                <li><a href="#">이벤트</a></li>
-                <li><a href="#">커뮤니티</a></li>
-            </ul>
-        </header>
+    <script>
+        window.onload = function(){
 
-        <script>
+            const form = document.querySelector('.terms > form');
+            const agree1 = document.getElementsByName('agree1')[0];
+            const agree2 = document.getElementsByName('agree2')[0];
+            const agree3 = document.getElementsByName('agree3')[0];
 
-            window.onload = function (){
+            const btnNext = document.getElementsByClassName('btnNext')[0];
 
-                const agree1 = document.getElementsByName('agree1')[0];
-                const agree2 = document.getElementsByName('agree2')[0];
-                const agree3 = document.getElementsByName('agree3')[0];
-                const btnNext = document.getElementsByClassName('btnNext')[0];
+            btnNext.onclick = function(e){
+                e.preventDefault();
 
-                btnNext.onclick = () => {
-
-                    if(agree1.checked && agree2.checked){
-                        return true;
-                    }else{
-                        //alertModal('이용약관과 개인정보 취급방침은 필수 동의입니다.');
-                        confirmModal("동의하시겠습니까?").then(result => {
-                            console.log('result : ' + result);
-                        });
-
-                        return false;
-                    }
+                if(agree1.checked && agree2.checked){
+                    // 폼 전송
+                    form.submit();
+                }else{
+                    alert('필수 동의 체크 하셔야 합니다.');
                 }
             }
-        </script>
+        }
+    </script>
+    <main id="user" layout:fragment="content">
+        <section class="terms">
+            <form th:action="@{/user/terms}" method="post">
+                <table border="1">
+                    <caption>사이트 이용약관</caption>
+                    <tr>
+                        <td>
+                            <textarea name="terms" readonly>${termsDTO.terms}</textarea>
+                            <label><input type="checkbox" name="agree1">&nbsp;동의합니다.</label>
+                        </td>
+                    </tr>
+                </table>
 
-        <div id="user" class="row justify-content-center">
-            <div class="col-lg-7">
-                <div class="card shadow-lg border-0 rounded-lg mt-5 mb-5">
-                    <div class="card-header"><h3 class="text-center font-weight-light my-4">이용약관</h3></div>
-                    <div class="card-body">
-                        <form>
-                            <div class="row mb-3">
-                                <div class="col-md-12">
-                                    <h6>사이트 이용약관</h6>
-                                    <label>
-                                        <textarea class="form-control" rows="10" cols="100" readonly>약관내용</textarea>
-                                    </label>
-                                    <label class="float-end mt-2"><input type="checkbox" name="agree1">동의합니다.</label>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-md-12">
-                                    <h6>개인정보 취급방침</h6>
-                                    <label>
-                                        <textarea class="form-control" rows="10" cols="100" readonly>약관내용</textarea>
-                                    </label>
-                                    <label class="float-end mt-2"><input type="checkbox" name="agree2">동의합니다.</label>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-md-12">
-                                    <h6>마켓팅 수신동의</h6>
-                                    <label>
-                                        <textarea class="form-control" rows="10" cols="100" readonly>약관내용</textarea>
-                                    </label>
-                                    <label class="float-end mt-2"><input type="checkbox" name="agree3">동의합니다.</label>
-                                </div>
-                            </div>
+                <table border="1">
+                    <caption>개인정보 취급방침</caption>
+                    <tr>
+                        <td>
+                            <textarea name="privacy" readonly>${termsDTO.privacy}</textarea>
+                            <label><input type="checkbox" name="agree2">&nbsp;동의합니다.</label>
+                        </td>
+                    </tr>
+                </table>
 
-                            <div class="text-center mt-4 mb-0">
-                                <a class="btn btn-secondary btnCancel" href="../user/login">취소</a>
-                                <a class="btn btn-primary btnNext" href="../user/register">다음</a>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+                <table border="1">
+                    <caption>마케팅 수신동의</caption>
+                    <tr>
+                        <td>
+                            <textarea name="sms" readonly>${termsDTO.sms}</textarea>
+                            <label><input type="checkbox" name="agree3">&nbsp;동의합니다.</label>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+            <div>
+                <a th:href="@{/user/login}" class="btn btnCancel">취소</a>
+                <a th:href="@{/user/register}" class="btn btnNext">다음</a>
             </div>
-        </div>
-        <footer>
-            <img src="../../static/assets/img/footer_logo.png" alt="로고"/>
-            <p>
-                (주)팜스토리 / 사업자등록번호 123-45-67890 / 통신판매업신고 제 2013-팜스토리구-123호 / 벤처기업확인 서울지방중소기업청 제 012345678-9-01234호<br />
-                등록번호 팜스토리01234 (2013.04.01) / 발행인 : 홍길동<br />
-                대표 : 홍길동 / 이메일 : email@mail.mail / 전화 : 01) 234-5678 / 경기도 성남시 잘한다구 신난다동 345<br />
-                <em>Copyright(C)홍길동 All rights reserved.</em>
-            </p>
-        </footer>
-    </div>
-</body>
+
+        </section>
+    </main>
 </html>
