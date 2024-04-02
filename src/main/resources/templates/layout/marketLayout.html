@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>팜스토리::장보기</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+    <script th:src="@{/js/util.js}"></script>
 </head>
 <body>
 <div id="container">
@@ -20,7 +21,7 @@
 
         <ul class="gnb">
             <li><a href="#">팜스토리소개</a></li>
-            <li><a href="#"><img th:src="@{/assets/img/head_menu_badge.png}" alt="30%"/>장바구니</a></li>
+            <li><a th:href="@{/market/list}"><img th:src="@{/assets/img/head_menu_badge.png}" alt="30%"/>장바구니</a></li>
             <li><a href="#">농작물이야기</a></li>
             <li><a href="#">이벤트</a></li>
             <li><a href="#">커뮤니티</a></li>

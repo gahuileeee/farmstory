@@ -1,15 +1,138 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/layout/marketLayout.html}">
+
+<article class="cart" layout:fragment="content">
+    <script>
+        window.onload = function () {
+
+            //전체 체크박스 선택
+            const selectAllCheckbox = document.getElementById('selectAll');
+            const individualCheckboxes = document.querySelectorAll('.select');
+
+            selectAllCheckbox.onclick= function (){
+                individualCheckboxes.forEach(function(checkbox) {
+                    checkbox.click();
+                });
+
+            }
+
+            //장바구니 삭제
+            const del = document.getElementById('del');
+            del.onclick=function (e){
+                const list = [];
+                individualCheckboxes.forEach(async function(checkbox) {
+                    if(checkbox.checked){
+                        list.push(checkbox.value);
+                            checkbox.closest('tr').remove();
+                    }
+                });
+                //DB로 보내기
+                const jsonData = {list : list};
+                const result =  fetchPut('/farmstory/market/cart/delete',jsonData);
+                //계산다시
+                calculateTotal();
+
+            }
+
+            //주문하기 버튼 클릭
+            const btnOrder = document.getElementById('btnOrder');
+
+            btnOrder.onclick = function (){
+                const cartCountsList = [];
+                const prodNosList = [];
+
+                const prodNos = document.querySelectorAll('.prodNo');
+                prodNos.forEach(function (prodNo){
+                   prodNosList.push(parseInt(prodNo.value));
+                });
+                console.log(prodNosList);
+
+                const cartCounts = document.querySelectorAll('.cartCount');
+                cartCounts.forEach(function (cartCount){
+                    cartCountsList.push(parseInt(cartCount.innerText));
+                })
+                console.log(cartCountsList);
+                const jsonData = {
+                    cartCountsList : cartCountsList,
+                    prodNosList : prodNosList
+                }
+                // JSON 데이터를 문자열로 변환하여 폼 필드에 설정
+                document.getElementById('jsonData').value = JSON.stringify(jsonData);
+                const form = document.getElementById('buyForm');
+                form.submit();
+            }
+
+
+            //계산
+            calculateTotal();
+
+        };
+        function calculateTotal() {
+            var totalPrice = 0;
+            var productPrice =0;
+            var totalPoint =0;
+            var cateSize =0;
+
+            // 각 상품의 가격 합산
+            //할인된 가격
+            var productsPrice = document.querySelectorAll('.price');
+            productsPrice.forEach(function(product) {
+                cateSize++;
+                totalPrice += parseFloat(product.innerText.replace(',', ''));
+            });
+            //할인전 가격
+            var prices = document.querySelectorAll('.prodcutPrice');
+            prices.forEach(function(product) {
+                productPrice += parseFloat(product.innerText.replace(',', ''));
+            });
+            document.getElementById('totalProductPrice').innerText = numberWithCommas(productPrice)+'원';
+
+            //할인된 금액
+            document.getElementById('discountTotal').innerText = numberWithCommas(productPrice - totalPrice )+'원';
+
+            //전체 토탈 금액 (배송비까지 계산)
+            var deliveryFee = 0;
+            if(totalPrice<30000 && totalPrice>1){
+                deliveryFee=5000;
+                totalPrice+=5000;
+            }
+            document.getElementById('totalPrice').innerText = numberWithCommas(totalPrice)+'원';
+            document.getElementById('delivery').innerText = numberWithCommas(deliveryFee)+'원';
+            document.getElementById('cateSize').innerText = numberWithCommas(cateSize);
+            document.getElementById('counts').innerText = numberWithCommas(cateSize);
+
+
+            //포인트 계산
+            const points = document.querySelectorAll('.point');
+            points.forEach(function(point) {
+                totalPoint += parseFloat(point.innerText.replace(',', ''));
+            });
+            document.getElementById('totalPoints').innerText = numberWithCommas(totalPoint)+'원';
+
+        }
+
+        // 숫자를 천 단위로 콤마를 찍는 함수
+        function numberWithCommas(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+    </script>
+    <nav>
+        <img th:src="@{/assets/img/sub_nav_tit_cate2_tit1.png}" alt="장보기"/>
+        <p>
+            HOME > 장보기 > <em>장보기</em>
+        </p>
+    </nav>
                     <!-- 내용 시작 -->
-                    <p class="sort" layout:fragment="content">
-                        <a href="#" class="on">장바구니 전체(10)</a>
+
+                    <p class="sort"  >
+                        <a href="#" class="on">장바구니 전체 [<span id="counts"></span>]</a>
                     </p>
-                    <table border="0">
+                    <table border="0" >
                         <thead>
                             <tr>
                                 <th>
-                                    <input type="checkbox" name="all">
+                                    <input type="checkbox" name="all" id="selectAll">
                                 </th>
                                 <th>이미지</th>
                                 <th>종류</th>
@@ -22,92 +145,68 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="empty">
+                            <tr class="empty" th:if="${carts.size()<1}">
                                 <td colspan="9">장바구니에 상품이 없습니다.</td>
                             </tr>
-                            <tr>
-                                <td>
-                                    <input type="checkbox" name="">
-                                </td>
 
+                            <tr th:each="cart, index:${carts}">
+                                <td>
+                                    <input type="hidden" name="cateNo" th:value="${cart.cartNo}">
+                                    <input type="hidden" name="prodNo" class="prodNo" th:value="${products[index.index].prodNo}">
+                                    <input type="checkbox" name="select" class="select" th:value="${cart.cartNo}">
+                                </td>
+                                <td>
+                                    <a th:href="@{/market/view(prodNum=${products[index.index].prodNo})}"
+                                    ><img  th:src="'data:image/jpeg;base64,' + ${products[index.index].image1.split(',')[1]}" alt="이미지1"></a>
+                                </td>
+                                <td>[[${cates[index.index].cateName}]]</td>
+                                <td><a href="#">[[${products[index.index].prodName}]]</a></td>
+                                <td class="cartCount">[[${cart.cartProdCount}]]</td>
+                                <td>[[${products[index.index].prodDiscount}]] %</td>
+                                <td class="point" >[[${products[index.index].prodPrice *0.01 * cart.cartProdCount}]]</td>
+                                <td class="prodcutPrice" >[[${products[index.index].prodPrice *  cart.cartProdCount}]]</td>
+                                <td ><strong class="price"
+                                             th:text="${#numbers.formatDecimal(products[index.index].prodPrice* (100 - products[index.index].prodDiscount)*0.01 * cart.cartProdCount, 1, 0)}">
+                                </strong>원</td>
+                            </tr>
 
-                                <td>
-                                    <a th:href=""><img src="../images/market_item1.jpg" class="thumb" alt="사과 500g"></a>
-                                </td>
-                                <td>과일</td>
-                                <td><a href="#">사과 500g</a></td>
-                                <td>1</td>
-                                <td>10%</td>
-                                <td>40P</td>
-                                <td>4,000</td>
-                                <td><strong>3,600</strong>원</td>    
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="checkbox" name="">
-                                </td>
-                                <td>
-                                    <a href="./productDetail.html"><img src="../images/market_item1.jpg" class="thumb" alt="사과 500g"></a>
-                                </td>
-                                <td>과일</td>
-                                <td><a href="#">사과 500g</a></td>
-                                <td>1</td>
-                                <td>10%</td>
-                                <td>40P</td>
-                                <td>4,000</td>
-                                <td><strong>3,600</strong>원</td>    
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="checkbox" name="">
-                                </td>
-                                <td>
-                                    <a href="./productDetail.html"><img src="../images/market_item1.jpg" class="thumb" alt="사과 500g"></a>
-                                </td>
-                                <td>과일</td>
-                                <td><a href="#">사과 500g</a></td>
-                                <td>1</td>
-                                <td>10%</td>
-                                <td>40P</td>
-                                <td>4,000</td>
-                                <td><strong>3,600</strong>원</td>    
-                            </tr>
-                            
-                        </tbody>                        
+                        </tbody>
                     </table>
-                    <input type="button" name="del" value="선택삭제">
+                    <input type="button" name="del" id="del" value="선택삭제">
 
                     <div class="info">                        
                         <table border="0">
                             <caption>전체합계</caption>                            
                             <tr>
                                 <th>상품수</th>
-                                <td>1</td>
+                                <td id="cateSize"></td>
                             </tr>
                             <tr>
                                 <th>상품금액</th>
-                                <td>27,000</td>
+                                <td id="totalProductPrice"></td>
                             </tr>
                             <tr>
                                 <th>할인금액</th>
-                                <td>5,0000원</td>
+                                <td id="discountTotal">5,0000원</td>
                             </tr>
                             <tr>
                                 <th>배송비</th>
-                                <td class="delivery">5,0000원</td>
+                                <td id="delivery"></td>
                             </tr>
                             <tr>
                                 <th>포인트</th>
-                                <td>4,000원</td>
+                                <td id="totalPoints"></td>
                             </tr>
                             <tr>
                                 <th>전체주문금액</th>
-                                <td class="total">22,000</td>
+                                <td class="total"  id="totalPrice"></td>
                             </tr>
-                            </tr>
-                        </table>                        
-                        <input type="submit" class="btnOrder" value="주문하기">
+                        </table>
+                        <input type="submit" class="btnOrder" id="btnOrder" value="주문하기">
                     </div>
                     <!-- 내용 끝 -->
-
+    <form id="buyForm" th:action="@{/market/order}" method="POST">
+        <input type="hidden" name="jsonData" id="jsonData" value="">
+    </form>
+</article>
 </html>

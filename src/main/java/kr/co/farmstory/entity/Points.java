@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -21,5 +22,6 @@ public class Points {
     private String userId;
     private int point;
     private String pointDesc;
+    @CreationTimestamp
     private LocalDateTime pointDate;
 }
