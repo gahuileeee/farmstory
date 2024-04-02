@@ -5,9 +5,27 @@
         <aside>
             <h3>주요기능</h3>
             <ul>
-                <li class="on"><a href="#">상품관리</a></li>
-                <li><a href="#">주문관리</a></li>
-                <li><a href="#">회원관리</a></li>
+                <li>
+                    <span>상품관리</span>
+                    <ol>
+                        <li><a th:href="@{/admin/product/list}">상품목록</a></li>
+                        <li><a th:href="@{/admin/product/register}">상품등록</a></li>
+                    </ol>
+                </li>
+                <li>
+                    <span>주문관리</span>
+                    <ol>
+                        <li><a th:href="@{/admin/order/list}">주문목록</a></li>
+                        <li><a th:href="@{/admin/order/delivery}">배송관리</a></li>
+                    </ol>
+                </li>
+                <li>
+                    <span>회원관리</span>
+                    <ol>
+                        <li><a th:href="@{/admin/user/list}">회원목록</a></li>
+                        <li><a th:href="@{/admin/user/register}">회원등록</a></li>
+                    </ol>
+                </li>
             </ul>
         </aside>
         <section id="productList">
@@ -28,15 +46,15 @@
                         <th>재고</th>
                         <th>등록일</th>
                     </tr>
-                    <tr>
+                    <tr th:each="products, index:${productPageResponseDTO.dtoList}">
                         <td><input type="checkbox" name=""/></td>
-                        <td><img src="./images/sample_item1.jpg" class="thumb" alt="샘플1"></td>
-                        <td>1011</td>
-                        <td>사과 500g</td>
-                        <td>과일</td>
-                        <td>4,000원</td>
-                        <td>100</td>
-                        <td>2023-01-01</td>
+                        <td><img th:src="@{/admin/images/sample_item1.jpg}" class="thumb" alt="샘플1"></td>
+                        <td>[[${products.prodNo}]]</td>
+                        <td>[[${products.prodName}]]</td>
+                        <td>[[${products.cateNo}]]</td>
+                        <td>[[${products.prodPrice}]]원</td>
+                        <td>[[${products.prodStock}]]</td>
+                        <td>[[${products.RegProdDate}]]</td>
                     </tr>
                 </table>
 

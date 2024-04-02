@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class ArticleController {
     private final ArticleService articleService;
-    
+
     // 공지사항 list
     @GetMapping("/community/notice_list")
     public String notice(Model model, PageRequestDTO pageRequestDTO){

@@ -1,84 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>팜스토리::로그인</title>
-    <link rel="stylesheet" href="../../static/css/styles.css">
-    <style>
-        #user > img {
-            display: block;
-            margin: 20px auto;
-        }
-    </style>
-</head>
-<body>
-    <div id="container">
-        <header>
-            <a href="../user/index" class="logo"><img src="../../static/assets/img/logo.png" alt="로고"/></a>
-            <p>
-                <a href="#">HOME |</a>
-                <a href="#">로그인 |</a>
-                <a href="#">회원가입 |</a>
-                <a href="#">관리자 |</a>
-                <a href="#">고객센터</a>
-            </p>
-            <img src="../../static/assets/img/head_txt_img.png" alt="3만원 이상 무료배송"/>
-            
-            <ul class="gnb">
-                <li><a href="#">팜스토리소개</a></li>
-                <li><a href="#"><img src="../../static/assets/img/head_menu_badge.png" alt="30%"/>장보기</a></li>
-                <li><a href="#">농작물이야기</a></li>
-                <li><a href="#">이벤트</a></li>
-                <li><a href="#">커뮤니티</a></li>
-            </ul>
-        </header>
-        <main>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/userLayout.html}">
 
-            <div id="user" class="row justify-content-center">
-                <div class="col-lg-5">
-                    <div class="card shadow-lg border-0 rounded-lg mt-5">
-                        <div class="card-header"><h3 class="text-center font-weight-light my-4">로그인</h3></div>
-                        <div class="card-body">
-                            <form method="post">
-                                <div class="form-floating mb-3">
-                                    <input class="form-control" type="text" id="inputUid" name="uid" placeholder="" />
-                                    <label for="inputUid">아이디 입력</label>
-                                </div>
-                                <div class="form-floating mb-3">
-                                    <input class="form-control" type="password" id="inputPassword" name="pass" placeholder="" />
-                                    <label for="inputPassword">비밀번호 입력</label>
-                                </div>
-                                <div class="form-check mb-3">
-                                    <input class="form-check-input" id="inputRememberPassword" type="checkbox" value="" />
-                                    <label class="form-check-label" for="inputRememberPassword">비밀번호 기억하기</label>
-                                </div>
-                                <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
-                                    <input type="submit" class="btn btn-primary" value="로그인"/>
-                                </div>
-                                <a href="#">
-                                    <img src="../../static/assets/img/web_light_sq_SU.svg" alt="로그인"/>
-                                </a>
-                            </form>
-                        </div>
-                        <div class="card-footer text-center py-3">
-                            <div class="small"><a href="../user/terms">회원가입</a></div>
-                        </div>
-                    </div>
-                </div>
+<main id="user" layout:fragment="content">
+    <section class="login">
+        <form th:action="@{/farmstory/user/login}" method="post">
+            <table border="0">
+                <tr>
+                    <td><img th:src="@{/assets/img/login_ico_id.png}"/></td>
+                    <td><input type="text" name="uid" placeholder="아이디 입력"/></td>
+                </tr>
+                <tr>
+                    <td><img th:src="@{/assets/img/login_ico_pw.png}"/></td>
+                    <td><input type="password" name="pass" placeholder="비밀번호 입력"/></td>
+                </tr>
+            </table>
+            <input type="submit" value="로그인" class="btnLogin"/>
+
+        </form>
+        <div>
+            <h3>회원 로그인 안내</h3>
+            <p>
+                아직 회원이 아니시면 회원으로 가입하세요.
+            </p>
+            <div style="text-align: right;">
+                <a th:href="@{/user/terms}">회원가입</a>
             </div>
+        </div>
+    </section>
+</main>
 
-        </main>
-        <footer>
-            <img src="../../static/assets/img/footer_logo.png" alt="로고"/>
-            <p>
-                (주)팜스토리 / 사업자등록번호 123-45-67890 / 통신판매업신고 제 2013-팜스토리구-123호 / 벤처기업확인 서울지방중소기업청 제 012345678-9-01234호<br />
-                등록번호 팜스토리01234 (2013.04.01) / 발행인 : 홍길동<br />
-                대표 : 홍길동 / 이메일 : email@mail.mail / 전화 : 01) 234-5678 / 경기도 성남시 잘한다구 신난다동 345<br />
-                <em>Copyright(C)홍길동 All rights reserved.</em>
-            </p>
-        </footer>
-    </div>
-    
-</body>
 </html>

@@ -2,6 +2,31 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/layout/marketLayout.html}">
 <article class="view" layout:fragment="content">
+    <script>
+        window.onload = function (){
+                 const btnCart = document.getElementById('btnCart')
+                const btnCartView = document.getElementById('btnCartView');
+
+
+
+                //장바구니 (추후에 user 추가!)
+            btnCart.onclick=async function (e) {
+                e.preventDefault();
+                //상품번호 + 상품 주문 수량 넘기기
+                const prodNo = document.getElementById('prodNo').value;
+                const count = document.getElementById('count').value;
+                const userId = document.getElementById('userId').value;
+                const jsonData = {prodNo: prodNo, count: count , userId : userId};
+                console.log(jsonData.count+"!!");
+                const response = await fetchPost('/farmstory/market/cart', jsonData)
+                console.log(response+"!!");
+                if(response.result === 'success'){
+                    console.log('성공!!');
+                    btnCartView.click();
+                }
+            }
+        }
+    </script>
     <nav>
         <img th:src="@{/assets/img/sub_nav_tit_cate2_tit1.png}" alt="장보기"/>
         <p>
@@ -36,29 +61,29 @@
             <tr>
                 <td>구매수량</td>
                 <td>
-                    <input type="number" name="count" min="1" value="1">
+                        <input type="hidden" id="prodNo" th:value="${product.getProdNo()}">
+                        <input type="hidden" id="userId" value="A101">
+                        <input type="number" name="count" id="count" min="1" value="1">
                 </td>
             </tr>
             <tr>
                 <td>합계</td>
                 <td class="total">4,000원</td>
             </tr>
-            <style>
-
-            </style>
-
         </table>
-
         <div style="float: right; margin-top: 10px;">
-            <a href="./cart.html" id="btnCart" class="btn btnCart">장바구니</a>
+            <a href="/" id="btnCart" class="btn btnCart">장바구니</a>
             <a href="./order.html" id="btnOrder" class="btn btnOrder">바로구매</a>
+            <form th:action="@{/market/cart}" method="get">
+                <input type="hidden" id="user" name="user" value="A101">
+                <button type="submit" id="btnCartView"></button>
+            </form>
         </div>
     </div>
     <h3>상품설명</h3>
     <div class="detail">
-        <img  th:src="'data:image/jpeg;base64,' + ${product.image3.split(',')[1]}" alt="상품설명">
+        <img th:src="'data:image/jpeg;base64,' + ${product.image3.split(',')[1]}" alt="상품설명">
     </div>
-
     <h3>배송정보</h3>
     <div class="delivery">
         <p>

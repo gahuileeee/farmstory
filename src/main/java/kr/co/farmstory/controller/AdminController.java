@@ -1,8 +1,14 @@
 package kr.co.farmstory.controller;
 
+import kr.co.farmstory.dto.PageRequestDTO;
+import kr.co.farmstory.dto.PageResponseDTO;
+import kr.co.farmstory.dto.ProductPageRequestDTO;
+import kr.co.farmstory.dto.ProductPageResponseDTO;
+import kr.co.farmstory.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Slf4j
@@ -10,13 +16,23 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class AdminController {
 
+    private final AdminService adminService;
+
     @GetMapping("/admin/index")
     public String index(){
         return "/admin/index";
     }
 
     @GetMapping("/admin/product/list")
-    public String productlsit(){
+    public String productlsit(Model model, ProductPageRequestDTO productPageRequestDTO){
+
+        ProductPageResponseDTO pageResponseDTO = null;
+        pageResponseDTO = adminService.selectProductsForAdmin(productPageRequestDTO);
+
+        model.addAttribute(pageResponseDTO);
+        log.info(pageResponseDTO.toString());
+
+
         return "/admin/product/list";
     }
 
