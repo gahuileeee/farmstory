@@ -21,7 +21,7 @@ public class QCategories extends EntityPathBase<Categories> {
 
     public final StringPath cateName = createString("cateName");
 
-    public final NumberPath<Integer> catNo = createNumber("catNo", Integer.class);
+    public final NumberPath<Integer> cateNo = createNumber("cateNo", Integer.class);
 
     public QCategories(String variable) {
         super(Categories.class, forVariable(variable));

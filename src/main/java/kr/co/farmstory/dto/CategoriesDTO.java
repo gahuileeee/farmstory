@@ -9,6 +9,6 @@ import lombok.*;
 @ToString
 @Builder
 public class CategoriesDTO {
-    private int catNo;
+    private int cateNo;
     private  String cateName;
 }

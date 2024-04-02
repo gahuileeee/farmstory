@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.io.IOException;
+
 @Slf4j
 @RequiredArgsConstructor
 @Controller
@@ -21,7 +23,7 @@ public class ProductController {
     public void productList(){}
 
     @PostMapping("/product/register")
-    public String productRegister(Model model, HttpServletRequest req, ProductsDTO productsDTO){
+    public String productRegister(Model model, HttpServletRequest req, ProductsDTO productsDTO) throws IOException{
 
         log.info("Controller.productsDTO....:" + productsDTO.toString());
 

@@ -15,6 +15,6 @@ import lombok.*;
 
 public class Categories {
     @Id
-    private int catNo;
+    private int cateNo;
     private  String cateName;
 }
