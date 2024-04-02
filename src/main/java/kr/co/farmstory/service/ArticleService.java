@@ -12,11 +12,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class ArticleService {
     private final ArticleRepository articleRepository;
+
     // RootConfig Bean 생성/등록
     private final ModelMapper modelMapper;
 
@@ -34,5 +37,18 @@ public class ArticleService {
                 .dtoList(dtoList)
                 .total(total)
                 .build();
+    }
+
+
+    public void insertArticle(ArticleDTO articleDTO) {
+
+        // articleDTO를 articleEntity로 변환
+        Article article = modelMapper.map(articleDTO, Article.class);
+        log.info(article.toString());
+
+        // 저장 후 저장한 엔티티 객체 반환(사실 JPA sava() 메서드는 default로 저장한 Entity를 반환)
+        Article savedArticle = articleRepository.save(article);
+        log.info("insertArticle : " + savedArticle.toString());
+
     }
 }

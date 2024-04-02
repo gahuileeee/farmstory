@@ -1,5 +1,8 @@
 package kr.co.farmstory.dto;
 
+import jakarta.mail.Multipart;
+import kr.co.farmstory.entity.Article;
+import kr.co.farmstory.entity.File;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,5 +31,9 @@ public class ArticleDTO {
 
     private List<MultipartFile> files;
 
+    private UserDTO user;
+    private List<FileDTO> fileList;
+
     private String nick;
+
 }
