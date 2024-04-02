@@ -9,10 +9,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class PageResponseDTO {
+public class ProductPageResponseDTO {
 
-    private List<ArticleDTO> dtoList;
-    private String cate;
+    private List<ProductsDTO> dtoList;
     private int pg;
     private int size;
     private int total;
@@ -21,10 +20,9 @@ public class PageResponseDTO {
     private boolean prev, next;
 
     @Builder
-    public PageResponseDTO(PageRequestDTO pageRequestDTO, List<ArticleDTO> dtoList, int total){
-        this.cate = pageRequestDTO.getCate();
-        this.pg = pageRequestDTO.getPg();
-        this.size = pageRequestDTO.getSize();
+    public ProductPageResponseDTO(ProductPageRequestDTO productPageRequestDTO, List<ProductsDTO> dtoList, int total){
+        this.pg = productPageRequestDTO.getPg();
+        this.size = productPageRequestDTO.getSize();
         this.total = total;
         this.dtoList = dtoList;
 

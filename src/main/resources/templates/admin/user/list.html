@@ -2,14 +2,32 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/admin/layout/adminLayout.html}">
 <main layout:fragment="content">
-        <aside>
-            <h3>주요기능</h3>
-            <ul>
-                <li><a href="#">상품관리</a></li>
-                <li><a href="#">주문관리</a></li>
-                <li class="on"><a href="#">회원관리</a></li>
-            </ul>
-        </aside>
+    <aside>
+        <h3>주요기능</h3>
+        <ul>
+            <li>
+                <span>상품관리</span>
+                <ol>
+                    <li><a th:href="@{/admin/product/list}">상품목록</a></li>
+                    <li><a th:href="@{/admin/product/register}">상품등록</a></li>
+                </ol>
+            </li>
+            <li>
+                <span>주문관리</span>
+                <ol>
+                    <li><a th:href="@{/admin/order/list}">주문목록</a></li>
+                    <li><a th:href="@{/admin/order/delivery}">배송관리</a></li>
+                </ol>
+            </li>
+            <li>
+                <span>회원관리</span>
+                <ol>
+                    <li><a th:href="@{/admin/user/list}">회원목록</a></li>
+                    <li><a th:href="@{/admin/user/register}">회원등록</a></li>
+                </ol>
+            </li>
+        </ul>
+    </aside>
         <section id="orderList">
             <nav>
                 <h3>회원목록</h3>

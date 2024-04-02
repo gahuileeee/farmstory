@@ -45,6 +45,8 @@ public class QProducts extends EntityPathBase<Products> {
 
     public final NumberPath<Integer> prodStock = createNumber("prodStock", Integer.class);
 
+    public final DateTimePath<java.time.LocalDateTime> RegProdDate = createDateTime("RegProdDate", java.time.LocalDateTime.class);
+
     public QProducts(String variable) {
         super(Products.class, forVariable(variable));
     }

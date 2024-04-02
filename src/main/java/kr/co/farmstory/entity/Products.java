@@ -2,12 +2,16 @@ package kr.co.farmstory.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 import java.sql.Blob;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @ToString
 @Builder
 @Entity
@@ -29,5 +33,8 @@ public class Products {
     private int point;
     private String etc;
     private int delivery;
+
+    @CreationTimestamp
+    private LocalDateTime RegProdDate;
 
 }

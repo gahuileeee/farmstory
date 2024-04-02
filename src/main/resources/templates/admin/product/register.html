@@ -3,7 +3,24 @@
       layout:decorate="~{/admin/layout/adminLayout.html}">
 <main class="" layout:fragment="content">
     <script>
+        /**가격 입력시 포인트 자동 계산**/
+        function calculatePoint() {
+            var priceInput = document.getElementById("price").value;
+            var pointInput = document.getElementById("point");
+            console.info(pointInput);
+
+            // 입력값이 숫자인지 확인
+            if (!isNaN(priceInput) && priceInput !== "") {
+                var price = parseFloat(priceInput);
+                var point = price * 0.01; // 가격의 1% 계산
+                pointInput.value = point.toFixed(0);
+            } else {
+                pointInput.value = ""; // 가격이 숫자가 아니거나 비어 있으면 포인트 초기화
+            }
+        }
+
         window.onload = function (){
+
             const btnSubmit = document.getElementById('btnSubmit');
 
             btnSubmit.onclick = function (e){
@@ -15,9 +32,27 @@
         <aside>
             <h3>주요기능</h3>
             <ul>
-                <li class="on"><a th:href="@{/admin/product/list}">상품관리</a></li>
-                <li><a th:href="@{/admin/order/list}">주문관리</a></li>
-                <li><a th:href="@{/admin/user/list}">회원관리</a></li>
+                <li>
+                    <span>상품관리</span>
+                    <ol>
+                        <li><a th:href="@{/admin/product/list}">상품목록</a></li>
+                        <li><a th:href="@{/admin/product/register}">상품등록</a></li>
+                    </ol>
+                </li>
+                <li>
+                    <span>주문관리</span>
+                    <ol>
+                        <li><a th:href="@{/admin/order/list}">주문목록</a></li>
+                        <li><a th:href="@{/admin/order/delivery}">배송관리</a></li>
+                    </ol>
+                </li>
+                <li>
+                    <span>회원관리</span>
+                    <ol>
+                        <li><a th:href="@{/admin/user/list}">회원목록</a></li>
+                        <li><a th:href="@{/admin/user/register}">회원등록</a></li>
+                    </ol>
+                </li>
             </ul>
         </aside>
         <section id="productRegister">
@@ -26,7 +61,7 @@
             </nav>
 
             <article>
-                <form th:action="@{/product/register}" method="post" name="productRegisterForm">
+                <form th:action="@{/product/register}" method="post" name="productRegisterForm" enctype="multipart/form-data">
                     <table border="0">
                         <tr>
                             <td>상품명</td>
@@ -45,12 +80,12 @@
                         </tr>
                         <tr>
                             <td>가격</td>
-                            <td><input type="text" name="prodPrice"/></td>
+                            <td><input type="text" name="prodPrice" id="price" oninput="calculatePoint()"/></td>
                         </tr>
                         <tr>
                             <td>포인트</td>
                             <td>
-                                <input type="text" name="point" value="100"/>
+                                <input type="text" name="point" id="point" readonly/>
                                 포인트는 가격의 1%
                             </td>
                         </tr>
@@ -58,21 +93,21 @@
                             <td>할인</td>
                             <td>
                                 <select name="prodDiscount">
-                                    <option value="5">5%</option>
-                                    <option value="12">12%</option>
-                                    <option value="15">15%</option>
-                                    <option value="18">18%</option>
-                                    <option value="20">20%</option>
+                                    <option th:value="5">5%</option>
+                                    <option th:value="12">12%</option>
+                                    <option th:value="15">15%</option>
+                                    <option th:value="18">18%</option>
+                                    <option th:value="20">20%</option>
                                 </select>
                             </td>
                         </tr>
                         <tr>
                             <td>배송비</td>
                             <td>
-                                <label><input type="radio" name="delivery">2,000원</label>
-                                <label><input type="radio" name="delivery">3,000원</label>
-                                <label><input type="radio" name="delivery">5,000원</label>
-                                <label><input type="radio" name="delivery">무료</label>
+                                <label><input type="radio" name="delivery" th:value="2000">2,000원</label>
+                                <label><input type="radio" name="delivery" th:value="3000">3,000원</label>
+                                <label><input type="radio" name="delivery" th:value="5000">5,000원</label>
+                                <label><input type="radio" name="delivery" th:value="0">무료</label>
                             </td>
                         </tr>
                         <tr>
