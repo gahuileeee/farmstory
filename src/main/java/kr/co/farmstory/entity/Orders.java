@@ -3,6 +3,7 @@ package kr.co.farmstory.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -22,5 +23,6 @@ public class Orders {
     private int orderTotalPrice;
     private String orderAddr;
     private int itemDiscount;
+    @CreationTimestamp
     private LocalDateTime orderDate;
 }

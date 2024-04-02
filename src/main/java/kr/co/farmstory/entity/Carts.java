@@ -1,9 +1,8 @@
 package kr.co.farmstory.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -17,10 +16,13 @@ import java.time.LocalDateTime;
 
 public class Carts {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int cartNo;
     private String userId;
     private int prodNo;
     private int cartProdCount;
+
+    @CreationTimestamp
     private LocalDateTime cartProdDate;
 
 }

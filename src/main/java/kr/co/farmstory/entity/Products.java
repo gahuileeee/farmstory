@@ -3,6 +3,8 @@ package kr.co.farmstory.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.sql.Blob;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
