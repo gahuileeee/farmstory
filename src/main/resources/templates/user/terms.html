@@ -2,66 +2,73 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/layout/userLayout.html}">
 
-    <script>
-        window.onload = function(){
 
-            const form = document.querySelector('.terms > form');
-            const agree1 = document.getElementsByName('agree1')[0];
-            const agree2 = document.getElementsByName('agree2')[0];
-            const agree3 = document.getElementsByName('agree3')[0];
+    <div class="container" layout:fragment="content">
+        <script>
 
-            const btnNext = document.getElementsByClassName('btnNext')[0];
+            window.onload = function (){
 
-            btnNext.onclick = function(e){
-                e.preventDefault();
+                const agree1 = document.getElementsByName('agree1')[0];
+                const agree2 = document.getElementsByName('agree2')[0];
+                const agree3 = document.getElementsByName('agree3')[0];
+                const btnNext = document.getElementsByClassName('btnNext')[0];
 
-                if(agree1.checked && agree2.checked){
-                    // 폼 전송
-                    form.submit();
-                }else{
-                    alert('필수 동의 체크 하셔야 합니다.');
+                btnNext.onclick = () => {
+
+                    if(agree1.checked && agree2.checked){
+                        return true;
+                    }else{
+                        alertModal('이용약관과 개인정보 취급방침은 필수 동의입니다.');
+                        /*
+                        confirmModal("동의하시겠습니까?").then(result => {
+                            console.log('result : ' + result);
+                        });
+                        */
+
+                        return false;
+                    }
                 }
             }
-        }
-    </script>
-    <main id="user" layout:fragment="content">
-        <section class="terms">
-            <form th:action="@{/user/terms}" method="post">
-                <table border="1">
-                    <caption>사이트 이용약관</caption>
-                    <tr>
-                        <td>
-                            <textarea name="terms" readonly>${termsDTO.terms}</textarea>
-                            <label><input type="checkbox" name="agree1">&nbsp;동의합니다.</label>
-                        </td>
-                    </tr>
-                </table>
+        </script>
 
-                <table border="1">
-                    <caption>개인정보 취급방침</caption>
-                    <tr>
-                        <td>
-                            <textarea name="privacy" readonly>${termsDTO.privacy}</textarea>
-                            <label><input type="checkbox" name="agree2">&nbsp;동의합니다.</label>
-                        </td>
-                    </tr>
-                </table>
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
+                <div class="card shadow-lg border-0 rounded-lg mt-5 mb-5">
+                    <div class="card-header"><h3 class="text-center font-weight-light my-4">이용약관</h3></div>
+                    <div class="card-body">
+                        <form>
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <h6>사이트 이용약관</h6>
+                                    <textarea class="form-control" rows="10" cols="100" readonly>[[${termsDTO.terms}]]</textarea>
+                                    <label class="float-end mt-2"><input type="checkbox" name="agree1">동의합니다.</label>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <h6>개인정보 취급방침</h6>
+                                    <textarea class="form-control" rows="10" cols="100" readonly>[[${termsDTO.privacy}]]</textarea>
+                                    <label class="float-end mt-2"><input type="checkbox" name="agree2">동의합니다.</label>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <h6>마켓팅 수신동의</h6>
+                                    <textarea class="form-control" rows="10" cols="100" readonly>[[${termsDTO.sms}]]</textarea>
+                                    <label class="float-end mt-2"><input type="checkbox" name="agree3">동의합니다.</label>
+                                </div>
+                            </div>
 
-                <table border="1">
-                    <caption>마케팅 수신동의</caption>
-                    <tr>
-                        <td>
-                            <textarea name="sms" readonly>${termsDTO.sms}</textarea>
-                            <label><input type="checkbox" name="agree3">&nbsp;동의합니다.</label>
-                        </td>
-                    </tr>
-                </table>
-            </form>
-            <div>
-                <a th:href="@{/user/login}" class="btn btnCancel">취소</a>
-                <a th:href="@{/user/register}" class="btn btnNext">다음</a>
+                            <div class="text-center mt-4 mb-0">
+                                <a class="btn btn-secondary btnCancel" th:href="@{/user/login}">취소</a>
+                                <a class="btn btn-primary btnNext" th:href="@{/user/register}">다음</a>
+                            </div>
+
+                        </form>
+                    </div>
+
+                </div>
             </div>
-
-        </section>
-    </main>
+        </div>
+    </div>
 </html>
