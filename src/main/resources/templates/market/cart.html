@@ -17,6 +17,13 @@
 
             }
 
+            //체크박스 선택
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('select') && e.target.type === 'checkbox') {
+                        calculateTotal();
+                }
+            });
+
             //장바구니 삭제
             const del = document.getElementById('del');
             del.onclick=function (e){
@@ -30,86 +37,76 @@
                 //DB로 보내기
                 const jsonData = {list : list};
                 const result =  fetchPut('/farmstory/market/cart/delete',jsonData);
-                //계산다시
                 calculateTotal();
-
             }
 
             //주문하기 버튼 클릭
             const btnOrder = document.getElementById('btnOrder');
 
             btnOrder.onclick = function (){
-                const cartCountsList = [];
-                const prodNosList = [];
-
-                const prodNos = document.querySelectorAll('.prodNo');
-                prodNos.forEach(function (prodNo){
-                   prodNosList.push(parseInt(prodNo.value));
-                });
-                console.log(prodNosList);
-
-                const cartCounts = document.querySelectorAll('.cartCount');
-                cartCounts.forEach(function (cartCount){
-                    cartCountsList.push(parseInt(cartCount.innerText));
-                })
-                console.log(cartCountsList);
-                const jsonData = {
-                    cartCountsList : cartCountsList,
-                    prodNosList : prodNosList
-                }
-                // JSON 데이터를 문자열로 변환하여 폼 필드에 설정
-                document.getElementById('jsonData').value = JSON.stringify(jsonData);
                 const form = document.getElementById('buyForm');
-                form.submit();
+                if ( document.getElementById('cateSize').innerText === "" || document.getElementById('cateSize').innerText ==="0"){
+                    alert('주문하려는 상품을 선택해주세요');
+                }else{
+                    form.submit();
+                }
             }
 
-
-            //계산
             calculateTotal();
 
         };
         function calculateTotal() {
+            const form = document.getElementById('buyForm');
             var totalPrice = 0;
             var productPrice =0;
             var totalPoint =0;
             var cateSize =0;
+            var totalSize = 0;
 
-            // 각 상품의 가격 합산
-            //할인된 가격
-            var productsPrice = document.querySelectorAll('.price');
-            productsPrice.forEach(function(product) {
-                cateSize++;
-                totalPrice += parseFloat(product.innerText.replace(',', ''));
-            });
+            const checkboxes = document.querySelectorAll('.select');
             //할인전 가격
             var prices = document.querySelectorAll('.prodcutPrice');
-            prices.forEach(function(product) {
-                productPrice += parseFloat(product.innerText.replace(',', ''));
-            });
-            document.getElementById('totalProductPrice').innerText = numberWithCommas(productPrice)+'원';
+            //포인트 계산
+            const points = document.querySelectorAll('.point');
+            //할인된 가격
+            var productsPrice = document.querySelectorAll('.price');
+            //상품수 계산
+            const  cartCount =document.querySelectorAll('.cartCount');
 
-            //할인된 금액
-            document.getElementById('discountTotal').innerText = numberWithCommas(productPrice - totalPrice )+'원';
+            checkboxes.forEach(function(checkbox, index) {
+                totalSize++;
+                if (checkbox.checked) {
+                    cateSize += parseFloat(cartCount[index].innerText.replace(',', ''));
+                    totalPoint += parseFloat(points[index].innerText.replace(',', ''));
+                    productPrice += parseFloat(prices[index].innerText.replace(',', ''));
+                    totalPrice += parseFloat(productsPrice[index].innerText.replace(',', ''));
+
+                    const existingInput = form.querySelector('input[name="cartNo"][value="' + checkbox.value + '"]');
+                    if (!existingInput) {
+                        const hiddenInput = document.createElement('input');
+                        hiddenInput.type = 'hidden';
+                        hiddenInput.name = 'cartNo';
+                        hiddenInput.value = checkbox.value;
+                        form.appendChild(hiddenInput);
+                    }
+                }
+            });
 
             //전체 토탈 금액 (배송비까지 계산)
             var deliveryFee = 0;
+            var discountTotal = productPrice - totalPrice;
             if(totalPrice<30000 && totalPrice>1){
                 deliveryFee=5000;
                 totalPrice+=5000;
             }
+
             document.getElementById('totalPrice').innerText = numberWithCommas(totalPrice)+'원';
             document.getElementById('delivery').innerText = numberWithCommas(deliveryFee)+'원';
             document.getElementById('cateSize').innerText = numberWithCommas(cateSize);
-            document.getElementById('counts').innerText = numberWithCommas(cateSize);
-
-
-            //포인트 계산
-            const points = document.querySelectorAll('.point');
-            points.forEach(function(point) {
-                totalPoint += parseFloat(point.innerText.replace(',', ''));
-            });
+            document.getElementById('counts').innerText = numberWithCommas(totalSize);
             document.getElementById('totalPoints').innerText = numberWithCommas(totalPoint)+'원';
-
+            document.getElementById('totalProductPrice').innerText = numberWithCommas(productPrice)+'원';
+            document.getElementById('discountTotal').innerText = numberWithCommas(discountTotal)+'원';
         }
 
         // 숫자를 천 단위로 콤마를 찍는 함수
@@ -126,7 +123,7 @@
                     <!-- 내용 시작 -->
 
                     <p class="sort"  >
-                        <a href="#" class="on">장바구니 전체 [<span id="counts"></span>]</a>
+                        <a href="#" class="on">장바구니 전체 [<span id="counts">[[${carts.size()}]]</span>]</a>
                     </p>
                     <table border="0" >
                         <thead>
@@ -157,7 +154,7 @@
                                 </td>
                                 <td>
                                     <a th:href="@{/market/view(prodNum=${products[index.index].prodNo})}"
-                                    ><img  th:src="'data:image/jpeg;base64,' + ${products[index.index].image1.split(',')[1]}" alt="이미지1"></a>
+                                    ><img   src="/" alt="이미지1"></a>
                                 </td>
                                 <td>[[${cates[index.index].cateName}]]</td>
                                 <td><a href="#">[[${products[index.index].prodName}]]</a></td>
@@ -187,7 +184,7 @@
                             </tr>
                             <tr>
                                 <th>할인금액</th>
-                                <td id="discountTotal">5,0000원</td>
+                                <td id="discountTotal"></td>
                             </tr>
                             <tr>
                                 <th>배송비</th>
@@ -206,7 +203,7 @@
                     </div>
                     <!-- 내용 끝 -->
     <form id="buyForm" th:action="@{/market/order}" method="POST">
-        <input type="hidden" name="jsonData" id="jsonData" value="">
+        <input type="hidden" name="user" value="A101">
     </form>
 </article>
 </html>

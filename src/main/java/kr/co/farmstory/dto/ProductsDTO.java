@@ -19,6 +19,7 @@ public class ProductsDTO {
     private int prodStock;
     private int prodSold; //판매액
     private int prodDiscount;
+
     private MultipartFile multImage1;
     private MultipartFile multImage2;
     private MultipartFile multImage3;

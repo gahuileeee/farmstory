@@ -1,8 +1,6 @@
 package kr.co.farmstory.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -18,6 +16,7 @@ import java.time.LocalDateTime;
 
 public class Points {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int pointNo;
     private String userId;
     private int point;

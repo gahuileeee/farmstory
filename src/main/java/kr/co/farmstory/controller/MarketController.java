@@ -2,9 +2,8 @@ package kr.co.farmstory.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kr.co.farmstory.dto.CartsDTO;
-import kr.co.farmstory.dto.CategoriesDTO;
-import kr.co.farmstory.dto.ProductsDTO;
+import kr.co.farmstory.dto.*;
+import kr.co.farmstory.entity.Points;
 import kr.co.farmstory.repository.ProductsRepository;
 import kr.co.farmstory.service.MarketService;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @Slf4j
@@ -96,31 +94,84 @@ public class MarketController {
 
     //결제 페이지 구현
 
-    //결제 페이지 조회
+    //결제 페이지 조회 (장바구니 이용하여 )
     @PostMapping("/market/order")
-    public String marketBuy(@RequestParam("jsonData") String jsonData, Model model) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        log.info("!!!!");
-        log.info(jsonData);
+    public String marketBuy(@RequestParam("cartNo") List<Integer> lists , @RequestParam("user") String userId, Model model) {
+        Set<Integer> set = new LinkedHashSet<>(lists);
+        List<Integer> cartsNo = new ArrayList<>(set);
 
-            Map<String, List<String>> dataMap = objectMapper.readValue(jsonData, Map.class);
-            List<Integer> carts = dataMap.get("cartCountsList").stream().map(a -> Integer.parseInt(a)).toList();
-            model.addAttribute("carts" , carts);
-            log.info(carts.toString() );
-            log.info("here2");
-
-        List<Integer> prodNos = dataMap.get("prodNosList").stream().map(a -> Integer.parseInt(a)).toList();
-            List<ProductsDTO> products = marketService.selectProductsByProdNum(prodNos);
-            model.addAttribute("products" , products);
-            //카테고리 조회 (아무리 생각해도 비효율적..)
-            List<CategoriesDTO> cates = marketService.selectCategoriesByProduct(products);
-            log.info(cates.toString());
-            log.info("here!!");
-            model.addAttribute("cates", cates);
+        List<CartsDTO> carts = marketService.selectCartsByCartNo(cartsNo);
+        model.addAttribute("carts", carts);
+        //그 상품들 조회
+        List<ProductsDTO> products = marketService.selectProductsByCart(carts);
+        model.addAttribute("products" , products);
+        //카테고리 조회 (아무리 생각해도 비효율적..)
+        List<CategoriesDTO> cates = marketService.selectCategoriesByProduct(products);
+        model.addAttribute("cates", cates);
+        model.addAttribute("user", marketService.selectUserByUid(userId));
 
         return "/market/order";
     }
 
-    //최종 결제 구현 (장바구니 삭제까지)
+    //최종 결제 구현 (장바구니 삭제 + 포인트 수정 + orderer + oderItems 넣기, 상품 재고량 변경)
+    @ResponseBody
+    @PutMapping("/market/order")
+    public ResponseEntity marketOrder(@RequestBody OrdersDTO ordersDTO){
+       int number = marketService.insertOrers(ordersDTO);
+        Map<String, Integer> map = new HashMap<>();
+        map.put("result",number );
+        return ResponseEntity.ok().body(map);
+    };
+
+    //orderItems + 재고량 없애기
+    @ResponseBody
+    @PutMapping("/market/orderItems")
+    public ResponseEntity marketOrderItems(@RequestBody Map<String, List<Integer>> map){
+        int orderNo = map.get("no").get(0);
+        List<Integer> prodNos = map.get("prodNosList");
+        List<Integer> itemCounts = map.get("itemCounts");
+        log.info(prodNos.toString());
+        log.info(itemCounts.toString());
+        log.info(orderNo+"!!!!");
+        marketService.insertOrderitems(prodNos, itemCounts, orderNo);
+        Map<String, String> map2 = new HashMap<>();
+        map2.put("result", "success" );
+        return ResponseEntity.ok().body(map2);
+    };
+
+    //point없애기
+    @ResponseBody
+    @PutMapping("/market/updatePoint")
+    public ResponseEntity updatePoint(@RequestBody Map<String, String> map){
+        String uid = map.get("userId");
+        int point = Integer.parseInt(map.get("deletePoint"));
+        marketService.updatePoint(uid, point);
+
+        Map<String, String> map2 = new HashMap<>();
+        map2.put("result", "success" );
+        return ResponseEntity.ok().body(map2);
+    };
+
+    //장바구니에서 삭제하기 (기존 메소드 재활용)
+
+
+    //장바구니 x 바로 결제 이용
+    @GetMapping ("/market/buyDirect")
+    public String buyDirect(@RequestParam("prodNumber") int prodNo, @RequestParam("user") String userId,
+                            @RequestParam("countNo") int countNo, Model model) {
+        
+        //상품 조회
+        ProductsDTO product = marketService.selectProduct(prodNo);
+        model.addAttribute("product", product);
+        //수량 넣기
+        model.addAttribute("countNo", countNo);
+        //카테고리 조회 
+        model.addAttribute("cate", marketService.selectCategoryByProduct(product));
+        //사용자 조회
+        model.addAttribute("user", marketService.selectUserByUid(userId));
+
+        return "/market/buyDirect";
+    }
+
 
 }

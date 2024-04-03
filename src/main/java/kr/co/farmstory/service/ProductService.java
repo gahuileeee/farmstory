@@ -34,6 +34,7 @@ public class ProductService {
 
         Products products = modelMapper.map(productsDTO, Products.class);
 
+
         MultipartFile image1 = productsDTO.getMultImage1();
         MultipartFile image2 = productsDTO.getMultImage2();
         MultipartFile image3 = productsDTO.getMultImage3();
@@ -54,6 +55,7 @@ public class ProductService {
                 }
             }
         }
+
 
 
         /*

@@ -7,6 +7,31 @@
                  const btnCart = document.getElementById('btnCart')
                 const btnCartView = document.getElementById('btnCartView');
 
+                 const btnOrder = document.getElementById('btnOrder');
+                const  buyDirect =document.getElementById('buyDirect');
+
+                const  total = document.getElementById('total');
+                const count = document.getElementById('count');
+            //${#numbers.formatDecimal(product.prodPrice* (100 - product.prodDiscount)*0.01 , 1, 0)
+            const productPrice = [[${product.prodPrice}]];
+            const prodDiscount = [[${product.prodDiscount}]];
+            //수량
+            count.onclick=function (){
+                totalPrice()
+            }
+            totalPrice()
+
+                //바로 결제
+            btnOrder.onclick= function (e){
+                e.preventDefault();
+                const inputProd = document.getElementById('prodNumber');
+                inputProd.value = document.getElementById('prodNo').value;
+
+                const inputCount = document.getElementById('countNo');
+                inputCount.value = document.getElementById('count').value;
+
+                buyDirect.click();
+            }
 
 
                 //장바구니 (추후에 user 추가!)
@@ -25,6 +50,16 @@
                     btnCartView.click();
                 }
             }
+            function numberWithCommas(x) {
+                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
+            function totalPrice(){
+                let totalPrice = productPrice * (100 - prodDiscount) * 0.01 * count.value;
+                if(totalPrice< 30000){
+                    totalPrice +=5000;
+                }
+                total.innerText =numberWithCommas (totalPrice) +'원';
+            }
         }
     </script>
     <nav>
@@ -36,7 +71,7 @@
     <!-- 내용 시작 -->
     <h3>기본정보</h3>
     <div class="basic">
-        <img  th:src="'data:image/jpeg;base64,' + ${product.image2.split(',')[1]}" alt="이미지1">
+        <img   src="/" alt="이미지1">
 
         <table border="0">
             <tr>
@@ -55,8 +90,12 @@
                 </td>
             </tr>
             <tr>
-                <td>판매가격</td>
-                <td>4,000원</td>
+                <td>(할인적용 된) 판매가격</td>
+                <td><strong class="price"
+                            th:text="${#numbers.formatDecimal(product.prodPrice* (100 - product.prodDiscount)*0.01 , 1, 0)}"
+                >
+
+                </strong></td>
             </tr>
             <tr>
                 <td>구매수량</td>
@@ -68,21 +107,30 @@
             </tr>
             <tr>
                 <td>합계</td>
-                <td class="total">4,000원</td>
+                <td class="total" id="total"></td>
             </tr>
         </table>
         <div style="float: right; margin-top: 10px;">
             <a href="/" id="btnCart" class="btn btnCart">장바구니</a>
-            <a href="./order.html" id="btnOrder" class="btn btnOrder">바로구매</a>
+            <a href="/" id="btnOrder" class="btn btnOrder">바로구매</a>
+
             <form th:action="@{/market/cart}" method="get">
                 <input type="hidden" id="user" name="user" value="A101">
                 <button type="submit" id="btnCartView"></button>
             </form>
+
+            <form th:action="@{/market/buyDirect}" method="get">
+                <input type="hidden"  name="user" value="A101">
+                <input type="hidden"  id="prodNumber" name="prodNumber" value="">
+                <input type="hidden"  id="countNo"  name="countNo" value="">
+                <button type="submit" id="buyDirect"></button>
+            </form>
+
         </div>
     </div>
     <h3>상품설명</h3>
     <div class="detail">
-        <img th:src="'data:image/jpeg;base64,' + ${product.image3.split(',')[1]}" alt="상품설명">
+        <img   src="/" alt="이미지1">
     </div>
     <h3>배송정보</h3>
     <div class="delivery">
