@@ -31,14 +31,16 @@
                     <tbody>
                     <tr th:each="product, index:${products}" >
                         <td>
-                            <a th:href="@{/market/view(prodNum=${product.prodNo})}" ><img  th:src="'data:image/jpeg;base64,' + ${product.image1.split(',')[1]}" alt="이미지1"></a>
+                            <a th:href="@{/market/view(prodNum=${product.prodNo})}" ><img  src="/" alt="이미지1"></a></a>
                         </td>
                         <td class="type">[[${cates[index.index].cateName}]]</td>
                         <td class="title"><a href="#">[[${product.prodName}]]</a></td>
-                        <td class="discount">[[${product.prodDiscount}]]</td>
-                        <td class="point">[[${product.point}]]</td>
+                        <td class="discount">[[${product.prodDiscount}]] %</td>
+                        <td class="point">[[${product.prodPrice * 0.01}]]</td>
                         <td class="price">
-                            <strong>[[${product.prodPrice}]]</strong>
+                            <strong  th:text="${#numbers.formatDecimal(product.prodPrice * (100 - product.prodDiscount)*0.01 , 1, 0)}">
+
+                            </strong>
                             <del>[[${product.prodPrice}]]</del> <!--할인전가격 표시 -->
                         </td>
                     </tr>

@@ -26,5 +26,6 @@ public class UserDTO {
     private String leaveDate;
     private String provider;
     private String grade;
+    private int totalPoint;
 
 }

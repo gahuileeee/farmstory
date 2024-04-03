@@ -4,57 +4,160 @@
 
 <article class="order" layout:fragment="content">
     <script>
+        let use = 0;
+        let  totalPrice =0;
         window.onload = function () {
+            const redirect = document.getElementById('redirect');
+            const userPoint = document.getElementById('userPoint');
+            const point = [[${user.totalPoint}]]
+            const  userFor = document.getElementById('userFor'); //사용가능 포인트
 
+            userPoint.onclick=function (e){
+                e.preventDefault();
+                alert('클릭!')
+                 use = userPoint.previousElementSibling.value;
+                if(use> point){
+                    alert('사용가능한 포인트를 초과할 수 없습니다.')
+                    userPoint.previousElementSibling.value="";
+                }else{
+                    userFor.innerText= point - use;
+                    document.getElementById('userPointNow').innerText = numberWithCommas(use) +"원";
+                    calculateTotal();
+                }
+            }
 
-            //주문하기 버튼 클릭
-
-
+            //계산
             calculateTotal();
+
+
+            //나중에 한번에 상태체크 하기
+            const btnOrder = document.getElementById('btnOrder');
+
+            btnOrder.onclick=async function (e) {
+                e.preventDefault();
+
+                //주문정보
+                const hp = document.getElementById('hp').value;
+                const receiver = document.getElementById('receiver').value;
+                const checkedRadios = document.querySelectorAll('input[name="payment"]:checked');
+
+                //자.. form을 넘겨보자 일단 order를 전달해보자
+                const userId = document.getElementById('userId').value;
+                const orderTotalPrice = totalPrice;
+                const orderAddr = document.getElementById('zip').value + document.getElementById('addr1').value + document.getElementById('addr2').value;
+
+                //이제 orderitems해보자 (여기서 재고량 없애야하나?)
+                const itemNos = document.querySelectorAll('.prodNo')
+                const prodNosList = [];
+                itemNos.forEach(function (no) {
+                    prodNosList.push(no.value);
+                });
+                const counts = document.querySelectorAll('.cartCount');
+                const itemCounts = [];
+                counts.forEach(function (no) {
+                    console.log(no.value);
+                    itemCounts.push(no.innerText);
+                })
+
+                //point도 어캐 해보자..
+                use; //이게 포인트, 유저 정보 넘겨서 바꾸기
+
+                //장바구니에서도 삭제
+                const cateNos = document.querySelectorAll('.cateNo');
+                const cateNoList = [];
+                cateNos.forEach(function (no) {
+                    cateNoList.push(no.value);
+                });
+
+                //추후에 유효성 검사 추가
+
+                if (orderAddr == null || orderAddr === "") {
+                    alert('배송 주소를 입력해주세요');
+                } else if (hp == null || hp === "") {
+                    alert('연락처를 입력해주세요')
+                } else if (receiver == null || receiver === "") {
+                    alert('받는 분을 입력해주세요')
+                } else if (checkedRadios.length === 0) {
+                    alert('결제 방법을 선택해주세요.');
+                } else {
+                    //order 넘기기
+                    const orderJsonData = {userId: userId, orderTotalPrice: orderTotalPrice, orderAddr: orderAddr}
+                    const result = await fetchPut('/farmstory/market/order', orderJsonData);
+
+                    //이제 orderitems해보자 (재고량까지 없애기)
+                    if(result.result != null){
+                        const no = [result.result];
+                        const orderItemJsonData = {prodNosList : prodNosList , itemCounts : itemCounts , no : no};
+
+                        const result2 = await fetchPut('/farmstory/market/orderItems', orderItemJsonData);
+                        console.log(result.result);
+
+                        if(result2.result === 'success'){
+                            const jsonDataFinal = {list : cateNoList};
+                            const result3 = await fetchPut('/farmstory/market/cart/delete', jsonDataFinal);
+                            if(result3.result === "success"){
+                                //point도 어캐 해보자..
+                                if(no >0){
+                                    const pointJsonData = { deletePoint : use , userId : userId };
+                                    const result4 = await fetchPut('/farmstory/market/updatePoint', pointJsonData);
+                                    if (result4.result ==="success"){
+                                        alert("결제가 완료되었습니다.")
+                                        redirect.click();
+                                    }
+                                }else{
+                                    redirect.click();
+                                    alert('결제가 완료되었습니다.');
+                                }
+
+
+                            }
+
+                        }
+                    }
+
+                }
+            }
 
         };
         function calculateTotal() {
-            var totalPrice = 0;
+            const form = document.getElementById('buyForm');
             var productPrice =0;
             var totalPoint =0;
             var cateSize =0;
+            totalPrice =0;
 
-            // 각 상품의 가격 합산
-            //할인된 가격
-            var productsPrice = document.querySelectorAll('.price');
-            productsPrice.forEach(function(product) {
-                cateSize++;
-                totalPrice += parseFloat(product.innerText.replace(',', ''));
-            });
             //할인전 가격
             var prices = document.querySelectorAll('.prodcutPrice');
-            prices.forEach(function(product) {
-                productPrice += parseFloat(product.innerText.replace(',', ''));
+            //포인트 계산
+            const points = document.querySelectorAll('.point');
+            //할인된 가격
+            var productsPrice = document.querySelectorAll('.price');
+            //전체 상품 수 계산
+            const  cartCounts =document.querySelectorAll('.cartCount');
+
+            prices.forEach(function(price, index) {
+                    totalPoint += parseFloat(points[index].innerText.replace(',', ''));
+                    productPrice += parseFloat(price.innerText.replace(',', ''));
+                    totalPrice += parseFloat(productsPrice[index].innerText.replace(',', ''));
+                    cateSize += parseFloat(cartCounts[index].innerText.replace(',', ''));
+
             });
-            document.getElementById('totalProductPrice').innerText = numberWithCommas(productPrice)+'원';
-
-            //할인된 금액
-            document.getElementById('discountTotal').innerText = numberWithCommas(productPrice - totalPrice )+'원';
-
             //전체 토탈 금액 (배송비까지 계산)
             var deliveryFee = 0;
+            var discountTotal = productPrice - totalPrice;
             if(totalPrice<30000 && totalPrice>1){
                 deliveryFee=5000;
                 totalPrice+=5000;
             }
+            if(use > 0){
+                totalPrice -= use;
+            }
             document.getElementById('totalPrice').innerText = numberWithCommas(totalPrice)+'원';
             document.getElementById('delivery').innerText = numberWithCommas(deliveryFee)+'원';
             document.getElementById('cateSize').innerText = numberWithCommas(cateSize);
-            document.getElementById('counts').innerText = numberWithCommas(cateSize);
-
-
-            //포인트 계산
-            const points = document.querySelectorAll('.point');
-            points.forEach(function(point) {
-                totalPoint += parseFloat(point.innerText.replace(',', ''));
-            });
             document.getElementById('totalPoints').innerText = numberWithCommas(totalPoint)+'원';
-
+            document.getElementById('totalProductPrice').innerText = numberWithCommas(productPrice)+'원';
+            document.getElementById('discountTotal').innerText = numberWithCommas(discountTotal)+'원';
         }
 
         // 숫자를 천 단위로 콤마를 찍는 함수
@@ -89,23 +192,24 @@
                         <tr class="empty" th:if="${carts.size()<1}">
                             <td colspan="9">장바구니에 상품이 없습니다.</td>
                         </tr>
-
                         <tr th:each="cart, index:${carts}">
-                                <td>
-                                    <a href="./productDetail.html"><img src="../images/market_item1.jpg" class="thumb" alt="사과 500g"></a>
-                                </td>
+                            <td>
+                                <input type="hidden" name="cateNo" class="cateNo" th:value="${cart.cartNo}">
+                                <input type="hidden" name="prodNo" class="prodNo" th:value="${products[index.index].prodNo}">
+                                <a th:href="@{/market/view(prodNum=${products[index.index].prodNo})}"
+                                ><img   src="/" alt="이미지1"></a>
+                            </td>
                             <td>[[${cates[index.index].cateName}]]</td>
                             <td><a href="#">[[${products[index.index].prodName}]]</a></td>
-                            <td class="cartCount">[[${cart}]]</td>
+                            <td class="cartCount">[[${cart.cartProdCount}]]</td>
                             <td>[[${products[index.index].prodDiscount}]] %</td>
-                            <td class="point" >[[${products[index.index].prodPrice *0.01 * cart}]]</td>
-                            <td class="prodcutPrice" >[[${products[index.index].prodPrice *  cart}]]</td>
-                            <td >
-                                <strong class="price"
+                            <td class="point" >[[${products[index.index].prodPrice *0.01 * cart.cartProdCount}]]</td>
+                            <td class="prodcutPrice" >[[${products[index.index].prodPrice *  cart.cartProdCount}]]</td>
+                            <td ><strong class="price"
                                          th:text="${#numbers.formatDecimal(products[index.index].prodPrice* (100 - products[index.index].prodDiscount)*0.01 * cart.cartProdCount, 1, 0)}">
                             </strong>원</td>
-                            </tr>
-                            
+                        </tr>
+
                         </tbody>                        
                     </table>
                     <div class="final">                        
@@ -125,7 +229,7 @@
                             </tr>
                             <tr>
                                 <th>포인트사용</th>
-                                <td></td>
+                                <td id="userPointNow"></td>
                             </tr>
                             <tr>
                                 <th>배송비</th>
@@ -140,64 +244,70 @@
                                 <td class="total"  id="totalPrice"></td>
                             </tr>
                         </table>                        
-                        <input type="submit" class="btnOrder" value="결제하기">
+                        <input type="submit" class="btnOrder" id="btnOrder" value="결제하기">
                     </div>
 
 
                     <h3>주문정보 입력</h3>
-                    <div class="shipping">
-                        <table>
-                            <tr>
-                                <td>주문자</td>
-                                <td><input type="text" name="orderer" value="홍길동" readonly></td>
-                            </tr>
-                            <tr>
-                                <td>휴대폰</td>
-                                <td><input type="text" name="orderer" value="010-1234-1001" readonly></td>
-                            </tr>
-                            <tr>
-                                <td>포인트사용</td>
-                                <td>
-                                    <input type="text" name="pointUse" value="">
-                                    <button>사용하기</button>
-                                    <p class="point">
-                                        사용가능 <span>2,000</span>
-                                    </p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>받는분</td>
-                                <td><input type="text" name="receiver"></td>
-                            </tr>
-                            <tr>
-                                <td>연락처</td>
-                                <td><input type="text" name="hp"></td>
-                            </tr>
-                            <tr>
-                                <td>배송주소</td>
-                                <td>
-                                    <input type="text" name="zip" readonly><button id="btnZip">우편번호 검색</button>
-                                    <input type="text" name="addr1" placeholder="기본주소 검색">
-                                    <input type="text" name="addr2" placeholder="상세주소 입력">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>결제방법</td>
-                                <td>
-                                    <label><input type="radio" name="payment">계좌이체</label>
-                                    <label><input type="radio" name="payment">신용카드</label>
-                                    <label><input type="radio" name="payment">체크카드</label>
-                                    <label><input type="radio" name="payment">휴대폰</label>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>기타</td>
-                                <td>
-                                    <textarea name="etc"></textarea>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
+    <div class="shipping">
+        <table>
+            <tr>
+                <td>주문자</td>
+                <td>
+                    <input type="text" name="orderer" th:value="${user.name}" readonly>
+                    <input type="hidden" name="order" id="userId" th:value="${user.uid}" readonly>
+                </td>
+            <tr>
+                <td>휴대폰</td>
+                <td><input type="text" name="orderer" th:value="${user.hp}" readonly></td>
+            </tr>
+            <tr>
+                <td>포인트사용</td>
+                <td>
+                    <input type="text" name="pointUse" value="">
+                    <button id="userPoint">사용하기</button>
+                    <p class="point">
+                        사용가능 <span id="userFor">[[${user.totalPoint}]]</span>
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td>받는분</td>
+                <td><input type="text" name="receiver" id="receiver"></td>
+            </tr>
+            <tr>
+                <td>연락처</td>
+                <td><input type="text" name="hp" id="hp"></td>
+            </tr>
+            <tr>
+                <td>배송주소</td>
+                <td>
+                    <input type="text" name="zip" id="zip" readonly><button id="btnZip">우편번호 검색</button>
+                    <input type="text" name="addr1" id="addr1"  placeholder="기본주소 검색">
+                    <input type="text" name="addr2"  id="addr2"   placeholder="상세주소 입력">
+                </td>
+            </tr>
+            <tr>
+                <td>결제방법</td>
+                <td>
+                    <label><input type="radio" name="payment">계좌이체</label>
+                    <label><input type="radio" name="payment">신용카드</label>
+                    <label><input type="radio" name="payment">체크카드</label>
+                    <label><input type="radio" name="payment">휴대폰</label>
+                </td>
+            </tr>
+            <tr>
+                <td>기타</td>
+                <td>
+                    <textarea name="etc"></textarea>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <a id="redirect" th:href="@{/index}"></a>
+    <form name="orderForm">
+
+    </form>
                     
                     <!-- 내용 끝 -->
 </article>
