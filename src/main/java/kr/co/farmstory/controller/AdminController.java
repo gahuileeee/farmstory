@@ -1,9 +1,6 @@
 package kr.co.farmstory.controller;
 
-import kr.co.farmstory.dto.PageRequestDTO;
-import kr.co.farmstory.dto.PageResponseDTO;
-import kr.co.farmstory.dto.ProductPageRequestDTO;
-import kr.co.farmstory.dto.ProductPageResponseDTO;
+import kr.co.farmstory.dto.*;
 import kr.co.farmstory.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +27,7 @@ public class AdminController {
         pageResponseDTO = adminService.selectProductsForAdmin(productPageRequestDTO);
 
         model.addAttribute(pageResponseDTO);
-        log.info(pageResponseDTO.toString());
+        log.info("here....!!!"+pageResponseDTO);
 
 
         return "/admin/product/list";
@@ -47,7 +44,13 @@ public class AdminController {
     }
 
     @GetMapping("/admin/user/list")
-    public String userLsit(){
+    public String userLsit(Model model, UserPageRequestDTO userPageRequestDTO){
+
+        UserPageResponseDTO pageResponseDTO = null;
+        pageResponseDTO = adminService.selectsUserForAdmin(userPageRequestDTO);
+
+        model.addAttribute(pageResponseDTO);
+        log.info(pageResponseDTO.toString());
         return "/admin/user/list";
     }
 
