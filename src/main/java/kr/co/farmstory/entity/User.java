@@ -36,6 +36,7 @@ public class User {
     @CreationTimestamp
     private LocalDateTime regDate;
     private LocalDateTime leaveDate;
+    private int totalPoint;
 
 
 }

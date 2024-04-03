@@ -1,0 +1,211 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/marketLayout.html}">
+
+<article class="order" layout:fragment="content">
+    <script>
+        let use = 0;
+        window.onload = function () {
+            const userPoint = document.getElementById('userPoint');
+            const point = [[${user.totalPoint}]];
+            const  userFor = document.getElementById('userFor'); //사용가능 포인트
+
+            userPoint.onclick=function (e){
+                e.preventDefault();
+                 use = userPoint.previousElementSibling.value;
+                if(use> point){
+                    alert('사용가능한 포인트를 초과할 수 없습니다.')
+                    userPoint.previousElementSibling.value="";
+                }else{
+                    userFor.innerText= point - use;
+                    document.getElementById('userPointNow').innerText = numberWithCommas(use) +"원";
+                    calculateTotal();
+                }
+            }
+
+            //계산
+            calculateTotal();
+
+        };
+        function calculateTotal() {
+            const form = document.getElementById('buyForm');
+            var totalPrice = 0;
+            var productPrice =0;
+            var totalPoint =0;
+            var cateSize =0;
+
+            //할인전 가격
+            var prices = document.querySelectorAll('.prodcutPrice');
+            //포인트 계산
+            const points = document.querySelectorAll('.point');
+            //할인된 가격
+            var productsPrice = document.querySelectorAll('.price');
+
+            prices.forEach(function(price, index) {
+                    cateSize++;
+                    totalPoint += parseFloat(points[index].innerText.replace(',', ''));
+                    productPrice += parseFloat(price.innerText.replace(',', ''));
+                    totalPrice += parseFloat(productsPrice[index].innerText.replace(',', ''));
+
+            });
+
+            //전체 토탈 금액 (배송비까지 계산)
+            var deliveryFee = 0;
+            var discountTotal = productPrice - totalPrice;
+            if(totalPrice<30000 && totalPrice>1){
+                deliveryFee=5000;
+                totalPrice+=5000;
+            }
+            if(use > 0){
+                totalPrice -= use;
+            }
+            document.getElementById('totalPrice').innerText = numberWithCommas(totalPrice)+'원';
+            document.getElementById('delivery').innerText = numberWithCommas(deliveryFee)+'원';
+            document.getElementById('cateSize').innerText = numberWithCommas(cateSize);
+            document.getElementById('totalPoints').innerText = numberWithCommas(totalPoint)+'원';
+            document.getElementById('totalProductPrice').innerText = numberWithCommas(productPrice)+'원';
+            document.getElementById('discountTotal').innerText = numberWithCommas(discountTotal)+'원';
+        }
+
+        // 숫자를 천 단위로 콤마를 찍는 함수
+        function numberWithCommas(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+    </script>
+    <nav>
+        <img th:src="@{/assets/img/sub_nav_tit_cate2_tit1.png}" alt="장보기"/>
+        <p>
+            HOME > 장보기 > <em>장보기</em>
+        </p>
+    </nav>
+                    <!-- 내용 시작 -->
+                    <p class="sort" >
+                        <a href="#" class="on">주문상춤 전체([[${countNo}]])</a>
+                    </p>
+                    <table border="0">
+                        <thead>
+                            <tr>                                
+                                <th>이미지</th>
+                                <th>종류</th>
+                                <th>상품명</th>
+                                <th>수량</th>
+                                <th>할인</th>
+                                <th>포인트</th>
+                                <th>가격</th>
+                                <th>소계</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+                                <input type="hidden" name="prodNo" class="prodNo" th:value="${product.prodNo}">
+                                <a th:href="@{/market/view(prodNum=${product.prodNo})}"
+                                ><img   src="/" alt="이미지1"></a></a>
+                            </td>
+                            <td>[[${cate.cateName}]]</td>
+                            <td><a href="#">[[${product.prodName}]]</a></td>
+                            <td class="cartCount">[[${countNo}]]</td>
+                            <td>[[${product.prodDiscount}]] %</td>
+                            <td class="point">[[${product.prodPrice * 0.01 * countNo}]]</td>
+                            <td class="prodcutPrice" >[[${product.prodPrice *  countNo}]]</td>
+                            <td ><strong class="price"
+                                         th:text="${#numbers.formatDecimal(product.prodPrice* (100 - product.prodDiscount)*0.01 * countNo , 1, 0)}">
+                            </strong>원</td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                    <div class="final">                        
+                        <table border="0">
+                            <caption>최종결제정보</caption>                            
+                            <tr>
+                                <th>상품수</th>
+                                <td id="cateSize"></td>
+                            </tr>
+                            <tr>
+                                <th>상품금액</th>
+                                <td id="totalProductPrice"></td>
+                            </tr>
+                            <tr>
+                                <th>할인금액</th>
+                                <td id="discountTotal"></td>
+                            </tr>
+                            <tr>
+                                <th>포인트사용</th>
+                                <td id="userPointNow"></td>
+                            </tr>
+                            <tr>
+                                <th>배송비</th>
+                                <td id="delivery"></td>
+                            </tr>
+                            <tr>
+                                <th>포인트적립</th>
+                                <td id="totalPoints"></td>
+                            </tr>
+                            <tr>
+                                <th>전체주문금액</th>
+                                <td class="total"  id="totalPrice"></td>
+                            </tr>
+                        </table>                        
+                        <input type="submit" class="btnOrder" value="결제하기">
+                    </div>
+
+
+                    <h3>주문정보 입력</h3>
+                    <div class="shipping">
+                        <table>
+                            <tr>
+                                <td>주문자</td>
+                                <td><input type="text" name="orderer" th:value="${user.name}" readonly></td>
+                            </tr>
+                            <tr>
+                                <td>휴대폰</td>
+                                <td><input type="text" name="orderer" th:value="${user.hp}" readonly></td>
+                            </tr>
+                            <tr>
+                                <td>포인트사용</td>
+                                <td>
+                                    <input type="text" name="pointUse" value="">
+                                    <button id="userPoint">사용하기</button>
+                                    <p class="point">
+                                        사용가능 <span id="userFor">[[${user.totalPoint}]]</span>
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>받는분</td>
+                                <td><input type="text" name="receiver"></td>
+                            </tr>
+                            <tr>
+                                <td>연락처</td>
+                                <td><input type="text" name="hp"></td>
+                            </tr>
+                            <tr>
+                                <td>배송주소</td>
+                                <td>
+                                    <input type="text" name="zip" readonly><button id="btnZip">우편번호 검색</button>
+                                    <input type="text" name="addr1" placeholder="기본주소 검색">
+                                    <input type="text" name="addr2" placeholder="상세주소 입력">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>결제방법</td>
+                                <td>
+                                    <label><input type="radio" name="payment">계좌이체</label>
+                                    <label><input type="radio" name="payment">신용카드</label>
+                                    <label><input type="radio" name="payment">체크카드</label>
+                                    <label><input type="radio" name="payment">휴대폰</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>기타</td>
+                                <td>
+                                    <textarea name="etc"></textarea>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <!-- 내용 끝 -->
+</article>
+</html>

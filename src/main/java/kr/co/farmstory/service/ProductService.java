@@ -26,9 +26,9 @@ public class ProductService {
 
         Products products = modelMapper.map(productsDTO, Products.class);
 
-        MultipartFile image1 = productsDTO.getImage1();
-        MultipartFile image2 = productsDTO.getImage2();
-        MultipartFile image3 = productsDTO.getImage3();
+        String image1 =  productsDTO.getImage1();
+        String image2 =  productsDTO.getImage2();
+        String image3 =  productsDTO.getImage3();
 
         if (image1 != null && !image1.isEmpty()) {
             byte[] image1Bytes = image1.getBytes();
