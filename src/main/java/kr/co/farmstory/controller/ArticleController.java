@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RequiredArgsConstructor
 @Controller
@@ -18,16 +20,29 @@ public class ArticleController {
 
     // 공지사항 list
     @GetMapping("/community/notice_list")
-    public String notice(Model model, PageRequestDTO pageRequestDTO){
-        PageResponseDTO pageResponseDTO = articleService.findByParentAndCate(pageRequestDTO);
-        log.info("pageResponseDTO : " + pageResponseDTO);
-        model.addAttribute(pageResponseDTO);
+    public String noticeList(Model model){
+
+        List<ArticleDTO> articles = articleService.selectArticles();
+
+        model.addAttribute("articles", articles);
+
         return "/community/notice_list";
+
     }
 
     @GetMapping("/community/notice_write")
-    public String write(@ModelAttribute("cate") String cate){
-        return "community/notice_write";
+    public String noticeWrite(){
+        return "/community/notice_write";
+    }
+
+    // 공지사항 writer
+    @PostMapping("/community/notice_write")
+    public String noticeWrite(ArticleDTO articleDTO){
+        log.info(articleDTO.toString());
+
+        articleService.insertArticle(articleDTO);
+
+        return "redirect:/community/notice_list";
     }
 
 

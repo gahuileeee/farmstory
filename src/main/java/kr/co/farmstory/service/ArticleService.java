@@ -1,4 +1,5 @@
 package kr.co.farmstory.service;
+import jakarta.transaction.Transactional;
 import kr.co.farmstory.dto.ArticleDTO;
 import kr.co.farmstory.dto.PageRequestDTO;
 import kr.co.farmstory.dto.PageResponseDTO;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -20,35 +22,28 @@ import java.util.Optional;
 public class ArticleService {
     private final ArticleRepository articleRepository;
 
-    // RootConfig Bean 생성/등록
-    private final ModelMapper modelMapper;
+    public void insertArticle(ArticleDTO articleDTO){
+        // DTO를 Entity로 변환
+        Article article = articleDTO.toEntity();
 
-    public PageResponseDTO findByParentAndCate(PageRequestDTO pageRequestDTO) {          // ArticleController - list로 감
-
-        Pageable pageable = pageRequestDTO.getPageable("no");
-
-        Page<Article> pageArticle = articleRepository.findByParentAndCate(0, pageRequestDTO.getCate(), pageable);
-        List<ArticleDTO> dtoList = pageArticle.getContent().stream()
-                .map(entity -> modelMapper.map(entity, ArticleDTO.class))
-                .toList();
-        int total = (int) pageArticle.getTotalElements();
-        return PageResponseDTO.builder()
-                .pageRequestDTO(pageRequestDTO)
-                .dtoList(dtoList)
-                .total(total)
-                .build();
+        // Entity 저장(데이터베이스 Insert)
+        articleRepository.save(article);
     }
 
+    public List<ArticleDTO> selectArticles(){
 
-    public void insertArticle(ArticleDTO articleDTO) {
+        List<Article> articles = articleRepository.findAll();
 
-        // articleDTO를 articleEntity로 변환
-        Article article = modelMapper.map(articleDTO, Article.class);
-        log.info(article.toString());
+        List<ArticleDTO> articleDTOs = articles.stream()
+                .map(entity -> ArticleDTO.builder()
+                        .no(entity.getNo())
+                        .title(entity.getTitle())
+                        .writer(entity.getWriter())
+                        .rdate(entity.getRdate())
+                        .hit(entity.getHit())
+                        .build())
+                .collect(Collectors.toList());
 
-        // 저장 후 저장한 엔티티 객체 반환(사실 JPA sava() 메서드는 default로 저장한 Entity를 반환)
-        Article savedArticle = articleRepository.save(article);
-        log.info("insertArticle : " + savedArticle.toString());
-
+        return articleDTOs;
     }
 }
