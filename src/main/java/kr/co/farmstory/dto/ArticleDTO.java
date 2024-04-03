@@ -36,4 +36,20 @@ public class ArticleDTO {
 
     private String nick;
 
+    public Article toEntity() {
+        Article article = new Article();
+        article.setNo(no);
+        article.setParent(parent);
+        article.setComment(comment);
+        article.setCate(cate);
+        article.setTitle(content);
+        article.setFile(file);
+        article.setHit(hit);
+        article.setWriter(writer);
+        article.setRegip(regip);
+        article.setRdate(rdate);
+        article.setNick(nick);
+
+        return article;
+    }
 }

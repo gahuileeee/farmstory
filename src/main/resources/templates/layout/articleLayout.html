@@ -3,8 +3,10 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>팜스토리::커뮤니티</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+    <script th:src="@{/js/util.js}"></script>
 </head>
 <body>
 <div id="container">
@@ -32,7 +34,11 @@
             <aside>
                 <img th:src="@{/assets/img/sub_aside_cate5_tit.png}" alt="커뮤니티"/>
                 <ul class="lnb">
-                    <li class="on"><a href="./community.html">커뮤니티</a></li>
+                    <li class="on"><a href="./notice_list">공지사항</a></li>
+                    <li class="on"><a href="./menu_list">오늘의식단</a></li>
+                    <li class="on"><a href="./chef_list">나도요리사</a></li>
+                    <li class="on"><a href="./qna_list">1:1고객문의</a></li>
+                    <li class="on"><a href="./faq_list">자주묻는질문</a></li>
                 </ul>
             </aside>
             <main layout:fragment="content">
@@ -52,6 +58,7 @@
             등록번호 팜스토리01234 (2013.04.01) / 발행인 : 홍길동<br />
             대표 : 홍길동 / 이메일 : email@mail.mail / 전화 : 01) 234-5678 / 경기도 성남시 잘한다구 신난다동 345<br />
             <em>Copyright(C)홍길동 All rights reserved.</em>
+            <a style="float: right" href="#">[[${appInfo.name}]]-[[${appInfo.version}]]</a>
         </p>
     </footer>
 </div>
