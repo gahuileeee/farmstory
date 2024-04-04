@@ -1,47 +1,102 @@
 package kr.co.farmstory.service;
 
 import kr.co.farmstory.dto.ArticleDTO;
+import kr.co.farmstory.dto.ConfigDTO;
 import kr.co.farmstory.entity.Article;
+import kr.co.farmstory.entity.Config;
 import kr.co.farmstory.repository.ArticleRepository;
 import kr.co.farmstory.repository.ConfigRepository;
-import kr.co.farmstory.repository.FileRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Slf4j
 @RequiredArgsConstructor
 @Service
 public class ArticleService {
 
     private final ArticleRepository articleRepository;
+    private final ConfigRepository configRepository;
 
-    public void insertArticle(ArticleDTO articleDTO){
-        // DTO를 Entity로 변환
+    public List<ArticleDTO> getArticlesByCategory(String cate) {
+        // 해당 카테고리의 게시글 목록을 가져온다.
+        List<Article> articles = articleRepository.findByCate(cate);
+
+        // Entity를 DTO로 변환하여 반환한다.
+        return articles.stream()
+                .map(article -> {
+                    ArticleDTO dto = new ArticleDTO();
+                    dto.setNo(article.getNo());
+                    dto.setParent(article.getParent());
+                    dto.setComment(article.getComment());
+                    dto.setCate(article.getCate());
+                    dto.setTitle(article.getTitle());
+                    dto.setContent(article.getContent());
+                    dto.setFile(article.getFile());
+                    dto.setHit(article.getHit());
+                    dto.setWriter(article.getWriter());
+                    dto.setRegip(article.getRegip());
+                    dto.setRdate(article.getRdate());
+                    dto.setNick(article.getNick());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
+
+    public void createArticle(ArticleDTO articleDTO) {
+        // DTO를 Entity로 변환하여 저장한다.
         Article article = articleDTO.toEntity();
-
-        // Entity 저장(데이터베이스 Insert)
         articleRepository.save(article);
     }
 
-    public List<ArticleDTO> selectArticles() {
-        // 전체 조회
-        List<Article> articles = articleRepository.findAll();
+    public void modifyArticle(Long articleId, ArticleDTO modifiedArticleDTO) {
+        // 수정할 게시글을 찾는다.
+        Optional<Article> articleOptional = articleRepository.findById(articleId);
+        Article article = articleOptional.orElseThrow(() -> new IllegalArgumentException("Invalid article"));
 
-        List<ArticleDTO> articleDTOs = articles.stream()
-                .map(entity -> ArticleDTO.builder()
-                        .no(entity.getNo())
-                        .title(entity.getTitle())
-                        .nick(entity.getNick())
-                        .rdate(entity.getRdate())
-                        .hit(entity.getHit())
-                        .build())
-                .collect(Collectors.toList());
+        // 변경된 내용을 적용한다.
+        article.setTitle(modifiedArticleDTO.getTitle());
+        article.setContent(modifiedArticleDTO.getContent());
 
-        return articleDTOs;
+        // 수정된 게시글을 저장한다.
+        articleRepository.save(article);
+    }
+
+    public void deleteArticle(Long articleId) {
+        // 삭제할 게시글을 찾는다.
+        Optional<Article> articleOptional = articleRepository.findById(articleId);
+        Article article = articleOptional.orElseThrow(() -> new IllegalArgumentException("Invalid article"));
+
+        // 게시글을 삭제한다.
+        articleRepository.delete(article);
+    }
+
+    public ArticleDTO findArticleById(Long articleId) {
+        // 게시글을 찾아서 DTO로 변환하여 반환한다.
+        Optional<Article> articleOptional = articleRepository.findById(articleId);
+        Article article = articleOptional.orElseThrow(() -> new IllegalArgumentException("Invalid article"));
+
+        ArticleDTO dto = new ArticleDTO();
+        dto.setNo(article.getNo());
+        dto.setParent(article.getParent());
+        dto.setComment(article.getComment());
+        dto.setCate(article.getCate());
+        dto.setTitle(article.getTitle());
+        dto.setContent(article.getContent());
+        dto.setFile(article.getFile());
+        dto.setHit(article.getHit());
+        dto.setWriter(article.getWriter());
+        dto.setRegip(article.getRegip());
+        dto.setRdate(article.getRdate());
+        dto.setNick(article.getNick());
+
+        return dto;
+    }
+
+    //카테고리를 검색하는 메소드 입니다
+    public Config findCate(String cate){
+        return  configRepository.findById(cate).get();
     }
 }

@@ -1,6 +1,7 @@
 package kr.co.farmstory.entity;
 
 import jakarta.persistence.*;
+import kr.co.farmstory.dto.ArticleDTO;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Formula;
@@ -49,6 +50,16 @@ public class Article {
     private List<File> fileList;
 
     private String nick;
+
+    public ArticleDTO toDTO() {
+        return ArticleDTO.builder()
+                .no(this.no)
+                .title(this.title)
+                .nick(this.nick)
+                .rdate(this.rdate)
+                .hit(this.hit)
+                .build();
+    }
 
 
 }
