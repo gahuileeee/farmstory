@@ -71,7 +71,7 @@
     <!-- 내용 시작 -->
     <h3>기본정보</h3>
     <div class="basic">
-        <img   src="/" alt="이미지1">
+        <img th:src="@{/uploads/__${product.image2}__}" class="thumb" alt="샘플1" style="width: 250px">
 
         <table border="0">
             <tr>
@@ -130,7 +130,7 @@
     </div>
     <h3>상품설명</h3>
     <div class="detail">
-        <img   src="/" alt="이미지1">
+        <img th:src="@{/uploads/__${product.image3}__}" class="thumb" alt="샘플1" style="width: 760px; text-align: center">
     </div>
     <h3>배송정보</h3>
     <div class="delivery">
