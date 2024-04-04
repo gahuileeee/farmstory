@@ -97,13 +97,14 @@ public class ProductService {
 
     }
 
-    public ResponseEntity<?> deleteProducts(int prodNo){
+    public ResponseEntity<?> deleteProducts(HttpServletRequest req, int prodNo){
         Optional<Products> optProducts = productsRepository.findById(prodNo);
         log.info("deleteProdAtService..1:"+optProducts);
 
         if (optProducts.isPresent()){
+            deleteFile(req, prodNo);
             productsRepository.deleteById(prodNo);
-            //deleteFile(prodNo);
+
             log.info("deleteProdAtService..2:"+prodNo);
             return ResponseEntity
                     .ok()
@@ -161,31 +162,36 @@ public class ProductService {
 
         return imageDTOS;
     }
-/*
-    public void deleteFile(int pNo) {
 
-        Optional<ProdImage> optProdImage = prodImageRepository.findById(pNo);
+    public void deleteFile(HttpServletRequest req, int prodNo) {
 
-        if(optProdImage.isPresent()){
-            ProdImageDTO prodImageDTO = optProdImageDTO.get();
+        List<ProdImage> prodImages = prodImageRepository.findBypNo(prodNo);
+        log.info("deleteProdAtService..1:" + prodImages);
+
+        for(ProdImage prodImage : prodImages){
+            //ProdImageDTO prodImageDTO = modelMapper.map(prodImage, ProdImageDTO.class);
+
+            // 업로드 디렉토리 파일 삭제
+            ServletContext ctx = req.getServletContext();
+            String path = new File(fileUploadPath).getAbsolutePath();
+
+            // 파일 객체 생성
+            //File file = new File(uploadPath + File.separator + prodImageDTO.getSName());
+            File file = new File(path + File.separator + prodImage.getSName());
+
+            // 파일 삭제
+            if(file.exists()) {
+                file.delete();
+            }
+
+            prodImageRepository.delete(prodImage);
+
         }
 
-        prodImageRepository.deleteById(pNo);
 
-        // 업로드 디렉토리 파일 삭제
-        ServletContext ctx = req.getServletContext();
-        String uploadPath = ctx.getRealPath("/uploads");
-
-        // 파일 객체 생성
-        File file = new File(uploadPath + File.separator + prodImageDTO.getSName());
-
-        // 파일 삭제
-        if(file.exists()) {
-            file.delete();
-        }
 
 
     }
-*/
+
 
 }

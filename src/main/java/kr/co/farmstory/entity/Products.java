@@ -37,4 +37,7 @@ public class Products {
     @CreationTimestamp
     private LocalDateTime RegProdDate;
 
+    @Transient
+    private String cateName;
+
 }

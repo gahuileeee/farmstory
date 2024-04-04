@@ -12,18 +12,21 @@
                 const agree2 = document.getElementsByName('agree2')[0];
                 const agree3 = document.getElementsByName('agree3')[0];
                 const btnNext = document.getElementsByClassName('btnNext')[0];
+                const registerBtn = document.getElementById('registerBtn');
 
                 btnNext.onclick = () => {
 
+
                     if(agree1.checked && agree2.checked){
+                        if(agree3.checked){
+                            registerBtn.href = '/farmstory/user/register?sms=Y';
+                        }else{
+                            registerBtn.href = '/farmstory/user/register?sms=N';
+                        }
                         return true;
+
                     }else{
                         alertModal('이용약관과 개인정보 취급방침은 필수 동의입니다.');
-                        /*
-                        confirmModal("동의하시겠습니까?").then(result => {
-                            console.log('result : ' + result);
-                        });
-                        */
 
                         return false;
                     }
@@ -61,7 +64,7 @@
 
                             <div class="text-center mt-4 mb-0">
                                 <a class="btn btn-secondary btnCancel" th:href="@{/user/login}">취소</a>
-                                <a class="btn btn-primary btnNext" th:href="@{/user/register}">다음</a>
+                                <a class="btn btn-primary btnNext" id="registerBtn" th:href="@{/user/register}">다음</a>
                             </div>
 
                         </form>

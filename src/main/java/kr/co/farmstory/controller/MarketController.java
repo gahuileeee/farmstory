@@ -15,6 +15,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.Console;
+import java.sql.Savepoint;
 import java.util.*;
 
 @Controller
@@ -27,12 +29,14 @@ public class MarketController {
 
     //상품 정보 리스트
     @GetMapping("/market/list")
-    public  String marketList(Model model){
-        List<ProductsDTO> products = marketService.selectProducts();
-        model.addAttribute("products", products);
-        List<CategoriesDTO> cates = marketService.selectCategoriesByProduct(products);
-        log.info(cates.toString());
-        model.addAttribute("cates", cates);
+    public  String marketList(Model model , ProductPageRequestDTO pageRequestDTO){
+        if(pageRequestDTO.getCate() == null){
+            ProductPageResponseDTO products = marketService.selectProducts(pageRequestDTO);
+            model.addAttribute("products", products);
+        }else{
+            ProductPageResponseDTO products = marketService.selectProductsbyCate(pageRequestDTO);
+            model.addAttribute("products", products);
+        }
         return "/market/list";
     }
 
@@ -97,6 +101,7 @@ public class MarketController {
     //결제 페이지 조회 (장바구니 이용하여 )
     @PostMapping("/market/order")
     public String marketBuy(@RequestParam("cartNo") List<Integer> lists , @RequestParam("user") String userId, Model model) {
+        log.info("user!" + userId);
         Set<Integer> set = new LinkedHashSet<>(lists);
         List<Integer> cartsNo = new ArrayList<>(set);
 
@@ -145,8 +150,25 @@ public class MarketController {
     public ResponseEntity updatePoint(@RequestBody Map<String, String> map){
         String uid = map.get("userId");
         int point = Integer.parseInt(map.get("deletePoint"));
-        marketService.updatePoint(uid, point);
 
+        int savePoint = Integer.parseInt(map.get("savePoint"));
+        marketService.updatePoint(uid, savePoint-point);
+        //포인트 테이블 수정
+        marketService.updatePointList(uid, point, savePoint);
+        Map<String, String> map2 = new HashMap<>();
+        map2.put("result", "success" );
+        return ResponseEntity.ok().body(map2);
+    };
+
+    @ResponseBody
+    @PutMapping("/market/saveOnlyPoint")
+    public ResponseEntity saveOnlyPoint(@RequestBody Map<String, String> map){
+        String uid = map.get("userId");
+        int savePoint = Integer.parseInt(map.get("savePoint"));
+        marketService.updatePoint(uid, savePoint);
+
+        //포인트 테이블 수정
+        marketService.updateOnlyPointPlus(uid, savePoint);
         Map<String, String> map2 = new HashMap<>();
         map2.put("result", "success" );
         return ResponseEntity.ok().body(map2);

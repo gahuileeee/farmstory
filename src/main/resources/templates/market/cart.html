@@ -154,7 +154,7 @@
                                 </td>
                                 <td>
                                     <a th:href="@{/market/view(prodNum=${products[index.index].prodNo})}"
-                                    ><img   src="/" alt="이미지1"></a>
+                                    ><img th:src="@{/uploads/__${products[index.index].image1}__}" class="thumb" alt="샘플1" style="width: 100px"></a>
                                 </td>
                                 <td>[[${cates[index.index].cateName}]]</td>
                                 <td><a href="#">[[${products[index.index].prodName}]]</a></td>

@@ -8,11 +8,11 @@ on:
 
 # 해당 yml 내에서 사용할 key-value 속성
 env:  
-  PROJECT_NAME: farmStory
+  PROJECT_NAME: farmstory
   AWS_REGION: ap-northeast-2
-  S3_BUCKET_NAME: chhak2023-s3-bucket-github-actions
-  CODE_DEPLOY_APPLICATION_NAME: chhak2023-codedeploy-app
-  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: chhak2023-codedeploy-deploy-group
+  S3_BUCKET_NAME: gahui446-s3-bucket-github-actions
+  CODE_DEPLOY_APPLICATION_NAME: gahui446-codedeploy-app
+  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: gahui446-codedeploy-deploy-group
   
 # workflow는 한개 이상의 job을 가지며, 각 job은 여러 step에 따라 단계를 나눔
 jobs:
