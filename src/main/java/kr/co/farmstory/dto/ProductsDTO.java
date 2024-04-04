@@ -1,5 +1,6 @@
 package kr.co.farmstory.dto;
 
+import jakarta.persistence.Transient;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,5 +32,7 @@ public class ProductsDTO {
     private String etc;
     private int delivery;
     private LocalDateTime RegProdDate;
+
+    private String cateName;
 
 }

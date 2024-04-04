@@ -7,7 +7,12 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import com.querydsl.core.Tuple;
+
 
 import java.beans.Transient;
 import java.util.ArrayList;
@@ -29,10 +34,47 @@ public class MarketService {
     private ModelMapper modelMapper;
 
     //상품들 조회
-    public List<ProductsDTO> selectProducts(){
-        log.info(productsRepository.findAll().toString());
-        return productsRepository.findAll().stream().map(entity->modelMapper.map(entity, ProductsDTO.class)
-        ).toList();
+    public ProductPageResponseDTO selectProducts(ProductPageRequestDTO pageRequestDTO) {
+        Pageable pageable = pageRequestDTO.getPageable("no");
+
+        Page<Tuple> pageArticle = productsRepository.selectProducts(pageRequestDTO , pageable);
+        log.info(pageArticle.getContent().toString()+"!!");
+        List<ProductsDTO> dtoList = pageArticle.getContent().stream()
+                .map(tuple -> {
+                    Products products = tuple.get(0 ,Products.class);
+                    String cateName = tuple.get(1, String.class);
+                    products.setCateName(cateName);
+                    return modelMapper.map(products, ProductsDTO.class);
+                })
+                .toList();
+        log.info(dtoList+" dto! !!");
+        int total = (int) pageArticle.getTotalElements();
+        return ProductPageResponseDTO.builder()
+                .productPageRequestDTO(pageRequestDTO)
+                .dtoList(dtoList)
+                .total(total)
+                .build();
+    }
+    //카테고리 별 조회
+    public ProductPageResponseDTO  selectProductsbyCate(ProductPageRequestDTO pageRequestDTO) {
+        Pageable pageable = pageRequestDTO.getPageable("no");
+
+        Page<Tuple> pageArticle = productsRepository.selectProductsbyCate(pageRequestDTO , pageable);
+        log.info(pageArticle.getContent().toString()+"!!");
+        List<ProductsDTO> dtoList = pageArticle.getContent().stream()
+                .map(tuple -> {
+                    Products products = tuple.get(0 ,Products.class);
+                    String cateName = tuple.get(1, String.class);
+                    products.setCateName(cateName);
+                    return modelMapper.map(products, ProductsDTO.class);
+                })
+                .toList();
+        int total = (int) pageArticle.getTotalElements();
+        return ProductPageResponseDTO.builder()
+                .productPageRequestDTO(pageRequestDTO)
+                .dtoList(dtoList)
+                .total(total)
+                .build();
     }
 
     //상품 하나 조회
@@ -143,10 +185,38 @@ public class MarketService {
         }
     }
 
-    //point 빼기 (points 목록은 안 할래..)
+    //point 빼기 
     public  void updatePoint(String uid, int point){
         UserDTO userDTO = modelMapper.map(userRepository.findById(uid), UserDTO.class);
-        userDTO.setTotalPoint(userDTO.getTotalPoint()- point);
+        userDTO.setTotalPoint(userDTO.getTotalPoint()+ point);
         userRepository.save(modelMapper.map(userDTO, User.class));
+    }
+
+    
+    //point 목록
+    public  void updatePointList(String uid, int point , int savePoint){
+        PointsDTO pointsDTO = PointsDTO.builder()
+                                        .userId(uid)
+                                        .point(-point)
+                                        .pointDesc("상품 구매 포인트 사용")
+                                        .build();
+        pointsRepository.save(modelMapper.map(pointsDTO, Points.class));
+
+        PointsDTO savepointsDTO = PointsDTO.builder()
+                .userId(uid)
+                .point(savePoint)
+                .pointDesc("상품 구매 포인트 적립")
+                .build();
+        pointsRepository.save(modelMapper.map(savepointsDTO, Points.class));
+    }
+
+    public  void updateOnlyPointPlus(String uid,  int savePoint){
+
+        PointsDTO savepointsDTO = PointsDTO.builder()
+                .userId(uid)
+                .point(savePoint)
+                .pointDesc("상품 구매 포인트 적립")
+                .build();
+        pointsRepository.save(modelMapper.map(savepointsDTO, Points.class));
     }
 }
