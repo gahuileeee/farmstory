@@ -31,7 +31,7 @@
                     <tbody>
                     <tr th:each="product, index:${products}" >
                         <td>
-                            <a th:href="@{/market/view(prodNum=${product.prodNo})}" ><img th:src="@{/uploads/__${product.image1}__}" class="thumb" alt="샘플1"><</a>
+                            <a th:href="@{/market/view(prodNum=${product.prodNo})}" ><img th:src="@{/uploads/__${product.image1}__}" class="thumb" alt="샘플1"></a>
                         </td>
                         <td class="type">[[${cates[index.index].cateName}]]</td>
                         <td class="title"><a th:href="@{/market/view(prodNum=${product.prodNo})}">[[${product.prodName}]]</a></td>
