@@ -37,6 +37,8 @@ public class SecurityConfig {
         httpSecurity.authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/").permitAll()
                 .requestMatchers("/article/**").permitAll()
+                .requestMatchers("/market/list").permitAll()
+                .requestMatchers("/market/**").authenticated()
                 .requestMatchers("/admin/**").permitAll()
                 .requestMatchers("/manager/**").permitAll()
                 .anyRequest().permitAll());
