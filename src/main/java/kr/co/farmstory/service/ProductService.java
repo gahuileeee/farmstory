@@ -1,5 +1,7 @@
 package kr.co.farmstory.service;
 
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
 import kr.co.farmstory.dto.FileDTO;
 import kr.co.farmstory.dto.ProdImageDTO;
 import kr.co.farmstory.dto.ProductsDTO;

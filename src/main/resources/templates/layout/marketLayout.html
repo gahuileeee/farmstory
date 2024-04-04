@@ -10,7 +10,7 @@
 <body>
 <div id="container">
     <header>
-        <a href="../index.html" class="logo"><img th:src="@{/assets/img/logo.png}" alt="로고"/></a>
+        <a th:href="@{/index}" class="logo"><img th:src="@{/assets/img/logo.png}" alt="로고"/></a>
         <p>
             <a href="#">HOME |</a>
             <a href="#">로그인 |</a>
@@ -53,6 +53,7 @@
             등록번호 팜스토리01234 (2013.04.01) / 발행인 : 홍길동<br />
             대표 : 홍길동 / 이메일 : email@mail.mail / 전화 : 01) 234-5678 / 경기도 성남시 잘한다구 신난다동 345<br />
             <em>Copyright(C)홍길동 All rights reserved.</em>
+            <a style="float: right" href="#">[[${appInfo.name}]]-[[${appInfo.version}]]</a>
         </p>
     </footer>
 </div>

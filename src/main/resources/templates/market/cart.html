@@ -203,7 +203,7 @@
                     </div>
                     <!-- 내용 끝 -->
     <form id="buyForm" th:action="@{/market/order}" method="POST">
-        <input type="hidden" name="user" value="A101">
+        <input type="hidden" name="user" th:value="${#authentication.principal.user.uid}">
     </form>
 </article>
 </html>
