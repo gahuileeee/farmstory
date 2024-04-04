@@ -9,7 +9,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class PageResponseDTO {
+public class ArticlePageResponseDTO {
 
     private List<ArticleDTO> dtoList;
     private String cate;
@@ -24,7 +24,7 @@ public class PageResponseDTO {
     private boolean prev, next;
 
     @Builder
-    public PageResponseDTO(PageRequestDTO pageRequestDTO, List<ArticleDTO> dtoList, int total){
+    public ArticlePageResponseDTO(ArticlePageRequestDTO pageRequestDTO, List<ArticleDTO> dtoList, int total){
         this.cate = pageRequestDTO.getCate();
         this.type = pageRequestDTO.getType();
         this.keyword = pageRequestDTO.getKeyword();

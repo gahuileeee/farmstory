@@ -1,10 +1,41 @@
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/layout/articleLayout.html}">
 
+<div id="sub" layout:fragment="content">
+    <script>
+        window.onload = function (){
+            //cateName이 일치하면 li ~~ 이쪽에 class = "on"을 주고싶다.
+           const classOnTarget =  document.getElementById('[[${cateName.cate}]]');
+            classOnTarget.classList.add("on");
+        }
+    </script>
+    <div><img  th:src="@{/assets/img/sub_top_tit5.png}" alt="CROP TALK"></div>
+    <section class="community">
+        <aside>
+            <img th:src="@{/assets/img/sub_aside_cate5_tit.png}" alt="농작물이야기"/>
 
+            <ul class="lnb">
+                <li class="" id="story"><a th:href="@{/croptalk/story(cate='story')}">공지사항</a></li>
+                <li class="" id="grow"><a th:href="@{/croptalk/story(cate='grow')}"></a></li>
+                <li class="" id="school"><a th:href="@{/croptalk/story(cate='school')}">귀농학교</a></li>  <!-- on 추가 -->
+                <li class="" id="school"><a th:href="@{/croptalk/story(cate='school')}">귀농학교</a></li>  <!-- on 추가 -->
+                <li class="" id="school"><a th:href="@{/croptalk/story(cate='school')}">귀농학교</a></li>  <!-- on 추가 -->
+            </ul>
 
-            <section class="list" layout:fragment="content">
+        </aside>
+        <article>
+            <nav>
+                <img th:src="@{/assets/img/__${cateName.cate}__.png}" alt="농작물이야기"/> <!-- ??-->
+                <p>
+                    HOME > 농작물이야기 > <em>[[${cateName.boardName}]]</em> <!-- 완료 -->
+                </p>
+            </nav>
+
+            <!-- 내용 시작 -->
+            <div id="board">
+            <section class="list" >
                 <form action="#" class="search">
                     <select name="searchType">
                         <option value="title">제목</option>
@@ -40,5 +71,12 @@
                 </div>
                 <a th:href="@{/board/write}" class="btn btnWrite">글쓰기</a>
             </section>
+            </div>
+            <!-- 내용 끝 -->
+
         </article>
+    </section>
+
+</div>
+
 </html>

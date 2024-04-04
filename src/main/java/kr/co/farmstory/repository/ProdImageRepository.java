@@ -12,5 +12,5 @@ import java.util.List;
 @Repository
 public interface ProdImageRepository extends JpaRepository<ProdImage, Integer> {
 
-
+    List<ProdImage> findBypNo(int pNo);
 }
