@@ -195,6 +195,7 @@ footer > p {
 #productRegister table tr > td:first-child {
     width: 12%;
 }
+
 #productRegister table tr > td > label {
     margin-right: 16px;
 }
@@ -242,5 +243,107 @@ footer > p {
 #orderList .paging > .on {
     font-weight: bold;
     text-decoration: underline;
+}
+
+/* orderDetail */
+#orderDetail {}
+#orderDetail > article {}
+#orderDetail > article > table {}
+#orderDetail table {}
+#orderDetail table .thumb {
+    width: 60px;
+}
+#orderDetail > article > p {
+    padding: 10px;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+#orderDetail .productDelete {
+    float: left;
+}
+
+#orderDetail .productRegister {
+    float: right;
+}
+#orderDetail .productRegister {
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+}
+
+#orderDetail .productRegister:hover {
+    background-color: #ccc;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+#orderDetail .paging {
+    text-align: center;
+}
+
+#orderDetail .paging > .on {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+#orderDetail nav > h3 {
+    font-size: 17px;
+    margin-top: 20px;
+    font-weight: bold;
+    color: #3f3f3f;
+}
+
+
+
+/* userDetail */
+#userDetail {}
+#userDetail > article {}
+
+#userDetail table {}
+#userDetail table tr {}
+#userDetail table tr > td {
+    text-align: left;
+}
+#userDetail table tr > td:first-child {
+    width: 12%;
+}
+
+#userDetail table tr:not(:first-child) > td:first-child {
+    width: auto; /* "addr2", "addr3" 열의 너비를 자동으로 설정 */
+    text-align: left; /* 왼쪽 정렬 적용 */
+}
+
+#userDetail table tr > td > label {
+    margin-right: 16px;
+}
+#userDetail table tr > td > p {
+    margin-bottom: 8px;
+}
+#userDetail table tr > td > p > span {
+    display: block;
+    margin-bottom: 2px;
+}
+
+#userDetail form > p {
+    margin: 12px 0;
+    text-align: center;
+}
+#userDetail form .btnCancel {
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+}
+
+#userDetail form input[type=submit] {
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+}
+
+#userDetail form input[type=submit]:hover {
+    background-color: #ccc;
+    border: 1px solid #ccc;
+    cursor: pointer;
 }
 
