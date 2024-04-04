@@ -21,18 +21,18 @@
 
     <insert id="insertUser">
         insert into user set
-        uid=#{uid},
-        pass=#{pass},
-        name=#{name},
-        nick=#{nick},
-        email=#{email},
-        hp=#{hp},
-        zip=#{zip},
-        addr1=#{addr1},
-        addr2=#{addr2},
-        regip=#{regip},
-        regDate=NOW()
+                        uid=#{uid},
+                        pass=#{pass},
+                        name=#{name},
+                        nick=#{nick},
+                        email=#{email},
+                        hp=#{hp},
+                        zip=#{zip},
+                        addr1=#{addr1},
+                        addr2=#{addr2},
+                        regip=#{regip},
+                        sms=#{sms},
+                        regDate=NOW()
     </insert>
-
 
 </mapper>

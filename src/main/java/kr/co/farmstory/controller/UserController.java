@@ -24,12 +24,12 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/user/login")
-    public String login(@ModelAttribute("success") String success){
+    public String login(@ModelAttribute("success") String success) {
         return "/user/login";
     }
 
     @GetMapping("/user/terms")
-    public String terms(Model model){
+    public String terms(Model model) {
 
         TermsDTO termsDTO = userService.selectTerms();
         model.addAttribute(termsDTO);
@@ -38,12 +38,12 @@ public class UserController {
     }
 
     @GetMapping("/user/register")
-    public String register(){
+    public String register(@ModelAttribute("sms") String sms) {
         return "/user/register";
     }
 
     @PostMapping("/user/register")
-    public String register(HttpServletRequest req, UserDTO userDTO){
+    public String register(HttpServletRequest req, UserDTO userDTO) {
 
         String regip = req.getRemoteAddr();
         userDTO.setRegip(regip);
@@ -58,8 +58,8 @@ public class UserController {
     @ResponseBody
     @GetMapping("/user/{type}/{value}")
     public ResponseEntity<?> checkUser(HttpSession session,
-                                       @PathVariable("type")  String type,
-                                       @PathVariable("value") String value){
+                                       @PathVariable("type") String type,
+                                       @PathVariable("value") String value) {
 
 
         log.info("type : " + type);
@@ -69,7 +69,7 @@ public class UserController {
         log.info("count : " + count);
 
         // 중복 없으면 이메일 인증코드 발송
-        if(count == 0 && type.equals("email")){
+        if (count == 0 && type.equals("email")) {
             log.info("email : " + value);
             userService.sendEmailCode(session, value);
         }
@@ -85,17 +85,17 @@ public class UserController {
     // 이메일 인증 코드 검사
     @ResponseBody
     @GetMapping("/email/{code}")
-    public ResponseEntity<?> checkEmail(HttpSession session, @PathVariable("code")  String code){
+    public ResponseEntity<?> checkEmail(HttpSession session, @PathVariable("code") String code) {
 
         String sessionCode = (String) session.getAttribute("code");
 
-        if(sessionCode.equals(code)){
+        if (sessionCode.equals(code)) {
             // Json 생성
             Map<String, Object> resultMap = new HashMap<>();
             resultMap.put("result", true);
 
             return ResponseEntity.ok().body(resultMap);
-        }else{
+        } else {
             // Json 생성
             Map<String, Object> resultMap = new HashMap<>();
             resultMap.put("result", false);
@@ -103,4 +103,5 @@ public class UserController {
             return ResponseEntity.ok().body(resultMap);
         }
     }
+
 }

@@ -2,6 +2,8 @@ package kr.co.farmstory.dto;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -22,10 +24,11 @@ public class UserDTO {
     private String addr2;
     private String regip;
     private String sms;
-    private String regDate;
-    private String leaveDate;
     private String provider;
     private String grade;
+
+    private LocalDateTime regDate;
+    private LocalDateTime leaveDate;
     private int totalPoint;
 
 }
