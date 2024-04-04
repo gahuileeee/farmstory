@@ -12,10 +12,10 @@
 
                 <!-- 내용 시작 -->
                 <p class="sort">
-                    <a href="#" class="on">전체(10) |</a>
-                    <a href="#">과일 |</a>
-                    <a href="#">야채 |</a>
-                    <a href="#">곡류</a>
+                    <a href="#" class="on">전체([[${products.total}]]) |</a>
+                    <a th:href="@{/market/list(cate = 1)}">과일 |</a>
+                    <a th:href="@{/market/list(cate = 2)}">야채 |</a>
+                    <a th:href="@{/market/list(cate = 3)}">곡류</a>
                 </p>
                 <table border="0">
                     <thead>
@@ -29,11 +29,14 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="product, index:${products}" >
+                    <tr th:if="${products.dtoList.size()<1}">
+                        <td colspan="6">등록된 상품이 없습니다</td>
+                    </tr>
+                    <tr th:each="product, index:${products.dtoList}" >
                         <td>
-                            <a th:href="@{/market/view(prodNum=${product.prodNo})}" ><img th:src="@{/uploads/__${product.image1}__}" class="thumb" alt="샘플1"></a>
+                            <a th:href="@{/market/view(prodNum=${product.prodNo})}" ><img th:src="@{/uploads/__${product.image1}__}" class="thumb" alt="샘플1" style="width: 100px"></a>
                         </td>
-                        <td class="type">[[${cates[index.index].cateName}]]</td>
+                        <td class="type">[[${product.cateName}]]</td>
                         <td class="title"><a th:href="@{/market/view(prodNum=${product.prodNo})}">[[${product.prodName}]]</a></td>
                         <td class="discount">[[${product.prodDiscount}]] %</td>
                         <td class="point">[[${product.prodPrice * 0.01}]]</td>
@@ -50,13 +53,20 @@
                 </table>
 
                 <p class="paging"  style="text-align: center">
-                    <a href="#"><</a>
-                    <a href="#" class="on">[1]</a>
-                    <a href="#">[2]</a>
-                    <a href="#">[3]</a>
-                    <a href="#">[4]</a>
-                    <a href="#">[5]</a>
-                    <a href="#">></a>
+                        <th:block th:if="${products.prev}" class="page-item ">
+                            <a  class="page-link" style="color: black" th:href="@{/market/list(pg=${products.start -1})}">&#60;</a>
+                        </th:block>
+                        <th:block th:each="num:${#numbers.sequence(products.start, products.end)}" class="page-item ">
+                            <th:block th:if="${num == products.getPg()}">
+                                <a class="page-link" style="color: black; background: #b9b9b9" th:href="@{/market/list(pg=${num})}">[[${num}]]</a>
+                            </th:block>
+                            <th:block th:if="${num != products.getPg()}">
+                                <a class="page-link " style="color: black"  th:href="@{/market/list( pg=${num})}">[[${num}]]</a>
+                            </th:block>
+                        </th:block>
+                        <th:block th:if="${products.next}" class="page-item">
+                            <a class="page-link"   style="color: black" th:href="@{/market/list(pg=${products.end+1})}">&#62;</a>
+                        </th:block>
                 </p>
 
                 <!-- 내용 끝 -->

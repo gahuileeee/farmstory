@@ -27,4 +27,6 @@ public class ProductPageRequestDTO {
     public Pageable getPageable(String sort){
         return PageRequest.of(this.pg - 1, this.size, Sort.by(sort).descending());
     }
+
+    private String cate;
 }
