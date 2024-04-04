@@ -41,13 +41,13 @@ public class ProductController {
     }
 
     @PutMapping("admin/product/{selectedProdList}")
-    public ResponseEntity<?> deleteProd(@RequestBody Map<String, List<Integer>> map){
+    public ResponseEntity<?> deleteProd(@RequestBody Map<String, List<Integer>> map, HttpServletRequest req){
 
         List<Integer> proNoList = map.get("prodNo");
         Map<String, String> response = new HashMap<>();
         try {
             for (Integer prodNo : proNoList){
-                productService.deleteProducts(prodNo);
+                productService.deleteProducts(req, prodNo);
                 log.info("deleteProd..!"+prodNo);
                 response.put("message", "상품이 성공적으로 삭제되었습니다.");
             }
