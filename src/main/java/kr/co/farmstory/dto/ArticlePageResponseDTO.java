@@ -24,5 +24,4 @@ public class ArticlePageResponseDTO {
     private boolean prev, next;
 
 
-
 }
