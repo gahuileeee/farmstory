@@ -1,7 +1,61 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/admin/layout/adminLayout.html}">
-<main main="" layout:fragment="content">
+<main layout:fragment="content">
+    <script>
+        window.onload = function (){
+            const allCheckbox = document.querySelector('input[name="all"]');
+            const selectedProdCheckboxes = document.querySelectorAll('input[name="selectedProd"]');
+
+            allCheckbox.addEventListener('click', function () {
+                selectedProdCheckboxes.forEach(function (checkbox) {
+                    checkbox.checked = allCheckbox.checked;
+                });
+            });
+
+            const productDelete = document.getElementById('productDelete');
+
+            productDelete.onclick = function (e){
+                e.preventDefault();
+                var selectedProd = document.getElementsByName('selectedProd');
+                var selectedProdList = [];
+                var rowsToDelete = [];
+
+                selectedProd.forEach(function (checkbox) {
+                    if (checkbox.checked){
+                        var prodNo = checkbox.parentElement.nextElementSibling.nextElementSibling.textContent;
+                        selectedProdList.push(prodNo);
+                        var row = checkbox.closest('tr');
+                        rowsToDelete.push(row);
+
+                    }
+                });
+
+                console.log(selectedProdList);
+                var result = confirm("제품 삭제를 진행하시겠습니까?");
+                if (result){
+                    const jsonDate = {
+                        prodNo : selectedProdList
+                    };
+                    fetchPut(`/farmstory/admin/product/delete`, jsonDate)
+                        .then(data => {
+                            console.log(data); // 서버로부터 받은 데이터 출력 또는 처리
+                            alert("삭제되었습니다.");
+                            rowsToDelete.forEach(function (row) {
+                                row.remove();
+                                if (allCheckbox.checked){
+                                    allCheckbox.checked = false;
+                                }
+                            });
+                        })
+                        .catch(error => {
+                            console.error(error); // 오류 처리
+                        });
+                }
+
+            }
+        }
+    </script>
         <aside>
             <h3>주요기능</h3>
             <ul>
@@ -46,35 +100,38 @@
                         <th>재고</th>
                         <th>등록일</th>
                     </tr>
-                    <tr th:each="products, index:${productPageResponseDTO.dtoList}">
-                        <td><input type="checkbox" name=""/></td>
-                        <td><img th:src="@{/admin/images/sample_item1.jpg}" class="thumb" alt="샘플1"></td>
+                    <tr th:each="products, index:${productPageResponseDTO.dtoList}" id="product">
+                        <td><input type="checkbox" name="selectedProd"/></td>
+                        <td><img th:src="@{/uploads/__${products.image1}__}" class="thumb" alt="샘플1"></td>
                         <td>[[${products.prodNo}]]</td>
                         <td>[[${products.prodName}]]</td>
                         <td>[[${products.cateNo}]]</td>
                         <td>[[${products.prodPrice}]]원</td>
                         <td>[[${products.prodStock}]]</td>
-                        <td>[[${products.RegProdDate}]]</td>
+                        <td th:text="${#temporals.format(products.RegProdDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
                     </tr>
                 </table>
 
                 <p>
-                    <a href="#" class="productDelete">선택삭제</a>
+                    <a href="#" id="productDelete">선택삭제</a>
                     <a th:href="@{/admin/product/register}" class="productRegister">상품등록</a>
                 </p>
 
                 <p class="paging">
-                    <a href="#"><</a>
-                    <a href="#" class="on">[1]</a>
-                    <a href="#">[2]</a>
-                    <a href="#">[3]</a>
-                    <a href="#">[4]</a>
-                    <a href="#">[5]</a>
-                    <a href="#">></a>
+                    <span th:if="${productPageResponseDTO.prev}" >
+                        <a th:href="@{/admin/product/list(pg=${productPageResponseDTO.start - 1})}"><</a>
+                    </span>
+                    <span th:each="num:${#numbers.sequence(productPageResponseDTO.start, productPageResponseDTO.end)}">
+                         <a th:href="@{/admin/product/list(pg=${num})}" class="on">[ [[${num}]] ]</a>
+                    </span>
+                    <span th:if="${productPageResponseDTO.next}">
+                         <a th:href="@{/admin/product/list(pg=${productPageResponseDTO.end + 1})}">></a>
+                    </span>
                 </p>
 
             </article>
 
         </section>
 </main>
+
 </html>

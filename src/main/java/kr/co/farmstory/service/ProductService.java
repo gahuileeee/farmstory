@@ -1,5 +1,7 @@
 package kr.co.farmstory.service;
 
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
 import kr.co.farmstory.dto.FileDTO;
 import kr.co.farmstory.dto.ProdImageDTO;
 import kr.co.farmstory.dto.ProductsDTO;
@@ -101,6 +103,7 @@ public class ProductService {
 
         if (optProducts.isPresent()){
             productsRepository.deleteById(prodNo);
+            //deleteFile(prodNo);
             log.info("deleteProdAtService..2:"+prodNo);
             return ResponseEntity
                     .ok()
@@ -158,6 +161,31 @@ public class ProductService {
 
         return imageDTOS;
     }
+/*
+    public void deleteFile(int pNo) {
 
+        Optional<ProdImage> optProdImage = prodImageRepository.findById(pNo);
+
+        if(optProdImage.isPresent()){
+            ProdImageDTO prodImageDTO = optProdImageDTO.get();
+        }
+
+        prodImageRepository.deleteById(pNo);
+
+        // 업로드 디렉토리 파일 삭제
+        ServletContext ctx = req.getServletContext();
+        String uploadPath = ctx.getRealPath("/uploads");
+
+        // 파일 객체 생성
+        File file = new File(uploadPath + File.separator + prodImageDTO.getSName());
+
+        // 파일 삭제
+        if(file.exists()) {
+            file.delete();
+        }
+
+
+    }
+*/
 
 }
