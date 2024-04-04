@@ -29,37 +29,36 @@
             }
         }
     </script>
-        <aside>
-            <h3>주요기능</h3>
-            <ul>
-                <li>
-                    <span>상품관리</span>
-                    <ol>
-                        <li><a th:href="@{/admin/product/list}">상품목록</a></li>
-                        <li><a th:href="@{/admin/product/register}">상품등록</a></li>
-                    </ol>
-                </li>
-                <li>
-                    <span>주문관리</span>
-                    <ol>
-                        <li><a th:href="@{/admin/order/list}">주문목록</a></li>
-                        <li><a th:href="@{/admin/order/delivery}">배송관리</a></li>
-                    </ol>
-                </li>
-                <li>
-                    <span>회원관리</span>
-                    <ol>
-                        <li><a th:href="@{/admin/user/list}">회원목록</a></li>
-                        <li><a th:href="@{/admin/user/register}">회원등록</a></li>
-                    </ol>
-                </li>
-            </ul>
-        </aside>
-        <section id="productRegister">
-            <nav>
-                <h3>상품등록</h3>
-            </nav>
-
+    <aside>
+        <h3>주요기능</h3>
+        <ul>
+            <li>
+                <span>상품관리</span>
+                <ol>
+                    <li><a th:href="@{/admin/product/list}">상품목록</a></li>
+                    <li><a th:href="@{/admin/product/register}">상품등록</a></li>
+                </ol>
+            </li>
+            <li>
+                <span>주문관리</span>
+                <ol>
+                    <li><a th:href="@{/admin/order/list}">주문목록</a></li>
+                    <li><a th:href="@{/admin/order/delivery}">배송관리</a></li>
+                </ol>
+            </li>
+            <li>
+                <span>회원관리</span>
+                <ol>
+                    <li><a th:href="@{/admin/user/list}">회원목록</a></li>
+                    <li><a th:href="@{/admin/user/register}">회원등록</a></li>
+                </ol>
+            </li>
+        </ul>
+    </aside>
+    <section id="productRegister">
+        <nav>
+            <h3>상품등록</h3>
+        </nav>
             <article>
                 <form th:action="@{/product/register}" method="post" name="productRegisterForm" enctype="multipart/form-data">
                     <table border="0">
@@ -138,14 +137,13 @@
                             </td>
                         </tr>
                     </table>
-
-                    <p>
-                        <a th:href="@{/admin/product/list}" class="btnCancel">취소</a>
-                        <input type="submit" id="btnSubmit" value="상품등록"/>
-                    </p>
-                </form>
-            </article>
-        </section>
+                <p>
+                    <a th:href="@{/admin/product/list}" class="btnCancel">취소</a>
+                    <input type="submit" id="btnSubmit" value="상품등록"/>
+                </p>
+            </form>
+        </article>
+    </section>
 </main>
 </div>
 </html>

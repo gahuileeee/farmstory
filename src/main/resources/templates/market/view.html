@@ -76,11 +76,11 @@
         <table border="0">
             <tr>
                 <td>상품명</td>
-                <td>딸기 500g</td>
+                <td>[[${product.prodName}]]</td>
             </tr>
             <tr>
                 <td>상품코드</td>
-                <td>01</td>
+                <td>[[${product.prodNo}]]</td>
             </tr>
             <tr>
                 <td>배송비</td>
@@ -101,7 +101,7 @@
                 <td>구매수량</td>
                 <td>
                         <input type="hidden" id="prodNo" th:value="${product.getProdNo()}">
-                        <input type="hidden" id="userId" value="A101">
+                        <input type="hidden" id="userId" th:value="${#authentication.principal.user.uid}">
                         <input type="number" name="count" id="count" min="1" value="1">
                 </td>
             </tr>
@@ -115,12 +115,12 @@
             <a href="/" id="btnOrder" class="btn btnOrder">바로구매</a>
 
             <form th:action="@{/market/cart}" method="get">
-                <input type="hidden" id="user" name="user" value="A101">
+                <input type="hidden" id="user" name="user" th:value="${#authentication.principal.user.uid}">
                 <button type="submit" id="btnCartView"></button>
             </form>
 
             <form th:action="@{/market/buyDirect}" method="get">
-                <input type="hidden"  name="user" value="A101">
+                <input type="hidden"  name="user" th:value="${#authentication.principal.user.uid}">
                 <input type="hidden"  id="prodNumber" name="prodNumber" value="">
                 <input type="hidden"  id="countNo"  name="countNo" value="">
                 <button type="submit" id="buyDirect"></button>

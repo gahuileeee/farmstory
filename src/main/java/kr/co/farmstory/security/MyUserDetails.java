@@ -28,6 +28,7 @@ public class MyUserDetails implements UserDetails, OAuth2User {
         return null;
     }
 
+    
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
