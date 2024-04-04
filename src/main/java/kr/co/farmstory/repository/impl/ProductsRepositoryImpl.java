@@ -2,15 +2,10 @@ package kr.co.farmstory.repository.impl;
 
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import kr.co.farmstory.dto.PageRequestDTO;
 import kr.co.farmstory.dto.ProductPageRequestDTO;
-import kr.co.farmstory.entity.Products;
 import kr.co.farmstory.entity.QCategories;
 import kr.co.farmstory.entity.QProducts;
-import kr.co.farmstory.entity.QUser;
 import kr.co.farmstory.repository.custum.ProductsRepositoryCustom;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
