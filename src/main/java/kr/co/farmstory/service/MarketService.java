@@ -1,15 +1,20 @@
 package kr.co.farmstory.service;
 
-import kr.co.farmstory.dto.*;
-import kr.co.farmstory.entity.*;
-import kr.co.farmstory.repository.*;
+import kr.co.farmstory.dto.CartsDTO;
+import kr.co.farmstory.dto.CategoriesDTO;
+import kr.co.farmstory.dto.PointsDTO;
+import kr.co.farmstory.dto.ProductsDTO;
+import kr.co.farmstory.entity.Carts;
+import kr.co.farmstory.entity.Products;
+import kr.co.farmstory.repository.CartsRepository;
+import kr.co.farmstory.repository.CategoriesRepository;
+import kr.co.farmstory.repository.ProductsRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.beans.Transient;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,10 +27,6 @@ public class MarketService {
     private ProductsRepository productsRepository;
     private CategoriesRepository categoriesRepository;
     private CartsRepository cartsRepository;
-    private UserRepository userRepository;
-    private PointsRepository pointsRepository;
-    private OrdersRepository ordersRepository;
-    private OrdersItemsRepository ordersItemsRepository;
     private ModelMapper modelMapper;
 
     //상품들 조회
@@ -45,14 +46,11 @@ public class MarketService {
     public List<CategoriesDTO> selectCategoriesByProduct( List<ProductsDTO> products ){
         List<CategoriesDTO> lists =new ArrayList<>();
             for(ProductsDTO product : products){
+                log.info(product.getCateNo() +"!!");
+                log.info(categoriesRepository.findById(1)+"!!");
                 lists.add( modelMapper.map(categoriesRepository.findById(product.getCateNo()), CategoriesDTO.class));
             }
             return lists;
-    }
-
-    //카테고리 하나 조회
-    public CategoriesDTO selectCategoryByProduct(ProductsDTO productsDTO){
-     return modelMapper.map(categoriesRepository.findById(productsDTO.getCateNo()),CategoriesDTO.class);
     }
 
     //장바구니 넣기
@@ -97,56 +95,13 @@ public class MarketService {
         return ResponseEntity.ok().body(map);
     }
 
-    //결제창에서 장바구니 조회
-    public  List<CartsDTO> selectCartsByCartNo(List<Integer> lists){
-        List<CartsDTO> cartsList = new ArrayList<>();
-        for(int a : lists){
-            cartsList.add(modelMapper.map(cartsRepository.findById(a) , CartsDTO.class));
+    //결제창에서 상품들 조회
+    public List<ProductsDTO> selectProductsByProdNum(List<Integer> prodNo){
+        List<ProductsDTO> lists = new ArrayList<>();
+        for(int no : prodNo){
+            Products product = productsRepository.findById(no).get();
+            lists.add(modelMapper.map(product, ProductsDTO.class));
         }
-        return  cartsList;
-    }
-    //사용자 조회
-    public UserDTO selectUserByUid (String uid){
-        return modelMapper.map(userRepository.findById(uid), UserDTO.class);
-    }
-    //포인트 조회
-    public List<PointsDTO> selectPointsByUid(String uid){
-        return pointsRepository.findAllByUserId(uid).stream().map(entity ->
-                modelMapper.map(entity, PointsDTO.class)).toList();
-    }
-
-
-    //주문 넣기
-    @Transient
-    public int insertOrers(OrdersDTO ordersDTO){
-        Orders ordersDTO1 = ordersRepository.save(modelMapper.map(ordersDTO, Orders.class));
-        return ordersDTO1.getOrderNo();
-    }
-
-    //orderItems넣기
-    public void insertOrderitems(List<Integer> prods , List<Integer> counts, int orderNo){
-        for(int i=0 ; i<prods.size(); i++){
-            Products products = productsRepository.findById(prods.get(i)).get();
-            OrderItems orderItems = OrderItems
-                    .builder()
-                    .orderNo(orderNo)
-                    .prodNo(prods.get(i))
-                    .itemPrice(products.getProdPrice())
-                    .itemCount(counts.get(i))
-                    .build();
-
-            ordersItemsRepository.save(orderItems);
-            //재고량 빼기
-            ProductsDTO productsDTO = modelMapper.map(products, ProductsDTO.class);
-            productsDTO.setProdStock(productsDTO.getProdStock() - counts.get(i));
-            productsRepository.save(modelMapper.map(productsDTO, Products.class));
-        }
-    }
-
-    //point 빼기 (points 목록은 안 할래..)
-    public  void updatePoint(String uid, int point){
-        UserDTO userDTO = modelMapper.map(userRepository.findById(uid), UserDTO.class);
-        userDTO.setTotalPoint(userDTO.getTotalPoint()- point);
-        userRepository.save(modelMapper.map(userDTO, User.class));
+        return lists;
     }
 }
