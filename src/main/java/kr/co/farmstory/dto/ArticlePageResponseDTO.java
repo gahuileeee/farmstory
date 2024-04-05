@@ -23,6 +23,7 @@ public class ArticlePageResponseDTO {
     private int start, end;
     private boolean prev, next;
 
+
     @Builder
     public ArticlePageResponseDTO(ArticlePageRequestDTO articlePageRequestDTO, List<ArticleDTO> dtoList, int total){
         this.pg = articlePageRequestDTO.getPg();
@@ -39,6 +40,7 @@ public class ArticlePageResponseDTO {
         this.prev = this.start > 1;
         this.next = total > this.end * this.size;
     }
+
 
 
 }
