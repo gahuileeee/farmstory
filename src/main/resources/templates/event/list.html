@@ -11,25 +11,21 @@
             classOnTarget.classList.add("on");
         }
     </script>
-    <div><img  th:src="@{/assets/img/sub_top_tit5.png}" alt="COMMUNITY"></div>
-    <section class="community">
+    <div><img  th:src="@{/assets/img/sub_top_tit4.png}" alt="EVENT"></div>
+    <section class="event">
         <aside>
-            <img th:src="@{/assets/img/sub_aside_cate5_tit.png}" alt="커뮤니티"/>
+            <img th:src="@{/assets/img/sub_aside_cate4_tit.png}" alt="이벤트"/>
 
             <ul class="lnb">
-                <li class="" id="notice"><a th:href="@{/community/list(cate='notice')}">공지사항</a></li>
-                <li class="" id="menu"><a th:href="@{/community/list(cate='menu')}">오늘의식단</a></li>
-                <li class="" id="chef"><a th:href="@{/community/list(cate='chef')}">나도요리사</a></li>  <!-- on 추가 -->
-                <li class="" id="qna"><a th:href="@{/community/list(cate='qna')}">1:1고객문의</a></li>  <!-- on 추가 -->
-                <li class="" id="faq"><a th:href="@{/community/list(cate='faq')}">자주묻는질문</a></li>  <!-- on 추가 -->
+                <li class="" id="event"><a th:href="@{/event/list(cate='event')}">농작물이야기</a></li>
             </ul>
 
         </aside>
         <article>
             <nav>
-                <img th:src="@{/assets/img/__${cateName.cate}__.png}" alt="커뮤니티"/> <!-- ??-->
+                <img th:src="@{/assets/img/__${cateName.cate}__.png}" alt="이벤트"/> <!-- ??-->
                 <p>
-                    HOME > 커뮤니티 > <em>[[${cateName.boardName}]]</em> <!-- 완료 -->
+                    HOME > 이벤트 > <em>[[${cateName.boardName}]]</em> <!-- 완료 -->
                 </p>
             </nav>
 
@@ -69,7 +65,7 @@
                     <a href="./list.do?pg=${i}" class="num ${currentPage == i?'current':'off'}">${i}</a>
                     <a href="./list.do?pg=${pageGroupEnd + 1}" class="next">다음</a>
                 </div>
-                <a th:href="@{'/community/write/' + ${cateName.cate}}" class="btn btnWrite">글쓰기</a>
+                <a th:href="@{'/event/write/' + ${cateName.cate}}" class="btn btnWrite">글쓰기</a>
             </section>
             </div>
             <!-- 내용 끝 -->
