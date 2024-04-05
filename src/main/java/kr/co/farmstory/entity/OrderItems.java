@@ -9,7 +9,7 @@ import lombok.*;
 @ToString
 @Builder
 @Entity
-@Table(name="orderItems")
+@Table(name="orderitems")
 
 public class OrderItems {
     @Id
