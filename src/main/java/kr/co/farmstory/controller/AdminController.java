@@ -20,7 +20,20 @@ public class AdminController {
     private final AdminService adminService;
 
     @GetMapping("/admin/index")
-    public String index(){
+    public String index(Model model, ProductPageRequestDTO productPageRequestDTO, UserPageRequestDTO userPageRequestDTO){
+
+        ProductPageResponseDTO productPageResponseDTO = null;
+        productPageResponseDTO = adminService.selectProductsForAdmin(productPageRequestDTO);
+
+        log.info("here....1 : "+productPageResponseDTO);
+        model.addAttribute(productPageResponseDTO);
+
+        UserPageResponseDTO userPageResponseDTO = null;
+        userPageResponseDTO = adminService.selectsUserForAdmin(userPageRequestDTO);
+        log.info("here....2 : "+userPageResponseDTO);
+
+        model.addAttribute(userPageResponseDTO);
+
         return "/admin/index";
     }
 

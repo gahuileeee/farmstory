@@ -1,9 +1,11 @@
 package kr.co.farmstory.service;
 
+import com.querydsl.core.Tuple;
 import kr.co.farmstory.dto.*;
 import kr.co.farmstory.dto.ProductPageResponseDTO;
 import kr.co.farmstory.entity.Products;
 import kr.co.farmstory.entity.User;
+import kr.co.farmstory.repository.CategoriesRepository;
 import kr.co.farmstory.repository.ProductsRepository;
 import kr.co.farmstory.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,16 +26,22 @@ import java.util.Optional;
 public class AdminService {
 
     private final ProductsRepository productsRepository;
+    private final CategoriesRepository categoriesRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
-    public ProductPageResponseDTO selectProductsForAdmin(ProductPageRequestDTO productPageRequestDTO) {
-        Pageable pageable = productPageRequestDTO.getPageable("prodNo");
-        Page<Products> pageProducts = productsRepository.findAll(pageable);
+    public ProductPageResponseDTO selectProductsForAdmin(ProductPageRequestDTO pageRequestDTO) {
+       /* Pageable pageable = productPageRequestDTO.getPageable("prodNo");
+        Page<Tuple> pageProducts = productsRepository.selectProducts(productPageRequestDTO , pageable);
         log.info("selectAllProd...:" + pageProducts);
 
         List<ProductsDTO> dtoList = pageProducts.getContent().stream()
-                .map(entity -> modelMapper.map(entity, ProductsDTO.class))
+                .map(tuple -> {
+                    Products products = tuple.get(0 ,Products.class);
+                    String cateName = tuple.get(1, String.class);
+                    products.setCateName(cateName);
+                    return modelMapper.map(products, ProductsDTO.class);
+                })
                 .toList();
         log.info("selectAllProd...2:" + dtoList);
 
@@ -44,10 +52,31 @@ public class AdminService {
                 .dtoList(dtoList)
                 .total(total)
                 .build();
+        */
+
+        Pageable pageable = pageRequestDTO.getPageable("no");
+
+        Page<Tuple> pageArticle = productsRepository.selectProducts(pageRequestDTO , pageable);
+        log.info(pageArticle.getContent().toString()+"!!");
+        List<ProductsDTO> dtoList = pageArticle.getContent().stream()
+                .map(tuple -> {
+                    Products products = tuple.get(0 ,Products.class);
+                    String cateName = tuple.get(1, String.class);
+                    products.setCateName(cateName);
+                    return modelMapper.map(products, ProductsDTO.class);
+                })
+                .toList();
+        log.info(dtoList+" dto! !!");
+        int total = (int) pageArticle.getTotalElements();
+        return ProductPageResponseDTO.builder()
+                .productPageRequestDTO(pageRequestDTO)
+                .dtoList(dtoList)
+                .total(total)
+                .build();
+
     }
 
     public UserPageResponseDTO selectsUserForAdmin(UserPageRequestDTO userPageRequestDTO){
-        //String sort = "regDate";
         Pageable pageable = userPageRequestDTO.getPageable();
         Page<User> pageUsers = userRepository.findAll(pageable);
         log.info("selectUsers....1: "+ pageUsers);

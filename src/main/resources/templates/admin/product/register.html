@@ -12,10 +12,12 @@
             // 입력값이 숫자인지 확인
             if (!isNaN(priceInput) && priceInput !== "") {
                 var price = parseFloat(priceInput);
-                var point = price * 0.01; // 가격의 1% 계산
+                var point = price * 0.01;
+                // 가격의 1% 계산
                 pointInput.value = point.toFixed(0);
             } else {
-                pointInput.value = ""; // 가격이 숫자가 아니거나 비어 있으면 포인트 초기화
+                pointInput.value = "";
+                // 가격이 숫자가 아니거나 비어 있으면 포인트 초기화
             }
         }
 
@@ -23,8 +25,11 @@
 
             const btnSubmit = document.getElementById('btnSubmit');
 
+
             btnSubmit.onclick = function (e){
+
                 e.preventDefault();
+
                 document.productRegisterForm.submit();
             }
         }
