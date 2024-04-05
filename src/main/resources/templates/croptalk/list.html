@@ -17,9 +17,9 @@
             <img th:src="@{/assets/img/sub_aside_cate3_tit.png}" alt="농작물이야기"/>
 
             <ul class="lnb">
-                <li class=""  id="story"><a th:href="@{/croptalk/story(cate='story')}">농작물이야기</a></li>
-                <li   class="" id="grow"><a th:href="@{/croptalk/story(cate='grow')}">텃밭가꾸기</a></li>
-                <li  class=""  id="school"><a th:href="@{/croptalk/story(cate='school')}">귀농학교</a></li>  <!-- on 추가 -->
+                <li class="" id="story"><a th:href="@{/croptalk/list(cate='story')}">농작물이야기</a></li>
+                <li class="" id="grow"><a th:href="@{/croptalk/list(cate='grow')}">텃밭가꾸기</a></li>
+                <li class="" id="school"><a th:href="@{/croptalk/list(cate='school')}">귀농학교</a></li>  <!-- on 추가 -->
             </ul>
 
         </aside>
@@ -67,7 +67,9 @@
                     <a href="./list.do?pg=${i}" class="num ${currentPage == i?'current':'off'}">${i}</a>
                     <a href="./list.do?pg=${pageGroupEnd + 1}" class="next">다음</a>
                 </div>
-                <a th:href="@{/board/write}" class="btn btnWrite">글쓰기</a>
+                <a th:href="@{'/croptalk/write/' + ${cateName.cate}}" class="btn btnWrite">글쓰기</a>
+
+
             </section>
             </div>
             <!-- 내용 끝 -->

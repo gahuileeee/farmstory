@@ -24,12 +24,9 @@ public class ArticlePageResponseDTO {
     private boolean prev, next;
 
     @Builder
-    public ArticlePageResponseDTO(ArticlePageRequestDTO pageRequestDTO, List<ArticleDTO> dtoList, int total){
-        this.cate = pageRequestDTO.getCate();
-        this.type = pageRequestDTO.getType();
-        this.keyword = pageRequestDTO.getKeyword();
-        this.pg = pageRequestDTO.getPg();
-        this.size = pageRequestDTO.getSize();
+    public ArticlePageResponseDTO(ArticlePageRequestDTO articlePageRequestDTO, List<ArticleDTO> dtoList, int total){
+        this.pg = articlePageRequestDTO.getPg();
+        this.size = articlePageRequestDTO.getSize();
         this.total = total;
         this.dtoList = dtoList;
 
@@ -42,7 +39,6 @@ public class ArticlePageResponseDTO {
         this.prev = this.start > 1;
         this.next = total > this.end * this.size;
     }
-
 
 
 }
