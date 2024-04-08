@@ -27,6 +27,7 @@
                         nick=#{nick},
                         email=#{email},
                         hp=#{hp},
+                        role=#{role},
                         zip=#{zip},
                         addr1=#{addr1},
                         addr2=#{addr2},

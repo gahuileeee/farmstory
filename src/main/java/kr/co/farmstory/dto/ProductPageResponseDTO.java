@@ -11,6 +11,9 @@ import java.util.List;
 @ToString
 public class ProductPageResponseDTO {
 
+    private String type;
+    private String keyword;
+
     private List<ProductsDTO> dtoList;
     private int pg;
     private int size;
@@ -21,6 +24,9 @@ public class ProductPageResponseDTO {
 
     @Builder
     public ProductPageResponseDTO(ProductPageRequestDTO productPageRequestDTO, List<ProductsDTO> dtoList, int total){
+
+        this.type    = productPageRequestDTO.getType();
+        this.keyword    = productPageRequestDTO.getKeyword();
         this.pg = productPageRequestDTO.getPg();
         this.size = productPageRequestDTO.getSize();
         this.total = total;

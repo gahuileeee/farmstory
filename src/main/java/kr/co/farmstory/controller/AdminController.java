@@ -37,23 +37,7 @@ public class AdminController {
         return "/admin/index";
     }
 
-    @GetMapping("/admin/product/list")
-    public String productlsit(Model model, ProductPageRequestDTO productPageRequestDTO){
-
-        ProductPageResponseDTO pageResponseDTO = null;
-        pageResponseDTO = adminService.selectProductsForAdmin(productPageRequestDTO);
-
-        model.addAttribute(pageResponseDTO);
-        log.info("here....!!!"+pageResponseDTO);
-
-
-        return "/admin/product/list";
-    }
-
-    @GetMapping("/admin/product/register")
-    public String productregister(){
-        return "/admin/product/register";
-    }
+    //productController 로 이동
 
     @GetMapping("/admin/order/list")
     public String orderLsit(){
@@ -74,6 +58,11 @@ public class AdminController {
         model.addAttribute(pageResponseDTO);
         log.info(pageResponseDTO.toString());
         return "/admin/user/list";
+    }
+
+    @GetMapping("/admin/user/register")
+    public String userRegister(){
+        return "/admin/user/register";
     }
 
     @PutMapping("/admin/user/modifyGrade")

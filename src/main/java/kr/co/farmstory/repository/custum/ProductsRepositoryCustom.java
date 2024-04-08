@@ -10,4 +10,6 @@ public interface ProductsRepositoryCustom {
     public Page<Tuple> selectProductsbyCate(ProductPageRequestDTO pageRequestDTO, Pageable pageable);
 
     public Page<Tuple> selectProducts(ProductPageRequestDTO pageRequestDTO, Pageable pageable);
+
+    public Page<Tuple> searchProducts(ProductPageRequestDTO productPageRequestDTO, Pageable pageable);
 }
