@@ -11,11 +11,26 @@
                 </nav>
 
                 <!-- 내용 시작 -->
+                <script>
+                    window.onload=function (e){
+                        const cate = [[${cate}]];
+                        console.log(cate);
+                        if(cate != null){
+                            if(cate == '1'){
+                                document.getElementById('cate1').style.color='black';
+                            }else if(cate == '2'){
+                                document.getElementById('cate2').style.color='black';
+                            }else{
+                                document.getElementById('cate3').style.color='black';
+                            }
+                        }
+                    }
+                </script>
                 <p class="sort">
-                    <a href="#" class="on">전체([[${products.total}]]) |</a>
-                    <a th:href="@{/market/list(cate = 1)}">과일 |</a>
-                    <a th:href="@{/market/list(cate = 2)}">야채 |</a>
-                    <a th:href="@{/market/list(cate = 3)}">곡류</a>
+                    <a  th:href="@{/market/list}" class="on">전체([[${products.total}]]) |</a>
+                    <a th:href="@{/market/list(cate = 1)}" id="cate1">과일 |</a>
+                    <a th:href="@{/market/list(cate = 2)}" id="cate2">야채 |</a>
+                    <a th:href="@{/market/list(cate = 3)}" id="cate3">곡류</a>
                 </p>
                 <table border="0">
                     <thead>
@@ -39,7 +54,7 @@
                         <td class="type">[[${product.cateName}]]</td>
                         <td class="title"><a th:href="@{/market/view(prodNum=${product.prodNo})}">[[${product.prodName}]]</a></td>
                         <td class="discount">[[${product.prodDiscount}]] %</td>
-                        <td class="point">[[${product.prodPrice * 0.01}]]</td>
+                        <td class="point">[[${product.point}]]</td>
                         <td class="price">
                             <strong  th:text="${#numbers.formatDecimal(product.prodPrice * (100 - product.prodDiscount)*0.01 , 1, 0)}">
 
@@ -58,10 +73,10 @@
                         </th:block>
                         <th:block th:each="num:${#numbers.sequence(products.start, products.end)}" class="page-item ">
                             <th:block th:if="${num == products.getPg()}">
-                                <a class="page-link" style="color: black; background: #b9b9b9" th:href="@{/market/list(pg=${num})}">[[${num}]]</a>
+                                <a class="page-link" style="color: black; background: #b9b9b9" th:href="@{/market/list(pg=${num})}">[ [[${num}]] ]</a>
                             </th:block>
                             <th:block th:if="${num != products.getPg()}">
-                                <a class="page-link " style="color: black"  th:href="@{/market/list( pg=${num})}">[[${num}]]</a>
+                                <a class="page-link " style="color: black"  th:href="@{/market/list( pg=${num})}">[ [[${num}]] ]</a>
                             </th:block>
                         </th:block>
                         <th:block th:if="${products.next}" class="page-item">

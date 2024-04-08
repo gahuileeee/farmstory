@@ -61,29 +61,26 @@
 
             <article>
                 <h3>
-                    <a href="#">주문현황</a>
-                    <a href="#" class="more">+ 더보기</a>
+                    <a th:href="@{/admin/order/list}">주문현황</a>
+                    <a th:href="@{/admin/order/list}" class="more">+ 더보기</a>
                 </h3>
                 <table border="0">
                     <tr>
                         <th>주문번호</th>
                         <th>상품명</th>
-                        <th>판매가격</th>
-                        <th>수량</th>
                         <th>배송비</th>
                         <th>합계</th>
                         <th>주문자</th>
                         <th>주문일</th>
                     </tr>
-                    <tr>
-                        <td>1011</td>
-                        <td>사과 500g</td>
-                        <td>4,000원</td>
-                        <td>2개</td>
-                        <td>3,000원</td>
-                        <td>8,000원</td>
-                        <td>홍길동</td>
-                        <td>2023-01-01</td>
+                    <tr th:each="order, index:${lists.dtoList}">
+                        <td>[[${order.orderNo}]]</td>
+                        <td>[[${order.productName}]] 외 [[${order.totalCount}]]개</td>
+                        <td>[[${order.delivery}]] 원</td>
+                        <td>[[${order.totalFee}]] 원</td>
+                        <td>[[${order.orderName}]]</td>
+                        <td>[[${order.orderDate}]]</td>
+                        <td><a th:href="@{/admin/order/detail(orderNo = ${order.orderNo})}">[상세확인]</a></td>
                     </tr>
                 </table>
             </article>

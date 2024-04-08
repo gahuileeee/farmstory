@@ -2,9 +2,11 @@ package kr.co.farmstory.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import kr.co.farmstory.dto.*;
+import kr.co.farmstory.service.AdminOrderService;
 import kr.co.farmstory.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class AdminController {
 
     private final AdminService adminService;
+
+    @Autowired
+    private AdminOrderService adminOrderService;
 
     @GetMapping("/admin/index")
     public String index(Model model, ProductPageRequestDTO productPageRequestDTO, UserPageRequestDTO userPageRequestDTO){
@@ -33,6 +38,8 @@ public class AdminController {
         log.info("here....2 : "+userPageResponseDTO);
 
         model.addAttribute(userPageResponseDTO);
+
+        model.addAttribute("lists", adminOrderService.searchs(productPageRequestDTO));
 
         return "/admin/index";
     }
@@ -55,15 +62,7 @@ public class AdminController {
         return "/admin/product/register";
     }
 
-    @GetMapping("/admin/order/list")
-    public String orderLsit(){
-        return "/admin/order/list";
-    }
-
-    @GetMapping("/admin/order/detail")
-    public String orderDetail(){
-        return "/admin/order/detail";
-    }
+   //order/list -> orderadmin으로 옮김
 
     @GetMapping("/admin/user/list")
     public String userLsit(Model model, UserPageRequestDTO userPageRequestDTO){
