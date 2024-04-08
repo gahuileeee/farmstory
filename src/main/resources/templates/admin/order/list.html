@@ -1,79 +1,47 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/admin/layout/adminLayout.html}">
-<main class="" layout:fragment="content">
-        <aside>
-            <h3>주요기능</h3>
-            <ul>
-                <li>
-                    <span>상품관리</span>
-                    <ol>
-                        <li><a th:href="@{/admin/product/list}">상품목록</a></li>
-                        <li><a th:href="@{/admin/product/register}">상품등록</a></li>
-                    </ol>
-                </li>
-                <li>
-                    <span>주문관리</span>
-                    <ol>
-                        <li><a th:href="@{/admin/order/list}">주문목록</a></li>
-                        <li><a th:href="@{/admin/order/delivery}">배송관리</a></li>
-                    </ol>
-                </li>
-                <li>
-                    <span>회원관리</span>
-                    <ol>
-                        <li><a th:href="@{/admin/user/list}">회원목록</a></li>
-                        <li><a th:href="@{/admin/user/register}">회원등록</a></li>
-                    </ol>
-                </li>
-            </ul>
-        </aside>
-        <section id="orderList">
-            <nav>
-                <h3>주문목록</h3>
-            </nav>
 
-            <article>
+    <section id="orderList" layout:fragment="content">
+        <nav>
+            <h3>주문목록</h3>
+        </nav>
 
                 <table border="0">
                     <tr>
-                        <th><input type="checkbox" name="all"/></th>
                         <th>주문번호</th>
                         <th>상품명</th>
-                        <th>판매가격</th>
-                        <th>수량</th>
                         <th>배송비</th>
                         <th>합계</th>
                         <th>주문자</th>
                         <th>주문일</th>
                         <th>확인</th>
                     </tr>
-                    <tr>
-                        <td><input type="checkbox" name=""/></td>
-                        <td>1001</td>
-                        <td>사과 500g</td>
-                        <td>4,000원</td>
-                        <td>2</td>
-                        <td>3,000원</td>
-                        <td>11,000원</td>
-                        <td>김유신</td>
-                        <td>2023-01-01 13:06:14</td>
-                        <td><a th:href="@{/admin/order/detail}">[상세확인]</a></td>
+                    <tr th:each="order, index:${lists.dtoList}">
+                        <td>[[${order.orderNo}]]</td>
+                        <td>[[${order.productName}]] 외 [[${order.totalCount}]]개</td>
+                        <td>[[${order.delivery}]] 원</td>
+                        <td>[[${order.totalFee}]] 원</td>
+                        <td>[[${order.orderName}]]</td>
+                        <td>[[${order.orderDate}]]</td>
+                        <td><a th:href="@{/admin/order/detail(orderNo = ${order.orderNo})}">[상세확인]</a></td>
                     </tr>
                 </table>
 
-                <p>
-                    <a href="#" class="orderDelete">선택삭제</a>
-                </p>
-
                 <p class="paging">
-                    <a href="#"><</a>
-                    <a href="#" class="on">[1]</a>
-                    <a href="#">[2]</a>
-                    <a href="#">[3]</a>
-                    <a href="#">[4]</a>
-                    <a href="#">[5]</a>
-                    <a href="#">></a>
+
+                        <span th:if="${lists.prev}" class="page-item ">
+                            <a class="page-link" th:href="@{/admin/order/list( pg=${lists.start -1})}">&#60;</a>
+                        </span>
+
+                        <span th:each="num:${#numbers.sequence(lists.start, lists.end)}" class="page-item">
+                            <a class="page-link" th:href="@{/admin/order/list(pg=${num})}">[ [[${num}]] ]</a>
+                        </span>
+
+                        <span th:if="${lists.next}" class="page-item">
+                            <a class="page-link" th:href="@{/admin/order/list( pg=${lists.end+1})}">&#62;</a>
+                        </span>
+
                 </p>
             </article>
         </section>

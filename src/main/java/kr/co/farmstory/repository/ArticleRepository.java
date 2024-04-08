@@ -15,5 +15,8 @@ public interface ArticleRepository extends JpaRepository<Article, Integer>, Arti
     public void deleteArticlesByParent(int no);
 
 
+    List<Article> findTop5ByCate(String cate);
+
+    List<Article> findTop3ByCate(String cate);
 
 }

@@ -59,13 +59,13 @@ public class AdminService {
         Page<Tuple> pageArticle = productsRepository.selectProducts(pageRequestDTO , pageable);
         log.info(pageArticle.getContent().toString()+"!!");
         List<ProductsDTO> dtoList = pageArticle.getContent().stream()
-                .map(tuple -> {
-                    Products products = tuple.get(0 ,Products.class);
-                    String cateName = tuple.get(1, String.class);
-                    products.setCateName(cateName);
-                    return modelMapper.map(products, ProductsDTO.class);
-                })
-                .toList();
+                                                .map(tuple -> {
+                                                    Products products = tuple.get(0 ,Products.class);
+                                                    String cateName = tuple.get(1, String.class);
+                                                    products.setCateName(cateName);
+                                                    return modelMapper.map(products, ProductsDTO.class);
+                                                })
+                                                .toList();
         log.info(dtoList+" dto! !!");
         int total = (int) pageArticle.getTotalElements();
         return ProductPageResponseDTO.builder()
@@ -73,10 +73,34 @@ public class AdminService {
                 .dtoList(dtoList)
                 .total(total)
                 .build();
+    }
 
+    public ProductPageResponseDTO searchProductsForAdmin(ProductPageRequestDTO pageRequestDTO) {
+
+        Pageable pageable = pageRequestDTO.getPageable("no");
+
+        Page<Tuple> pageArticle = productsRepository.searchProducts(pageRequestDTO , pageable);
+        log.info(pageArticle.getContent().toString()+"!!");
+
+        List<ProductsDTO> dtoList = pageArticle.getContent().stream()
+                                                .map(tuple -> {
+                                                    Products products = tuple.get(0 ,Products.class);
+                                                    String cateName = tuple.get(1, String.class);
+                                                    products.setCateName(cateName);
+                                                    return modelMapper.map(products, ProductsDTO.class);
+                                                })
+                                                .toList();
+        log.info(dtoList+" dto! !!");
+        int total = (int) pageArticle.getTotalElements();
+        return ProductPageResponseDTO.builder()
+                .productPageRequestDTO(pageRequestDTO)
+                .dtoList(dtoList)
+                .total(total)
+                .build();
     }
 
     public UserPageResponseDTO selectsUserForAdmin(UserPageRequestDTO userPageRequestDTO){
+
         Pageable pageable = userPageRequestDTO.getPageable();
         Page<User> pageUsers = userRepository.findAll(pageable);
         log.info("selectUsers....1: "+ pageUsers);

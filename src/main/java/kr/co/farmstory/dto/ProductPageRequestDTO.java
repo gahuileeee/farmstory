@@ -23,10 +23,12 @@ public class ProductPageRequestDTO {
     @Builder.Default
     private int size =10;
 
+    /* 검색을 위한 type, keyword 선언 */
+    private String type;
+    private String keyword;
 
     public Pageable getPageable(String sort){
         return PageRequest.of(this.pg - 1, this.size, Sort.by(sort).descending());
     }
 
-    private String cate;
 }

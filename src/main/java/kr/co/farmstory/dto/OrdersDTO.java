@@ -17,4 +17,10 @@ public class OrdersDTO {
     private String orderAddr;
     private int itemDiscount;
     private LocalDateTime orderDate;
+
+    private String receiveName;
+    private String receiveHp;
+    private String memo;
+    private String sendHp;
+    private String sendName;
 }
