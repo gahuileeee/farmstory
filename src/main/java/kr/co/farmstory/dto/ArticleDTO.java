@@ -17,6 +17,7 @@ import java.util.List;
 @Builder
 public class ArticleDTO {
 
+
     private int no;
     private int parent;
     private int comment;
@@ -42,7 +43,8 @@ public class ArticleDTO {
         article.setParent(parent);
         article.setComment(comment);
         article.setCate(cate);
-        article.setTitle(content);
+        article.setTitle(title);
+        article.setContent(content);
         article.setFile(file);
         article.setHit(hit);
         article.setWriter(writer);

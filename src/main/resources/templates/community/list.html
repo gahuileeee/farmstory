@@ -7,7 +7,7 @@
     <script>
         window.onload = function (){
             //cateName이 일치하면 li ~~ 이쪽에 class = "on"을 주고싶다.
-           const classOnTarget =  document.getElementById('[[${cateName.cate}]]');
+            const classOnTarget =  document.getElementById('[[${cateName.cate}]]');
             classOnTarget.classList.add("on");
         }
     </script>
@@ -35,42 +35,46 @@
 
             <!-- 내용 시작 -->
             <div id="board">
-            <section class="list" >
-                <form action="#" class="search">
-                    <select name="searchType">
-                        <option value="title">제목</option>
-                        <option value="content">내용</option>
-                        <option value="title_content">제목+내용</option>
-                        <option value="writer">작성자</option>
-                    </select>
-                    <input type="text" name="keyword" placeholder="검색 키워드 입력">
-                    <input type="submit" value="검색">
-                </form>
+                <section class="list" >
+                    <form action="#" class="search">
+                        <select name="searchType">
+                            <option value="title">제목</option>
+                            <option value="content">내용</option>
+                            <option value="title_content">제목+내용</option>
+                            <option value="nick">작성자</option>
+                        </select>
+                        <input type="text" name="keyword" placeholder="검색 키워드 입력">
+                        <input type="submit" value="검색">
+                    </form>
 
-                <table border="0">
-                    <tr>
-                        <th>번호</th>
-                        <th>제목</th>
-                        <th>글쓴이</th>
-                        <th>날짜</th>
-                        <th>조회</th>
-                    </tr>
-                    <tr th:each="article : ${articles}">
-                        <td th:text="${article.no}"> </td>
-                        <td><a th:href="@{#}" th:text="${article.title}"> </a></td>
-                        <td th:text="${article.nick}"> </td>
-                        <td th:text="${#temporals.format(article.rdate, 'yyyy-MM-dd')}"></td>
-                        <td th:text="${article.hit}"> </td>
-                    </tr>
-                </table>
 
-                <div class="page">
-                    <a href="./list.do?pg=${pageGroupStart - 1}" class="prev">이전</a>
-                    <a href="./list.do?pg=${i}" class="num ${currentPage == i?'current':'off'}">${i}</a>
-                    <a href="./list.do?pg=${pageGroupEnd + 1}" class="next">다음</a>
-                </div>
-                <a th:href="@{'/community/write/' + ${cateName.cate}}" class="btn btnWrite">글쓰기</a>
-            </section>
+                    <table border="0">
+                        <tr>
+                            <th>번호</th>
+                            <th>제목</th>
+                            <th>글쓴이</th>
+                            <th>날짜</th>
+                            <th>조회</th>
+                        </tr>
+                        <tr th:each="article : ${articles}">
+                            <td th:text="${article.no}"> </td>
+                            <td><a th:href="@{/community/view(cate=${cateName.cate}, no=${article.no})}" th:text="${article.title}"> </a></td>
+                            <td th:text="${article.nick}"> </td>
+                            <td th:text="${article.rdate}"> </td>
+                            <td th:text="${article.hit}"> </td>
+                        </tr>
+                    </table>
+
+
+                    <div class="page">
+                        <a href="./list.do?pg=${pageGroupStart - 1}" class="prev">이전</a>
+                        <a href="./list.do?pg=${i}" class="num ${currentPage == i?'current':'off'}">${i}</a>
+                        <a href="./list.do?pg=${pageGroupEnd + 1}" class="next">다음</a>
+                    </div>
+                    <a th:href="@{/community/write(cate=${cateName.cate})}" class="btn btnWrite">글쓰기</a>
+
+
+                </section>
             </div>
             <!-- 내용 끝 -->
 

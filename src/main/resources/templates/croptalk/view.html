@@ -1,36 +1,126 @@
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/layout/articleLayout.html}">
 
+<div id="sub" layout:fragment="content">
+    <script>
+        window.onload = function (){
+            //cateName이 일치하면 li ~~ 이쪽에 class = "on"을 주고싶다.
+            const classOnTarget =  document.getElementById('[[${cateName.cate}]]');
+            classOnTarget.classList.add("on");
+        }
+    </script>
+    <div><img  th:src="@{/assets/img/sub_top_tit3.png}" alt="CROP TALK"></div>
+    <section class="croptalk">
+        <aside>
+            <img th:src="@{/assets/img/sub_aside_cate3_tit.png}" alt="농작물이야기"/>
+
+            <ul class="lnb">
+                <li class="" id="story"><a th:href="@{/croptalk/list(cate='story')}">농작물이야기</a></li>
+                <li class="" id="grow"><a th:href="@{/croptalk/list(cate='grow')}">텃밭가꾸기</a></li>
+                <li class="" id="school"><a th:href="@{/croptalk/list(cate='school')}">귀농학교</a></li>  <!-- on 추가 -->
+            </ul>
+
+        </aside>
+        <article>
+            <nav>
+                <img th:src="@{/assets/img/__${cateName.cate}__.png}" alt="농작물이야기"/> <!-- ??-->
+                <p>
+                    HOME > 농작물이야기 > <em>[[${cateName.boardName}]]</em> <!-- 완료 -->
+                </p>
+            </nav>
+
+            <!-- 내용 시작 -->
+            <div id="board">
+                <section class="view">
+                    <input  type="hidden" name="no" th:value="${articleDTO.getNo()}" />
+                    <input  type="hidden" name="cate" th:value="${cateName.getCate()}" />
+                    <input type="hidden" name="nick" th:value="${articleDTO.getNick()}" />
+                    <table border="0">
+                        <tr>
+                            <th>제목</th>
+                            <td><input type="text" name="title" th:value="${articleDTO.title}" readonly/></td>
+                        </tr>
+                        <th:block th:if="${articleDTO.file > 0}">
+                            <tr>
+                                <th>파일</th>
+                                <td>
+                                    <th:block th:each="file : ${articleDTO.fileDTOs}">
+                                        <p style="margin-top:6px;">
+                                            <a th:href="@{/file/download/{fno}(fno=${file.fno})}" class="fileLink" th:data-fno="${file.fno}">[[${file.oName}]]</a>
+                                            <span>[[${file.download}]]</span>회 다운로드
+                                        </p>
+                                    </th:block>
+                                </td>
+                            </tr>
+                        </th:block>
+                        <tr>
+                            <th>내용</th>
+                            <td>
+                                <textarea name="content" readonly>[[${articleDTO.content}]]</textarea>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div>
+                        <!-- 삭제 버튼 -->
+                        <th:block th:if="${#authentication.principal != 'anonymousUser'}">
+                            <a th:if="${#authentication.principal.user.uid == articleDTO.writer}"
+                               th:href="@{/croptalk/delete(cate=${cateName.cate}, no=${articleDTO.getNo()})}" class="btn btnRemove">삭제</a>
+                        </th:block>
+                        <!-- 수정 버튼 -->
+                        <th:block th:if="${#authentication.principal != 'anonymousUser'}">
+                            <a th:if="${#authentication.principal.user.uid == articleDTO.writer}"
+                               th:href="@{/croptalk/modify(cate=${cateName.cate}, no=${articleDTO.getNo()})}" class="btn  btnModify">수정</a>
+                        </th:block>
 
 
-<section class="view" layout:fragment="content">
-    <form th:action="@{/board/modify}" method="post">
-        <table border="0">
-            <tr>
-                <th>제목</th>
-                <td><input type="text" name="title" placeholder="제목을 입력하세요." /></td>
-            </tr>
-            <tr>
-                <th>내용</th>
-                <td>
-                    <textarea id="content" name="content"></textarea>
-                </td>
-            </tr>
-            <tr>
-                <th>파일</th>
-                <td>
-                    <p style="margin-bottom:6px;color:grey;">최대 2개 파일 첨부 가능</p>
-                    <input type="file" name="fname" multiple="multiple" pl/><br>
-                </td>
-            </tr>
-        </table>
 
-        <div>
-            <a th:href="@{/board/list}" class="btn btnCancel">취소</a>
-            <input type="submit" value="작성완료" class="btn btnComplete"/>
-        </div>
-    </form>
-</section>
+                        <a th:href="@{/croptalk/list(cate=${cateName.cate})}" class="btn btnList">목록</a>
+                    </div>
+
+                    <!-- 댓글목록 -->
+                    <section class="commentList">
+                        <h3>댓글목록</h3>
+                        <th:block th:each="comment : ${comments}">
+                            <article>
+                                <span class="nick" th:text="${comment.nick}"></span>
+                                <span class="date" th:text="${#strings.substring(comment.rdate, 2, 10)}"></span>
+                                <p class="content" th:text="${comment.content}"></p>
+                                <div>
+                                    <a href="#" th:data-no="${comment.no}" th:data-parent="${comment.parent}" class="remove">삭제</a>
+                                    <a href="#" class="modify">수정</a>
+                                </div>
+                            </article>
+                        </th:block>
+
+                        <th:block th:if="${#lists.isEmpty(comments)}">
+                            <p class="empty">등록된 댓글이 없습니다.</p>
+                        </th:block>
+                    </section>
+
+                    <!-- 댓글쓰기 -->
+                    <section class="commentForm">
+                        <h3>댓글쓰기</h3>
+                        <form name="commentForm" action="#" method="post">
+                            <input type="hidden" name="parent" value="${articleDTO.no}">
+                            <input type="hidden" name="writer" value="${sessionScope.sessUser.uid}">
+                            <textarea name="content" placeholder="댓글 입력"></textarea>
+                            <div>
+                                <a href="#" class="btn btnCancel">취소</a>
+                                <input type="submit" name="submit" value="작성완료" class="btn btnComplete"/>
+                            </div>
+                        </form>
+                    </section>
+
+                </section>
+            </div>
+            <!-- 내용 끝 -->
+
+        </article>
+    </section>
+
+</div>
 
 </html>

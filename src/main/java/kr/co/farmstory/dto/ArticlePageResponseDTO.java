@@ -25,9 +25,13 @@ public class ArticlePageResponseDTO {
 
 
     @Builder
-    public ArticlePageResponseDTO(ArticlePageRequestDTO articlePageRequestDTO, List<ArticleDTO> dtoList, int total){
-        this.pg = articlePageRequestDTO.getPg();
-        this.size = articlePageRequestDTO.getSize();
+    public ArticlePageResponseDTO(ArticlePageRequestDTO pageRequestDTO, List<ArticleDTO> dtoList, int total){
+        this.cate = pageRequestDTO.getCate();
+        this.type = pageRequestDTO.getType();
+        this.keyword = pageRequestDTO.getKeyword();
+
+        this.pg = pageRequestDTO.getPg();
+        this.size = pageRequestDTO.getSize();
         this.total = total;
         this.dtoList = dtoList;
 
