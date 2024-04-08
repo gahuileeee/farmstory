@@ -11,4 +11,7 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
 
     List<Article> findByCate(String cate);
 
+    List<Article> findTop5ByCate(String cate);
+
+    List<Article> findTop3ByCate(String cate);
 }

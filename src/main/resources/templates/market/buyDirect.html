@@ -96,6 +96,10 @@
                 const hp = document.getElementById('hp').value;
                 const receiver = document.getElementById('receiver').value;
                 const checkedRadios = document.querySelectorAll('input[name="payment"]:checked');
+
+                const sendName = document.getElementById('orderer').value;
+                const etc = document.getElementById('etc').value;
+
                 //자.. form을 넘겨보자 일단 order를 전달해보자
                 const userId = document.getElementById('userId').value;
                 const orderTotalPrice = totalPrice;
@@ -130,7 +134,8 @@
                     userPoint.previousElementSibling.value="";
                 }else {
                     //order 넘기기
-                    const orderJsonData = {userId: userId, orderTotalPrice: orderTotalPrice, orderAddr: orderAddr}
+                    const orderJsonData = {userId: userId, orderTotalPrice: orderTotalPrice, orderAddr: orderAddr
+                        , receiveName : receiver , receiveHp : hp , sendName : sendName, memo : etc , sendHp : ordererHp }
                     const result = await fetchPut('/farmstory/market/order', orderJsonData);
                     //이제 orderitems해보자 (재고량까지 없애기)
                     if(result.result != null){
@@ -198,7 +203,7 @@
             }
             document.getElementById('totalPrice').innerText = numberWithCommas(totalPrice)+'원';
             document.getElementById('delivery').innerText = numberWithCommas(deliveryFee)+'원';
-            document.getElementById('cateSize').innerText = numberWithCommas(cateSize);
+            document.getElementById('cateSize').innerText = numberWithCommas([[${countNo}]]);
             document.getElementById('totalPoints').innerText = numberWithCommas(totalPoint)+'원';
             document.getElementById('totalProductPrice').innerText = numberWithCommas(productPrice)+'원';
             document.getElementById('discountTotal').innerText = numberWithCommas(discountTotal)+'원';
@@ -243,7 +248,7 @@
                             <td><a href="#">[[${product.prodName}]]</a></td>
                             <td class="cartCount">[[${countNo}]]</td>
                             <td>[[${product.prodDiscount}]] %</td>
-                            <td class="point">[[${product.prodPrice * 0.01 * countNo}]]</td>
+                            <td class="point">[[${product.point * countNo}]]</td>
                             <td class="prodcutPrice" >[[${product.prodPrice *  countNo}]]</td>
                             <td ><strong class="price"
                                          th:text="${#numbers.formatDecimal(product.prodPrice* (100 - product.prodDiscount)*0.01 * countNo , 1, 0)}">
@@ -294,7 +299,7 @@
             <tr>
                 <td>주문자</td>
                 <td>
-                    <input type="text" name="orderer" th:value="${user.name}" readonly>
+                    <input type="text" name="orderer" id="orderer" th:value="${user.name}" readonly>
                     <input type="hidden" name="order" id="userId" th:value="${user.uid}" readonly>
                 </td>
             <tr>
@@ -339,7 +344,7 @@
             <tr>
                 <td>기타</td>
                 <td>
-                    <textarea name="etc"></textarea>
+                    <textarea name="etc" id="etc"></textarea>
                 </td>
             </tr>
         </table>

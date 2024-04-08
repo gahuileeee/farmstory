@@ -25,4 +25,9 @@ public class Orders {
     private int itemDiscount;
     @CreationTimestamp
     private LocalDateTime orderDate;
+    private String receiveName;
+    private String receiveHp;
+    private String memo;
+    private String sendHp;
+    private String sendName;
 }

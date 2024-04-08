@@ -204,6 +204,8 @@ main > .latest table {
   bottom: 16px;
   color: #6a6a6a;
 }
+main > .latest table tr {
+}
 main > .latest table tr > td > a{
   display: block;
   width: 140px;
@@ -213,6 +215,7 @@ main > .latest table tr > td > a{
   line-height: 18px;
   color: #6a6a6a;
 }
+
 
 /* 메인 - info */
 main > .info {

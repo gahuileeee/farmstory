@@ -13,18 +13,23 @@
         <a th:href="@{/index}" class="logo"><img th:src="@{/assets/img/logo.png}" alt="로고"/></a>
         <p>
             <a href="#">HOME |</a>
-            <a href="#">로그인 |</a>
-            <a href="#">회원가입 |</a>
+            <th:block th:if="${#authentication.principal != 'anonymousUser'}">
+                <a th:href="@{/user/logout}">로그아웃 |</a>
+            </th:block>
+            <th:block th:if="${#authentication.principal == 'anonymousUser'}">
+                <a th:href="@{/user/login}">로그인 | </a>
+            </th:block>
+            <a th:href="@{/user/terms}">회원가입 |</a>
             <a href="#">고객센터</a>
         </p>
         <img th:src="@{/assets/img/head_txt_img.png}" alt="3만원 이상 무료배송"/>
 
         <ul class="gnb">
-            <li><a href="#">팜스토리소개</a></li>
+            <li><a th:href="@{/introduction/list(cate = hello)}">팜스토리소개</a></li>
             <li><a th:href="@{/market/list}"><img th:src="@{/assets/img/head_menu_badge.png}" alt="30%"/>장바구니</a></li>
-            <li><a href="#">농작물이야기</a></li>
-            <li><a href="#">이벤트</a></li>
-            <li><a href="#">커뮤니티</a></li>
+            <li><a th:href="@{/croptalk/list(cate = story)}">농작물이야기</a></li>
+            <li><a th:href="@{/event/list(cate = event)}">이벤트</a></li>
+            <li><a th:href="@{/community/list(cate = notice)}">커뮤니티</a></li>
         </ul>
     </header>
     <div id="sub">
@@ -33,7 +38,7 @@
             <aside>
                 <img th:src="@{/assets/img/sub_aside_cate2_tit.png}" alt="장보기"/>
                 <ul class="lnb">
-                    <li class="on"><a href="./market.html">장보기</a></li>
+                    <li class="on"><a th:href="@{/market/list}">장보기</a></li>
                 </ul>
             </aside>
                 <main layout:fragment="content">

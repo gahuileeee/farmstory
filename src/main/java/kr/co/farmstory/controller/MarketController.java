@@ -35,6 +35,7 @@ public class MarketController {
             model.addAttribute("products", products);
         }else{
             ProductPageResponseDTO products = marketService.selectProductsbyCate(pageRequestDTO);
+            model.addAttribute("cate", pageRequestDTO.getCate());
             model.addAttribute("products", products);
         }
         return "/market/list";

@@ -3,14 +3,14 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/layout/articleLayout.html}">
 
+<script>
+    window.onload = function (){
+        //cateName이 일치하면 li ~~ 이쪽에 class = "on"을 주고싶다.
+        const classOnTarget =  document.getElementById('[[${cateName.cate}]]');
+        classOnTarget.classList.add("on");
+    }
+</script>
 <div id="sub" layout:fragment="content">
-    <script>
-        window.onload = function (){
-            //cateName이 일치하면 li ~~ 이쪽에 class = "on"을 주고싶다.
-           const classOnTarget =  document.getElementById('[[${cateName.cate}]]');
-            classOnTarget.classList.add("on");
-        }
-    </script>
     <div><img  th:src="@{/assets/img/sub_top_tit3.png}" alt="CROP TALK"></div>
     <section class="croptalk">
         <aside>
