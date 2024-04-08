@@ -160,7 +160,7 @@
                                 <td><a href="#">[[${products[index.index].prodName}]]</a></td>
                                 <td class="cartCount">[[${cart.cartProdCount}]]</td>
                                 <td>[[${products[index.index].prodDiscount}]] %</td>
-                                <td class="point" >[[${products[index.index].prodPrice *0.01 * cart.cartProdCount}]]</td>
+                                <td class="point" >[[${products[index.index].point * cart.cartProdCount}]]</td>
                                 <td class="prodcutPrice" >[[${products[index.index].prodPrice *  cart.cartProdCount}]]</td>
                                 <td ><strong class="price"
                                              th:text="${#numbers.formatDecimal(products[index.index].prodPrice* (100 - products[index.index].prodDiscount)*0.01 * cart.cartProdCount, 1, 0)}">
@@ -191,7 +191,7 @@
                                 <td id="delivery"></td>
                             </tr>
                             <tr>
-                                <th>포인트</th>
+                                <th>적립 포인트</th>
                                 <td id="totalPoints"></td>
                             </tr>
                             <tr>
