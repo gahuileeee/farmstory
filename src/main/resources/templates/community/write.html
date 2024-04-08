@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/layout/articleLayout.html}">
@@ -10,30 +11,32 @@
             classOnTarget.classList.add("on");
         }
     </script>
-    <div><img  th:src="@{/assets/img/sub_top_tit3.png}" alt="CROP TALK"></div>
-    <section class="croptalk">
+    <div><img  th:src="@{/assets/img/sub_top_tit5.png}" alt="COMMUNITY"></div>
+    <section class="community">
         <aside>
-            <img th:src="@{/assets/img/sub_aside_cate3_tit.png}" alt="농작물이야기"/>
+            <img th:src="@{/assets/img/sub_aside_cate5_tit.png}" alt="커뮤니티"/>
 
             <ul class="lnb">
-                <li class="" id="story"><a th:href="@{/croptalk/list(cate='story')}">농작물이야기</a></li>
-                <li class="" id="grow"><a th:href="@{/croptalk/list(cate='grow')}">텃밭가꾸기</a></li>
-                <li class="" id="school"><a th:href="@{/croptalk/list(cate='school')}">귀농학교</a></li>  <!-- on 추가 -->
+                <li class="" id="notice"><a th:href="@{/community/list(cate='notice')}">공지사항</a></li>
+                <li class="" id="menu"><a th:href="@{/community/list(cate='menu')}">오늘의식단</a></li>
+                <li class="" id="chef"><a th:href="@{/community/list(cate='chef')}">나도요리사</a></li>  <!-- on 추가 -->
+                <li class="" id="qna"><a th:href="@{/community/list(cate='qna')}">1:1고객문의</a></li>  <!-- on 추가 -->
+                <li class="" id="faq"><a th:href="@{/community/list(cate='faq')}">자주묻는질문</a></li>  <!-- on 추가 -->
             </ul>
 
         </aside>
         <article>
             <nav>
-                <img th:src="@{/assets/img/__${cateName.cate}__.png}" alt="농작물이야기"/> <!-- ??-->
+                <img th:src="@{/assets/img/__${cateName.cate}__.png}" alt="커뮤니티"/> <!-- ??-->
                 <p>
-                    HOME > 농작물이야기 > <em>[[${cateName.boardName}]]</em> <!-- 완료 -->
+                    HOME > 커뮤니티 > <em>[[${cateName.boardName}]]</em> <!-- 완료 -->
                 </p>
             </nav>
 
             <!-- 내용 시작 -->
             <div id="board">
                 <section class="write">
-                    <form th:action="@{/croptalk/write}" name="formWrite" method="post" enctype="multipart/form-data">
+                    <form th:action="@{/community/write}" name="formWrite" method="post" enctype="multipart/form-data">
                         <input type="hidden" name="writer" th:value="${#authentication.principal.user.uid}" />
                         <input type="hidden" name="cate" th:value="${cateName.getCate()}" />
                         <input type="hidden" name="nick" th:value="${#authentication.principal.user.nick}" />
@@ -57,7 +60,7 @@
                         </table>
 
                         <div>
-                            <a th:href="@{/croptalk/list(cate=${cateName.cate})}" class="btn btnCancel">취소</a>
+                            <a th:href="@{/community/list(cate=${cateName.cate})}" class="btn btnCancel">취소</a>
                             <input type="submit" value="작성완료" class="btn btnComplete" />
                         </div>
                     </form>

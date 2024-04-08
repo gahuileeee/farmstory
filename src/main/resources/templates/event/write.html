@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/layout/articleLayout.html}">
@@ -10,30 +11,28 @@
             classOnTarget.classList.add("on");
         }
     </script>
-    <div><img  th:src="@{/assets/img/sub_top_tit3.png}" alt="CROP TALK"></div>
-    <section class="croptalk">
+    <div><img  th:src="@{/assets/img/sub_top_tit4.png}" alt="EVENT"></div>
+    <section class="event">
         <aside>
-            <img th:src="@{/assets/img/sub_aside_cate3_tit.png}" alt="농작물이야기"/>
+            <img th:src="@{/assets/img/sub_aside_cate4_tit.png}" alt="이벤트"/>
 
             <ul class="lnb">
-                <li class="" id="story"><a th:href="@{/croptalk/list(cate='story')}">농작물이야기</a></li>
-                <li class="" id="grow"><a th:href="@{/croptalk/list(cate='grow')}">텃밭가꾸기</a></li>
-                <li class="" id="school"><a th:href="@{/croptalk/list(cate='school')}">귀농학교</a></li>  <!-- on 추가 -->
+                <li class="" id="event"><a th:href="@{/event/list(cate='event')}">농작물이야기</a></li>
             </ul>
 
         </aside>
         <article>
             <nav>
-                <img th:src="@{/assets/img/__${cateName.cate}__.png}" alt="농작물이야기"/> <!-- ??-->
+                <img th:src="@{/assets/img/__${cateName.cate}__.png}" alt="이벤트"/> <!-- ??-->
                 <p>
-                    HOME > 농작물이야기 > <em>[[${cateName.boardName}]]</em> <!-- 완료 -->
+                    HOME > 이벤트 > <em>[[${cateName.boardName}]]</em> <!-- 완료 -->
                 </p>
             </nav>
 
             <!-- 내용 시작 -->
             <div id="board">
                 <section class="write">
-                    <form th:action="@{/croptalk/write}" name="formWrite" method="post" enctype="multipart/form-data">
+                    <form th:action="@{/event/write}" name="formWrite" method="post" enctype="multipart/form-data">
                         <input type="hidden" name="writer" th:value="${#authentication.principal.user.uid}" />
                         <input type="hidden" name="cate" th:value="${cateName.getCate()}" />
                         <input type="hidden" name="nick" th:value="${#authentication.principal.user.nick}" />
@@ -57,7 +56,7 @@
                         </table>
 
                         <div>
-                            <a th:href="@{/croptalk/list(cate=${cateName.cate})}" class="btn btnCancel">취소</a>
+                            <a th:href="@{/event/list(cate=${cateName.cate})}" class="btn btnCancel">취소</a>
                             <input type="submit" value="작성완료" class="btn btnComplete" />
                         </div>
                     </form>
