@@ -28,6 +28,7 @@ public class MarketController {
     private MarketService marketService;
 
     //상품 정보 리스트
+    /*
     @GetMapping("/market/list")
     public  String marketList(Model model , ProductPageRequestDTO pageRequestDTO){
         if(pageRequestDTO.getCate() == null){
@@ -40,6 +41,8 @@ public class MarketController {
         }
         return "/market/list";
     }
+    */
+
 
 
     //상품 상세 리스트

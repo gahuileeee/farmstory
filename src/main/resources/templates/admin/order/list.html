@@ -1,39 +1,11 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/admin/layout/adminLayout.html}">
-<main class="" layout:fragment="content">
-        <aside>
-            <h3>주요기능</h3>
-            <ul>
-                <li>
-                    <span>상품관리</span>
-                    <ol>
-                        <li><a th:href="@{/admin/product/list}">상품목록</a></li>
-                        <li><a th:href="@{/admin/product/register}">상품등록</a></li>
-                    </ol>
-                </li>
-                <li>
-                    <span>주문관리</span>
-                    <ol>
-                        <li><a th:href="@{/admin/order/list}">주문목록</a></li>
-                        <li><a th:href="@{/admin/order/delivery}">배송관리</a></li>
-                    </ol>
-                </li>
-                <li>
-                    <span>회원관리</span>
-                    <ol>
-                        <li><a th:href="@{/admin/user/list}">회원목록</a></li>
-                        <li><a th:href="@{/admin/user/register}">회원등록</a></li>
-                    </ol>
-                </li>
-            </ul>
-        </aside>
-        <section id="orderList">
-            <nav>
-                <h3>주문목록</h3>
-            </nav>
 
-            <article>
+    <section id="orderList" layout:fragment="content">
+        <nav>
+            <h3>주문목록</h3>
+        </nav>
 
                 <table border="0">
                     <tr>
@@ -55,11 +27,6 @@
                         <td><a th:href="@{/admin/order/detail(orderNo = ${order.orderNo})}">[상세확인]</a></td>
                     </tr>
                 </table>
-            <script>
-                window.onload=function (){
-                }
-            </script>
-
 
                 <p class="paging">
 

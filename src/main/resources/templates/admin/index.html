@@ -1,63 +1,36 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/admin/layout/adminLayout.html}">
-<main class="" layout:fragment="content">
-        <aside>
-            <h3>주요기능</h3>
-            <ul>
-                <li>
-                    <span>상품관리</span>
-                    <ol>
-                        <li><a th:href="@{/admin/product/list}">상품목록</a></li>
-                        <li><a th:href="@{/admin/product/register}">상품등록</a></li>
-                    </ol>
-                </li>
-                <li>
-                    <span>주문관리</span>
-                    <ol>
-                        <li><a th:href="@{/admin/order/list}">주문목록</a></li>
-                        <li><a th:href="@{/admin/order/delivery}">배송관리</a></li>
-                    </ol>
-                </li>
-                <li>
-                    <span>회원관리</span>
-                    <ol>
-                        <li><a th:href="@{/admin/user/list}">회원목록</a></li>
-                        <li><a th:href="@{/admin/user/register}">회원등록</a></li>
-                    </ol>
-                </li>
-            </ul>
-        </aside>
-        <section>
-            <nav>
-                <h3>관리자 메인</h3>
-            </nav>
 
-            <article>
-                <h3>
-                    <a href="#">상품현황</a>
-                    <a th:href="@{/admin/product/list}" class="more">+ 더보기</a>
-                </h3>
-                <table border="0">
-                    <tr>
-                        <th>상품번호</th>
-                        <th>상품명</th>
-                        <th>구분</th>
-                        <th>가격</th>
-                        <th>재고</th>
-                        <th>등록일</th>
-                    </tr>
+    <section layout:fragment="content">
+        <nav>
+            <h3>관리자 메인</h3>
+        </nav>
 
-                    <tr th:each="product, index:${productPageResponseDTO.dtoList}" id="product">
-                      <td>[[${product.prodNo}]]</td>
-                      <td>[[${product.prodName}]]</td>
-                      <td>[[${product.cateName}]]</td>
-                      <td>[[${product.prodPrice}]]</td>
-                      <td>[[${product.prodStock}]]</td>
-                      <td th:text="${#temporals.format(product.RegProdDate, 'yyyy-MM-dd')}"></td>
-                    </tr>
-                </table>
-            </article>
+        <article>
+            <h3>
+                <a href="#">상품현황</a>
+                <a th:href="@{/admin/product/list}" class="more">+ 더보기</a>
+            </h3>
+            <table border="0">
+                <tr>
+                    <th>상품번호</th>
+                    <th>상품명</th>
+                    <th>구분</th>
+                    <th>가격</th>
+                    <th>재고</th>
+                    <th>등록일</th>
+                </tr>
+                <tr th:each="product, index:${productPageResponseDTO.dtoList}" id="product">
+                  <td>[[${product.prodNo}]]</td>
+                  <td>[[${product.prodName}]]</td>
+                  <td>[[${product.cateName}]]</td>
+                  <td>[[${product.prodPrice}]]</td>
+                  <td>[[${product.prodStock}]]</td>
+                  <td th:text="${#temporals.format(product.RegProdDate, 'yyyy-MM-dd')}"></td>
+                </tr>
+            </table>
+        </article>
 
             <article>
                 <h3>
@@ -112,4 +85,5 @@
             </article>
         </section>
 </main>
+
 </html>
