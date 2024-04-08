@@ -2,11 +2,13 @@ package kr.co.farmstory.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import kr.co.farmstory.config.AppInfo;
 import kr.co.farmstory.dto.TermsDTO;
 import kr.co.farmstory.dto.UserDTO;
 import kr.co.farmstory.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,7 +26,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/user/login")
-    public String login(@ModelAttribute("success") String success) {
+    public String login(@ModelAttribute("success") String success){
         return "/user/login";
     }
 
@@ -81,6 +83,25 @@ public class UserController {
         return ResponseEntity.ok().body(resultMap);
     }
 
+    @GetMapping("/user/{email}")
+    public ResponseEntity<?> sendEmailForFindUser(HttpSession session,
+                                                  @PathVariable("email") String email){
+
+        try {
+            userService.sendEmailCode(session, email);
+            // 이메일 성공적으로 보내짐을 클라이언트에게 응답
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("success", true);
+            return ResponseEntity.ok().body(resultMap);
+        } catch (Exception e) {
+            // 이메일 전송 실패시 클라이언트에게 오류 응답
+            Map<String, Object> errorMap = new HashMap<>();
+            errorMap.put("success", false);
+            errorMap.put("message", "이메일 전송에 실패했습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMap);
+        }
+    }
+
 
     // 이메일 인증 코드 검사
     @ResponseBody
@@ -102,6 +123,83 @@ public class UserController {
 
             return ResponseEntity.ok().body(resultMap);
         }
+    }
+
+
+    @GetMapping("/user/findId")
+    public String findId(){
+        return "/user/findId";
+    }
+    @PostMapping("/user/findId")
+    public ResponseEntity<UserDTO> findId(@RequestBody UserDTO userDTO){
+        String name =userDTO.getName();
+        log.info("findId...... :" + name);
+        String email =userDTO.getEmail();
+        UserDTO foundUserDTO = userService.findByNameAndEmail(name, email);
+
+        if (foundUserDTO != null) {
+            return ResponseEntity.ok(foundUserDTO);
+            // 사용자를 찾은 경우 200 OK 응답으로 사용자 정보 반환
+        } else {
+            return ResponseEntity.notFound().build();
+            // 사용자를 찾지 못한 경우 404 Not Found 응답 반환
+        }
+    }
+
+    @PostMapping("/user/findIdResult")
+    public String findIdResult(String name, String email, Model model){
+        UserDTO userDTO = userService.findByNameAndEmail(name, email);
+        log.info("result....:" + userDTO.toString());
+        model.addAttribute("userDTO" , userDTO);
+        log.info(userDTO.toString());
+
+        return "/user/findIdResult";
+    }
+
+    @GetMapping("/user/findPassword")
+    public String findPassword(){
+        return "/user/findPassword";
+    }
+
+    @PostMapping("/user/findPassword")
+    public ResponseEntity<UserDTO> findPassword(@RequestBody UserDTO userDTO){
+
+        String uid = userDTO.getUid();
+        String email = userDTO.getEmail();
+        log.info("findPass.....uid: " + uid);
+        log.info("findPass.....email: " + email);
+        UserDTO foundUserDTO = userService.findPassword(uid, email);
+        log.info("findPass...... :" + foundUserDTO);
+
+        if (foundUserDTO != null) {
+            return ResponseEntity.ok(foundUserDTO);
+            // 사용자를 찾은 경우 200 OK 응답으로 사용자 정보 반환
+        } else {
+            return ResponseEntity.notFound().build();
+            // 사용자를 찾지 못한 경우 404 Not Found 응답 반환
+        }
+
+    }
+
+    @PostMapping("/user/findPasswordChange")
+    public String findPasswordChange(String uid, String email, Model model){
+        UserDTO userDTO = userService.findPassword(uid, email);
+        log.info("result....:" + userDTO.toString());
+        model.addAttribute("userDTO" , userDTO);
+        log.info(userDTO.toString());
+
+        return "/user/findPasswordChange";
+    }
+
+    @PutMapping("/updatePass")
+    public ResponseEntity<?> putPass(@RequestBody UserDTO userDTO, HttpServletRequest req){
+        return userService.updateUserPass(userDTO);
+    }
+
+    @PutMapping("/updateZip")
+    public ResponseEntity<?> putZip(@RequestBody UserDTO userDTO, HttpServletRequest req){
+        log.info(userDTO.toString()+"@@@@");
+        return userService.updateUserZip(userDTO);
     }
 
 }
