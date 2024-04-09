@@ -31,8 +31,6 @@ public class ArticleRepositoryImpl implements ArticleRepositoryCustom {
 
         String cate = pageRequestDTO.getCate();
 
-        log.info("selectArticles...1-1 : " + cate);
-
         // 부가적인 Query 실행 정보를 처리하기 위해 fetchResults()로 실행
         QueryResults<Tuple> results = jpaQueryFactory
                                             .select(qArticle, qUser.nick)
@@ -45,15 +43,10 @@ public class ArticleRepositoryImpl implements ArticleRepositoryCustom {
                                             .orderBy(qArticle.no.desc())
                                             .fetchResults();
 
-        log.info("selectArticles...1-2 : " + cate);
-        
         List<Tuple> content = results.getResults();
-
-        log.info("selectArticles...1-3 : " + cate);
 
         long total = results.getTotal();
 
-        
         // 페이징 처리를 위해 page 객체 리턴
         return new PageImpl<>(content, pageable, total);
     }
@@ -71,20 +64,16 @@ public class ArticleRepositoryImpl implements ArticleRepositoryCustom {
         // 검색 종류에 따른 where 표현식 생성
         if(type.equals("title")) {
             expression = qArticle.cate.eq(cate).and(qArticle.title.contains(keyword));
-            log.info("expression : " + expression);
         }else if(type.equals("content")) {
             expression = qArticle.cate.eq(cate).and(qArticle.content.contains(keyword));
-            log.info("expression : " + expression);
         }else if(type.equals("title_content")) {
 
             BooleanExpression titleContains = qArticle.title.contains(keyword);
             BooleanExpression contentContains = qArticle.content.contains(keyword);
             expression = qArticle.cate.eq(cate).and(titleContains.or(contentContains));
-            log.info("expression : " + expression);
 
         }else if(type.equals("writer")) {
             expression = qArticle.cate.eq(cate).and(qArticle.parent.eq(0)).and(qUser.nick.contains(keyword));
-            log.info("expression : " + expression);
         }
 
         // 부가적인 Query 실행 정보를 처리하기 위해 fetchResults()로 실행
@@ -107,5 +96,21 @@ public class ArticleRepositoryImpl implements ArticleRepositoryCustom {
 
         // 페이징 처리를 위해 page 객체 리턴
         return new PageImpl<>(content, pageable, total);
+    }
+
+    @Override
+    public List<Tuple> selectComments(int no) {
+
+        //부가적인 Query 실행 정보를 처리하기 위해 fetchResults()로 실행
+        QueryResults<Tuple> results = jpaQueryFactory
+                .select(qArticle, qUser.nick)
+                .from(qArticle)
+                .join(qUser)
+                .on(qArticle.writer.eq(qUser.uid))
+                .where(qArticle.parent.eq(no))
+                .orderBy(qArticle.no.desc())
+                .fetchResults();
+
+        return results.getResults();
     }
 }
