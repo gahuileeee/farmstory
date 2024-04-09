@@ -214,7 +214,7 @@ public class UserService {
             javaMailSender.send(message);
 
         }catch(Exception e){
-            log.error("sendEmailConde : " + e.getMessage());
+            log.error("sendEmailCode : " + e.getMessage());
         }
 
     }
