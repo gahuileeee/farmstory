@@ -49,13 +49,15 @@ public class AdminController {
    //order/list -> orderadmin으로 옮김
 
     @GetMapping("/admin/user/list")
-    public String userLsit(Model model, UserPageRequestDTO userPageRequestDTO){
+    public String userList(Model model, UserPageRequestDTO userPageRequestDTO){
 
+
+        log.info("userList!!!");
         UserPageResponseDTO pageResponseDTO = null;
         pageResponseDTO = adminService.selectsUserForAdmin(userPageRequestDTO);
 
         model.addAttribute(pageResponseDTO);
-        log.info(pageResponseDTO.toString());
+        //log.info(pageResponseDTO.toString());
         return "/admin/user/list";
     }
 

@@ -102,14 +102,27 @@ public class AdminService {
     public UserPageResponseDTO selectsUserForAdmin(UserPageRequestDTO userPageRequestDTO){
 
         Pageable pageable = userPageRequestDTO.getPageable();
-        Page<User> pageUsers = userRepository.findAll(pageable);
-        log.info("selectUsers....1: "+ pageUsers);
+        Page<Tuple> pageUsers = userRepository.selectsUsers(userPageRequestDTO, pageable);
+
+        //log.info("selectUsers....1: "+ pageUsers);
 
         List<UserDTO> dtoList = pageUsers.getContent().stream()
-                .map(entity -> modelMapper.map(entity, UserDTO.class))
-                .toList();
-        log.info("selectUsers....2:" + dtoList);
+                                    .map(tuple ->
+                                            {
+                                                User user = tuple.get(0, User.class);
+                                                Integer totalPrice = tuple.get(1, Integer.class);
+
+                                                int totalPriceValue = (totalPrice != null) ? totalPrice : 0;
+                                                user.setTotalPrice(totalPriceValue);
+
+                                                return modelMapper.map(user, UserDTO.class);
+                                                }
+                                            )
+                                            .toList();
+        //log.info("selectUsers....2:" + dtoList);
         int total = (int) pageUsers.getTotalElements();
+
+        //log.info("selectUsers....3:" + total);
 
         return UserPageResponseDTO.builder()
                 .userPageRequestDTO(userPageRequestDTO)
