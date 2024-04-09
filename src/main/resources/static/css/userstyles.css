@@ -13,6 +13,43 @@ a {text-decoration: none; color: #111;}
     margin: 0 auto;
 }
 
+#resultName{
+    font-family: 메이플스토리;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+#resultUid{
+    font-family: 메이플스토리;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+#resultEmail{
+    font-family: 메이플스토리;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.idFont{
+    font-family: "넥슨 풋볼고딕 B";
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.text-center{
+    font-family: 메이플스토리;
+    font-size: 35px;
+}
+
+.emailBtn{
+    font-family: "넥슨 풋볼고딕 B";
+    font-weight: bold;
+}
+
+
+
 /* 헤더영역 */
 header {
     position: relative;
