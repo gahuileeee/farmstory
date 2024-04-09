@@ -7,14 +7,18 @@ import kr.co.farmstory.dto.ArticlePageRequestDTO;
 import kr.co.farmstory.dto.ArticlePageResponseDTO;
 import kr.co.farmstory.entity.Config;
 import kr.co.farmstory.service.ArticleService;
+import kr.co.farmstory.service.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.http.HttpRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Controller
@@ -22,6 +26,7 @@ import java.util.List;
 public class ArticleController {
 
     private final ArticleService articleService;
+    private final FileService fileService;
 
     // 팜스토리 소개 -----------------------------------------------------------------------------------------------------
     // 인사말
@@ -122,16 +127,25 @@ public class ArticleController {
     // ------------------------------------------------------------------------------------------------------
     // 농작물이야기
     @GetMapping("/croptalk/list")
-    public String croptalkList(@RequestParam("cate") String cate, Model model, ArticlePageRequestDTO pageRequestDTO) {
+    public String croptalkList(@RequestParam("cate") String cate, Model model,
+                               ArticlePageRequestDTO pageRequestDTO, @RequestParam(value = "pg", required = false) Integer pg) {
 
         ArticlePageResponseDTO pageResponseDTO;
 
-        if (pageRequestDTO.getKeyword() == null) {
+        if(pageRequestDTO.getType() == null){
+            if(pg != null){
+                pageRequestDTO.setPg(pg);
+            }
             // 일반 글 목록 조회
             pageResponseDTO = articleService.selectArticles(pageRequestDTO);
-        } else {
+        }else{
+            if(pg != null){
+                pageRequestDTO.setPg(pg);
+            }
             // 검색 글 목록 조회
             pageResponseDTO = articleService.searchArticles(pageRequestDTO);
+            model.addAttribute("keyword", pageRequestDTO.getKeyword());
+            model.addAttribute("type", pageRequestDTO.getType());
         }
         model.addAttribute(pageResponseDTO);
 
@@ -162,6 +176,8 @@ public class ArticleController {
         articleDTO.setRegip(request.getRemoteAddr());
         articleService.insertArticle(articleDTO);
 
+        log.info(articleDTO.toString());
+
         return "redirect:/croptalk/list?cate=" + articleDTO.getCate();
     }
 
@@ -176,6 +192,11 @@ public class ArticleController {
         }
 
         model.addAttribute("cateName", cateName);
+
+        List<ArticleDTO> comments = articleService.selectComment(no);
+        log.info("comments "+comments);
+        model.addAttribute("cate", articleDTO.getCate());
+        model.addAttribute("comments",comments);
 
         return "/croptalk/view";
     }
@@ -195,20 +216,51 @@ public class ArticleController {
     }
 
     @PostMapping("/croptalk/modify")
-    public String modify( ArticleDTO articleDTO) {
-        log.info("여기;ㄱ;기기기기!"+articleDTO.toString());
+    public String modify(ArticleDTO articleDTO) {
 
         articleService.modifyArticle(articleDTO);
 
         return "redirect:/croptalk/view?no=" + articleDTO.getNo()+"&cate="+articleDTO.getCate();
     }
 
-
-
     @GetMapping("/croptalk/delete")
     public String delete(int no, String cate) {
+        fileService.deleteFiles(no);
         articleService.deleteArticle(no);
 
         return "redirect:/croptalk/list?cate=" + cate;
+    }
+
+    //comment
+    @PostMapping("/croptalk/insertComment" )
+    public ResponseEntity insertComment(@RequestBody ArticleDTO commentDTO, HttpServletRequest request){
+        commentDTO.setRegip(request.getRemoteAddr());
+        log.info("info.. "+commentDTO);
+        return articleService.insertComment(commentDTO);
+    }
+
+    @ResponseBody
+    @DeleteMapping("/croptalk/deleteComment/{no}")
+    public ResponseEntity deleteComment(@PathVariable("no") int no){
+        return   articleService.deleteComment(no);
+    }
+
+    @ResponseBody
+    @PutMapping("/croptalk/modifyComment")
+    public ResponseEntity  modifyComment(@RequestBody ArticleDTO commentDTO){
+        log.info("modify! "+commentDTO);
+        ArticleDTO oldComment = articleService.selectCommentByNo(commentDTO.getNo());
+        oldComment.setContent(commentDTO.getContent());
+
+        return articleService.updateComment(oldComment);
+    }
+
+    @ResponseBody
+    @GetMapping("/croptalk/selectComment/{no}")
+    public ResponseEntity  selectComment(@PathVariable("no") int no){
+        ArticleDTO articleDTO =articleService.selectCommentByNo(no);
+        Map<String , Object> map = new HashMap<>();
+        map.put("article", articleDTO);
+        return ResponseEntity.ok().body(map);
     }
 }

@@ -51,14 +51,14 @@
                             <tr>
                                 <th>파일</th>
                                 <td>
-                                    <input type="file" name="fname" multiple="multiple" pl/><br>
+                                    <input type="file" name="files" multiple="multiple" pl/><br>
                                 </td>
                             </tr>
                         </table>
 
                         <div>
                             <a th:href="@{/croptalk/list(cate=${cateName.cate})}" class="btn btnCancel">취소</a>
-                            <input type="submit" value="작성완료" class="btn btnComplete" />
+                            <input type="submit" value="작성완료" class="btn btnComplete" id="formFileMultiple" multiple/>
                         </div>
                     </form>
                 </section>

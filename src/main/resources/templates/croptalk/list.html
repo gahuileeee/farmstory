@@ -3,12 +3,6 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/layout/articleLayout.html}">
 
-<script>
-    window.onload = function (){
-        //cateName이 일치하면 li ~~ 이쪽에 class = "on"을 주고싶다.
-        const classOnTarget =  document.getElementById('[[${cateName.cate}]]');
-        classOnTarget.classList.add("on");
-    }
 </script>
 <div id="sub" layout:fragment="content">
 
@@ -53,7 +47,7 @@
                             <option value="writer">글쓴이</option>
                         </select>
                         <input class="form-control" type="text" name="keyword" placeholder="검색 키워드 입력" />
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> 검색</button>
+                        <button type="submit" id="btnNavbarSearch" class="btn btn-primary"><i class="fas fa-search"></i> 검색</button>
                     </form>
 
 
@@ -65,35 +59,41 @@
                             <th>날짜</th>
                             <th>조회</th>
                         </tr>
-                        <tr th:each="article : ${articles}">
-                            <td th:text="${article.no}"> </td>
+                        <tr th:each="article, index:${articlePageResponseDTO.dtoList}">
+                            <td>[[${articlePageResponseDTO.startNo - index.index}]]</td>
                             <td><a th:href="@{/croptalk/view(cate=${cateName.cate}, no=${article.no})}" th:text="${article.title}"> </a></td>
                             <td th:text="${article.nick}"> </td>
-                            <td th:text="${article.rdate}"> </td>
+                            <td th:text="${#temporals.format(article.rdate, 'yyyy-MM-dd')}"></td>
                             <td th:text="${article.hit}"> </td>
                         </tr>
                     </table>
 
                     <div class="page">
                         <!-- 게시물이 없을 때 -->
-                        <div th:if="${articles.isEmpty()}" >
+                        <div th:if="${articles.isEmpty()}">
                             <br/>
                             <p>게시물이 없습니다.</p>
                             <br/>
                         </div>
-
-                        <a th:if="${articlePageResponseDTO.prev} and ${articlePageResponseDTO.keyword == null}" class="prev" th:href="@{/croptalk/list(cate=${articlePageResponseDTO.cate}, pg=${articlePageResponseDTO.start - 1})}">&#60;</a>
-                        <a th:if="${articlePageResponseDTO.prev} and ${articlePageResponseDTO.keyword != null}" class="prev" th:href="@{/croptalk/list(cate=${articlePageResponseDTO.cate}, pg=${articlePageResponseDTO.start - 1}, type=${articlePageResponseDTO.type}, keyword=${articlePageResponseDTO.keyword})}">&#60;</a>
-
-                        <a th:each="num:${#numbers.sequence(articlePageResponseDTO.start, articlePageResponseDTO.end)}"  th:if="${articlePageResponseDTO.keyword == null}" class="num" th:href="@{/croptalk/list(cate=${articlePageResponseDTO.cate}, pg=${num})}">[[${num}]]</a>
-                        <a th:each="num:${#numbers.sequence(articlePageResponseDTO.start, articlePageResponseDTO.end)}"  th:if="${articlePageResponseDTO.keyword != null}" class="num" th:href="@{/croptalk/list(cate=${articlePageResponseDTO.cate}, pg=${num}, type=${articlePageResponseDTO.type}, keyword=${articlePageResponseDTO.keyword})}">[[${num}]]</a>
-
-
-                        <a th:if="${articlePageResponseDTO.next} and ${articlePageResponseDTO.keyword == null}" class="next" th:href="@{/croptalk/list(cate=${articlePageResponseDTO.cate}, pg=${articlePageResponseDTO.end + 1})}">&#62;</a>
-                        <a th:if="${articlePageResponseDTO.next} and ${articlePageResponseDTO.keyword != null}" class="next" th:href="@{/croptalk/list(cate=${articlePageResponseDTO.cate}, pg=${articlePageResponseDTO.end + 1}, type=${articlePageResponseDTO.type}, keyword=${articlePageResponseDTO.keyword})}">&#62;</a>
-
+                        <!-- 게시글이 있을 때 -->
+                        <th:block th:unless="${articles.isEmpty()}">
+                            <!-- 이전 페이지 링크 -->
+                            <a th:if="${articlePageResponseDTO.prev and articlePageResponseDTO.keyword == null}" class="prev" th:href="@{/croptalk/list(cate=${articlePageResponseDTO.cate}, pg=${articlePageResponseDTO.start - 1})}">&#60;</a>
+                            <a th:if="${articlePageResponseDTO.prev and articlePageResponseDTO.keyword != null}" class="prev" th:href="@{/croptalk/list(cate=${articlePageResponseDTO.cate}, pg=${articlePageResponseDTO.start - 1}, type=${articlePageResponseDTO.type}, keyword=${articlePageResponseDTO.keyword})}">&#60;</a>
+                            <!-- 페이지 번호 표시 -->
+                            <a th:each="num:${#numbers.sequence(articlePageResponseDTO.start, articlePageResponseDTO.end)}" class="num" th:href="@{/croptalk/list(cate=${articlePageResponseDTO.cate}, pg=${num})}">[[${num}]]</a>
+                            <!-- 다음 페이지 링크 -->
+                            <a th:if="${articlePageResponseDTO.next and articlePageResponseDTO.keyword == null}" class="next" th:href="@{/croptalk/list(cate=${articlePageResponseDTO.cate}, pg=${articlePageResponseDTO.end + 1})}">&#62;</a>
+                            <a th:if="${articlePageResponseDTO.next and articlePageResponseDTO.keyword != null}" class="next" th:href="@{/croptalk/list(cate=${articlePageResponseDTO.cate}, pg=${articlePageResponseDTO.end + 1}, type=${articlePageResponseDTO.type}, keyword=${articlePageResponseDTO.keyword})}">&#62;</a>
+                        </th:block>
                     </div>
-                    <a th:href="@{/croptalk/write(cate=${cateName.cate})}" class="btn btnWrite">글쓰기</a>
+
+                    <a th:href="@{/croptalk/write(
+                    cate=${cateName.cate},
+                    type=${articlePageResponseDTO.type},
+                    keyword=${articlePageResponseDTO.keyword}
+                    )}"
+                       th:if="${#authentication.principal != 'anonymousUser'}" class="btn btnWrite">글쓰기</a>
 
 
                 </section>

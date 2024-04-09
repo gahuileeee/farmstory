@@ -1,5 +1,6 @@
 package kr.co.farmstory.dto;
 
+import kr.co.farmstory.entity.File;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -19,4 +20,14 @@ public class FileDTO {
     private int download;           // 다운로드 횟수
     private LocalDateTime rdate;    // 생성일자
 
+    public File toEntity(){
+        return  File.builder()
+                .fno(fno)
+                .ano(ano)
+                .oName(oName)
+                .sName(sName)
+                .download(download)
+                .rdate(rdate)
+                .build();
+    }
 }

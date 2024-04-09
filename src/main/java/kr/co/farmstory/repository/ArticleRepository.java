@@ -2,6 +2,8 @@ package kr.co.farmstory.repository;
 
 import kr.co.farmstory.entity.Article;
 import kr.co.farmstory.repository.custum.ArticleRepositoryCustom;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,9 +16,12 @@ public interface ArticleRepository extends JpaRepository<Article, Integer>, Arti
 
     public void deleteArticlesByParent(int no);
 
-
     List<Article> findTop5ByCate(String cate);
 
     List<Article> findTop3ByCate(String cate);
+
+    public Page<Article> findByParentAndCate(int parent, String cate, Pageable pageable);
+
+    public List<Article> findByParent(int parent);
 
 }
