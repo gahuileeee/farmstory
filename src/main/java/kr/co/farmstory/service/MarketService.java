@@ -59,7 +59,7 @@ public class MarketService {
     public ProductPageResponseDTO  selectProductsbyCate(ProductPageRequestDTO pageRequestDTO) {
         Pageable pageable = pageRequestDTO.getPageable("no");
 
-        Page<Tuple> pageArticle = productsRepository.selectProductsbyCate(pageRequestDTO , pageable);
+        Page<Tuple> pageArticle = productsRepository.selectProductsByCate(pageRequestDTO , pageable);
         log.info(pageArticle.getContent().toString()+"!!");
         List<ProductsDTO> dtoList = pageArticle.getContent().stream()
                 .map(tuple -> {
