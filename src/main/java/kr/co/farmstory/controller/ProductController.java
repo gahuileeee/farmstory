@@ -71,6 +71,11 @@ public class ProductController {
 
     }
 
+    @GetMapping("/admin/product/detail/{prodNo}")
+    public String productDetail(){
+        return "/admin/product/tetail";
+    }
+
     @PutMapping("admin/product/{selectedProdList}")
     public ResponseEntity<?> deleteProd(@RequestBody Map<String, List<Integer>> map, HttpServletRequest req){
 
@@ -92,8 +97,6 @@ public class ProductController {
                     .status(HttpStatus.NOT_FOUND)
                     .body(errorResponse);
         }
-
-
     }
 
 }
