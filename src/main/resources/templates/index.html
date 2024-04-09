@@ -77,7 +77,7 @@
                     <table border="0">
                         <tr th:each="grow , index :${grows}">
                             <td>></td>
-                            <td><a href="#">[[${grow.title}]]</a></td>
+                            <td><a th:href="@{/croptalk/view(cate=grow , no=${grow.no})}">[[${grow.title}]]</a></td>
                             <td th:text="${#temporals.format(grow.rdate, 'yy-MM-dd')}"></td>
                         </tr>
                     </table>
@@ -88,7 +88,7 @@
                     <table border="0">
                         <tr th:each="grow , index :${school}">
                             <td>></td>
-                            <td><a href="#">[[${grow.title}]]</a></td>
+                            <td><a th:href="@{/croptalk/view(cate=school , no=${grow.no})}">[[${grow.title}]]</a></td>
                             <td th:text="${#temporals.format(grow.rdate, 'yy-MM-dd')}"></td>
                         </tr>
                     </table>
@@ -99,7 +99,7 @@
                     <table border="0">
                         <tr th:each="grow , index :${story}">
                             <td>></td>
-                            <td><a href="#">[[${grow.title}]]</a></td>
+                            <td><a th:href="@{/croptalk/view(cate=story , no=${grow.no})}">[[${grow.title}]]</a></td>
                             <td th:text="${#temporals.format(grow.rdate, 'yy-MM-dd')}"></td>
                         </tr>
                     </table>
@@ -144,17 +144,17 @@
                         </ul>
                         <div id="tabs-1">
                             <ul class="txt" th:each="noti, index:${notice}">
-                                <li><a th:href="@{/}"> [[${noti.title}]]</a></li>
+                                <li><a th:href="@{/community/view(cate=notice , no=${noti.no})}"> [[${noti.title}]]</a></li>
                             </ul>
                         </div>
                         <div id="tabs-2">
                             <ul class="txt" th:each="q, index:${qna}">
-                                <li><a href="#">·  [[${q.title}]]</a></li>
+                                <li><a th:href="@{/community/view(cate=qna , no=${q.no})}">·  [[${q.title}]]</a></li>
                             </ul>
                         </div>
                         <div id="tabs-3">
                             <ul class="txt" th:each="f, index:${faq}">
-                                <li><a th:href="@{/}"> [[${f.title}]]</a></li>
+                                <li><a th:href="@{/community/view(cate=faq , no=${f.no})}"> [[${f.title}]]</a></li>
                             </ul>
                         </div>
                     </div>

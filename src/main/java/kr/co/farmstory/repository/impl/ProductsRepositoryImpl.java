@@ -30,8 +30,8 @@ public class ProductsRepositoryImpl implements ProductsRepositoryCustom {
     private final ModelMapper modelMapper;
 
     @Override
-    public Page<Tuple> selectProductsbyCate(ProductPageRequestDTO pageRequestDTO, Pageable pageable) {
-        String cate =pageRequestDTO.getType();
+    public Page<Tuple> selectProductsByCate(ProductPageRequestDTO pageRequestDTO, Pageable pageable) {
+        String cate =pageRequestDTO.getCate();
 
         //부가적인 Query 실행 정보를 처리하기 위해 fetchResults()로 실행
         QueryResults<Tuple> results = jpaQueryFactory
