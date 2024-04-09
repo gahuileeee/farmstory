@@ -24,6 +24,6 @@ public class WebMVCConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/admin/**").addResourceLocations("classpath:/admin/");
-        registry.addResourceHandler("/uploads/**").addResourceLocations(resourceLoader.getResource("file:/home/uploads/"));
+        registry.addResourceHandler("/uploads/**").addResourceLocations(resourceLoader.getResource("file:/home/farmstory/uploads/"));
     }
 }
