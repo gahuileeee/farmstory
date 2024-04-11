@@ -186,6 +186,24 @@ public class UserService {
         }
     }
 
+    public void deleteUser(String uid){
+        //삭제 전 조회
+        Optional<User> optUser = userRepository.findById(uid);
+
+        log.info("optUser.... : " + optUser);
+
+        if(optUser.isPresent()){
+            log.info("deleteUser.....1");
+
+            // 유저 id 와 leaveDate 만 남기고 나머지 null 처리
+            userMapper.deleteUser(uid);
+
+        }else {
+            log.info("deleteUser.....2");
+
+        }
+    }
+
     @Value("${spring.mail.username}")
     private String sender;
 
@@ -214,7 +232,7 @@ public class UserService {
             javaMailSender.send(message);
 
         }catch(Exception e){
-            log.error("sendEmailConde : " + e.getMessage());
+            log.error("sendEmailCode : " + e.getMessage());
         }
 
     }

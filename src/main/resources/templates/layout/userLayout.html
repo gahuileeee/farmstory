@@ -9,6 +9,9 @@
         <meta name="author" content="" />
         <title>팜스토리::유저</title>
         <link rel="stylesheet" th:href="@{/css/userstyles.css}"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
         <script th:src="@{/js/util.js}"></script>
     </head>
@@ -23,6 +26,9 @@
                     </th:block>
                     <th:block th:if="${#authentication.principal == 'anonymousUser'}">
                         <a th:href="@{/user/login}">로그인 | </a>
+                    </th:block>
+                    <th:block th:if="${#authentication.principal != 'anonymousUser'}">
+                        <a th:href="@{/my/setting(uid=${#authentication.principal.user.uid})}">마이페이지 | </a>
                     </th:block>
                     <a th:href="@{/user/terms}">회원가입 |</a>
                     <a href="#">고객센터</a>

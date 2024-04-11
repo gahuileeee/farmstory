@@ -49,6 +49,7 @@ public class UserController {
 
         String regip = req.getRemoteAddr();
         userDTO.setRegip(regip);
+        userDTO.setRole("USER");
 
         log.info(userDTO.toString());
 
@@ -200,6 +201,33 @@ public class UserController {
     public ResponseEntity<?> putZip(@RequestBody UserDTO userDTO, HttpServletRequest req){
         log.info(userDTO.toString()+"@@@@");
         return userService.updateUserZip(userDTO);
+    }
+
+    @GetMapping("/my/setting")
+    public String mySetting(@RequestParam("uid") String uid, Model model){
+
+        UserDTO userDTO = userService.findUserByUid(uid);
+        log.info("mySetting......1111:"+userDTO.toString());
+
+        model.addAttribute("userDTO", userDTO);
+        log.info("mySetting......:"+userDTO.toString());
+
+        return "/my/setting";
+    }
+
+    @ResponseBody
+    @GetMapping("/my/setting/{type}/{value}/{uid}")
+    public ResponseEntity<?> updateUser(@PathVariable("type") String type,
+                                        @PathVariable("value") String value,
+                                        @PathVariable("uid") String uid) {
+        return userService.updateUser(type, value, uid);
+    }
+
+    @DeleteMapping("/user/{uid}")
+    public void deleteUser(@PathVariable("uid") String uid){
+
+        userService.deleteUser(uid);
+
     }
 
 }

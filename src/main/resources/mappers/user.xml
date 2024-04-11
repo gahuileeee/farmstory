@@ -36,4 +36,14 @@
                         regDate=NOW()
     </insert>
 
+
+    <update id="updateUserZip">
+        update `user` set
+        zip=#{zip},
+        addr1=#{addr1},
+        addr2=#{addr2}
+        where uid = #{uid}
+    </update>
+
+
 </mapper>
