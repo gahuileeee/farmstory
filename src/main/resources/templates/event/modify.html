@@ -15,26 +15,23 @@
             btnModify.onclick=function (){
             formModify.submit();
             }
-
         }
     </script>
-    <div><img  th:src="@{/assets/img/sub_top_tit3.png}" alt="CROP TALK"></div>
-    <section class="croptalk">
+    <div><img  th:src="@{/assets/img/sub_top_tit3.png}" alt="EVENT"></div>
+    <section class="event">
         <aside>
-            <img th:src="@{/assets/img/sub_aside_cate3_tit.png}" alt="농작물이야기"/>
+            <img th:src="@{/assets/img/sub_aside_cate3_tit.png}" alt="이벤트"/>
 
             <ul class="lnb">
-                <li class="" id="story"><a th:href="@{/croptalk/list(cate='story')}">농작물이야기</a></li>
-                <li class="" id="grow"><a th:href="@{/croptalk/list(cate='grow')}">텃밭가꾸기</a></li>
-                <li class="" id="school"><a th:href="@{/croptalk/list(cate='school')}">귀농학교</a></li>  <!-- on 추가 -->
+                <li class="" id="event"><a th:href="@{/event/list(cate='story')}">이벤트</a></li>
             </ul>
 
         </aside>
         <article>
             <nav>
-                <img th:src="@{/assets/img/__${cateName.cate}__.png}" alt="농작물이야기"/> <!-- ??-->
+                <img th:src="@{/assets/img/__${cateName.cate}__.png}" alt="이벤트"/> <!-- ??-->
                 <p>
-                    HOME > 농작물이야기 > <em>[[${cateName.boardName}]]</em> <!-- 완료 -->
+                    HOME > 이벤트 > <em>[[${cateName.boardName}]]</em> <!-- 완료 -->
                 </p>
             </nav>
 
@@ -43,7 +40,7 @@
                 <section class="view">
 
                     <input type="hidden" name="nick" th:value="${article.nick}" />
-                    <form th:action="@{/croptalk/modify}" method="post" enctype="multipart/form-data" id="formModify">  <!--enctype선언해야 MultipartFile객체로 파일을 변환처리가능-->
+                    <form th:action="@{/event/modify}" method="post" enctype="multipart/form-data" id="formModify">  <!--enctype선언해야 MultipartFile객체로 파일을 변환처리가능-->
                         <input type="hidden" name="no" th:value="${article.no}" />
                         <input type="hidden" name="cate" th:value="${article.getCate()}" />
                     <table border="0">
@@ -80,7 +77,7 @@
                     <input type="hidden" th:value="${article}" name="articleDTO">
                     <!-- 폼 내용 생략 -->
                     <div style="text-align: right; margin-top: 10px;">
-                        <a th:href="@{/croptalk/view(cate=${cateName.cate}, no=${article.no})}" class="btn btnCancel">취소</a>
+                        <a th:href="@{/event/view(cate=${cateName.cate}, no=${article.no})}" class="btn btnCancel">취소</a>
                         <input type="button" id="modifyButton" value="수정완료" class="btn btnComplete"/>
                     </div>
                 </section>

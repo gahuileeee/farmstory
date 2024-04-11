@@ -25,6 +25,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 @Slf4j
@@ -111,39 +112,8 @@ public class FileService {
         return ResponseEntity.ok().body(resultMap);
     }
 
-    @Transactional
-    public ResponseEntity deleteFile(List<Integer> list, int no){
-        //파일 수 변경
-        Article article= articleRepository.findById(no).get();
-        ArticleDTO articleDTO = modelMapper.map(article, ArticleDTO.class);
-        articleDTO.setFile(articleDTO.getFile() - list.size());
-        Article nArticle =modelMapper.map(articleDTO, Article.class);
-        log.info("!!"+nArticle.getFile());
-        articleRepository.save(nArticle);
-
-        //파일 삭제
-        String path = new File(fileUploadPath).getAbsolutePath();
-
-        for(int fno : list){
-            //DB에 삭제
-            kr.co.farmstory.entity.File file  = fileRepository.findById(fno).get();
-            String sName = file.getSName();
-            fileRepository.deleteById(fno);
-
-            //실제로 삭제
-            File deleteFile = new File(fileUploadPath+File.separator+ sName);
-            if(deleteFile.exists()){
-                deleteFile.delete();
-            }
-        }
-
-        Map<String, Object> map2 = new HashMap<>();
-        map2.put("delte", "success");
-
-        return ResponseEntity.ok().body(map2);
-    }
-
-    public  void deleteFiles(int ano){
+    // 여러파일삭제(게시글 삭제)
+    public void deleteFiles(int ano){
         String path = new File(fileUploadPath).getAbsolutePath();
         List<kr.co.farmstory.entity.File> files = fileRepository.findFilesByAno(ano);
         for(kr.co.farmstory.entity.File file : files){

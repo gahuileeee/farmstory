@@ -29,5 +29,8 @@ public class File {
     @CreationTimestamp
     private LocalDateTime rdate;
 
+    // 파일 경로 저장 필드 추가
+    private String filePath;
+
 
 }

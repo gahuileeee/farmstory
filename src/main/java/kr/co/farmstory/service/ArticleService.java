@@ -180,6 +180,13 @@ public class ArticleService {
         articleRepository.save(article);
     }
 
+    // hit 증가
+    public ArticleDTO updateHit (ArticleDTO articleDTO){
+        Article article = modelMapper.map(articleDTO, Article.class);
+        Article article1 = articleRepository.save(article);
+        return modelMapper.map(article1, ArticleDTO.class);
+    }
+
     @Transactional
     public void deleteArticle (int no){
         articleRepository.deleteById(no);
@@ -188,9 +195,15 @@ public class ArticleService {
 
     //comment
     public ResponseEntity insertComment(ArticleDTO articleDTO){
-        Article savedArticle =articleRepository.save(modelMapper.map(articleDTO,Article.class));
+        Article savedArticle = articleRepository.save(modelMapper.map(articleDTO, Article.class));
 
-        return ResponseEntity.ok().body(savedArticle);
+        ArticleDTO savedArticleDTO = modelMapper.map(savedArticle, ArticleDTO.class);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("comment", savedArticleDTO);
+
+        return ResponseEntity.ok().body(response);
     }
 
     public List<ArticleDTO> selectComment(int parent){
@@ -210,7 +223,7 @@ public class ArticleService {
         articleRepository.deleteById(no);
 
         Map<String, Object> map = new HashMap<>();
-        map.put("sucesss", "1");
+        map.put("success", true);
 
         return ResponseEntity.ok().body(map);
     }
