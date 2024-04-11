@@ -21,7 +21,7 @@ public class ProductPageRequestDTO {
     private int pg=1;
 
     @Builder.Default
-    private int size =10;
+    private int size =12;
 
     private String cate;
 

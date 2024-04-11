@@ -1,8 +1,10 @@
 /* 전체 스타일 초기화 */
+@import url('https://fonts.googleapis.com/css2?family=Orbit&family=Sunflower:wght@300&display=swap'); /*"Orbit"*/
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&family=Orbit&family=Sunflower:wght@300&display=swap');
 * {
   margin: 0;
   padding: 0;
-  font: normal 12px '돋움';
+  font: normal 12px "Noto Sans KR";
 }
 ul, ol {list-style: none;}
 a {text-decoration: none; color: #111;}
@@ -1214,3 +1216,22 @@ input:focus {
 textarea:focus {
   outline: none;
 }
+
+
+/* 장보기*/
+.product-container {
+  overflow: hidden; /* 부모 요소의 내부 영역을 넘어가는 자식 요소를 숨김 */
+}
+
+.product-item {
+  width: 25%;
+  padding: 10px;
+  box-sizing: border-box;
+  float: left;
+  transition: transform 0.3s; /* 호버 시 변화를 부드럽게 만듦 */
+}
+
+.product-item:hover {
+  transform: scale(1.15); }/* 호버 시 크기를 105%로 확대 */
+
+
