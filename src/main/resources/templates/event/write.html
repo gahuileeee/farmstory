@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/layout/articleLayout.html}">
@@ -11,13 +10,13 @@
             classOnTarget.classList.add("on");
         }
     </script>
-    <div><img  th:src="@{/assets/img/sub_top_tit4.png}" alt="EVENT"></div>
+    <div><img  th:src="@{/assets/img/sub_top_tit3.png}" alt="EVENT"></div>
     <section class="event">
         <aside>
-            <img th:src="@{/assets/img/sub_aside_cate4_tit.png}" alt="이벤트"/>
+            <img th:src="@{/assets/img/sub_aside_cate3_tit.png}" alt="이벤트"/>
 
             <ul class="lnb">
-                <li class="" id="event"><a th:href="@{/event/list(cate='event')}">농작물이야기</a></li>
+                <li class="" id="event"><a th:href="@{/event/list(cate='story')}">이벤트</a></li>
             </ul>
 
         </aside>
@@ -50,14 +49,14 @@
                             <tr>
                                 <th>파일</th>
                                 <td>
-                                    <input type="file" name="fname" multiple="multiple" pl/><br>
+                                    <input type="file" name="files" multiple="multiple" pl/><br>
                                 </td>
                             </tr>
                         </table>
 
                         <div>
                             <a th:href="@{/event/list(cate=${cateName.cate})}" class="btn btnCancel">취소</a>
-                            <input type="submit" value="작성완료" class="btn btnComplete" />
+                            <input type="submit" value="작성완료" class="btn btnComplete" id="formFileMultiple" multiple/>
                         </div>
                     </form>
                 </section>
