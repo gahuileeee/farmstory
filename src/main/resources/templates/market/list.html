@@ -80,69 +80,69 @@
                 <p class="paging"  style="text-align: center">
                     <th:block th:if="${cate == null && keyword != null}">
                         <th:block th:if="${products.prev}" class="page-item ">
-                            <a  class="page-link" style="color: black" th:href="@{/market/list(pg=${products.start -1}, keyword=${keyword})}">&#60;</a>
+                            <a  class="page-link prev"  th:href="@{/market/list(pg=${products.start -1}, keyword=${keyword})}">&#60;</a>
                         </th:block>
                         <th:block th:each="num:${#numbers.sequence(products.start, products.end)}" class="page-item ">
                             <th:block th:if="${num == products.getPg()}">
-                                <a class="page-link" style="color: black; background: #b9b9b9" th:href="@{/market/list(pg=${num}, keyword=${keyword})}">[ [[${num}]] ]</a>
+                                <a class="page-link"  th:href="@{/market/list(pg=${num}, keyword=${keyword})}">[[${num}]]</a>
                             </th:block>
                             <th:block th:if="${num != products.getPg()}">
-                                <a class="page-link " style="color: black"  th:href="@{/market/list( pg=${num}, keyword=${keyword})}">[ [[${num}]] ]</a>
+                                <a class="page-link "  th:href="@{/market/list( pg=${num}, keyword=${keyword})}">[[${num}]]</a>
                             </th:block>
                         </th:block>
                         <th:block th:if="${products.next}" class="page-item">
-                            <a class="page-link"   style="color: black" th:href="@{/market/list(pg=${products.end+1}, keyword=${keyword})}">&#62;</a>
+                            <a class="page-link next"   th:href="@{/market/list(pg=${products.end+1}, keyword=${keyword})}">&#62;</a>
                         </th:block>
                     </th:block>
 
                     <th:block th:if="${cate != null && keyword == null}">
                         <th:block th:if="${products.prev}" class="page-item ">
-                            <a  class="page-link" style="color: black" th:href="@{/market/list(pg=${products.start -1}, cate = ${cate})}">&#60;</a>
+                            <a  class="page-link prev" th:href="@{/market/list(pg=${products.start -1}, cate = ${cate})}">&#60;</a>
                         </th:block>
                         <th:block th:each="num:${#numbers.sequence(products.start, products.end)}" class="page-item ">
                             <th:block th:if="${num == products.getPg()}">
-                                <a class="page-link" style="color: black; background: #b9b9b9" th:href="@{/market/list(pg=${num}, cate = ${cate})}">[ [[${num}]] ]</a>
+                                <a class="page-link"  th:href="@{/market/list(pg=${num}, cate = ${cate})}">[[${num}]]</a>
                             </th:block>
                             <th:block th:if="${num != products.getPg()}">
-                                <a class="page-link " style="color: black"  th:href="@{/market/list( pg=${num}, cate = ${cate})}">[ [[${num}]] ]</a>
+                                <a class="page-link "  th:href="@{/market/list( pg=${num}, cate = ${cate})}">[[${num}]]</a>
                             </th:block>
                         </th:block>
                         <th:block th:if="${products.next}" class="page-item">
-                            <a class="page-link"   style="color: black" th:href="@{/market/list(pg=${products.end+1}, cate = ${cate})}">&#62;</a>
+                            <a class="page-link next"  th:href="@{/market/list(pg=${products.end+1}, cate = ${cate})}">&#62;</a>
                         </th:block>
                     </th:block>
 
                     <th:block th:if="${cate != null && keyword != null}">
                         <th:block th:if="${products.prev}" class="page-item ">
-                            <a  class="page-link" style="color: black" th:href="@{/market/list(pg=${products.start -1}, cate = ${cate}, keyword=${keyword})}">&#60;</a>
+                            <a  class="page-link prev" th:href="@{/market/list(pg=${products.start -1}, cate = ${cate}, keyword=${keyword})}">&#60;</a>
                         </th:block>
                         <th:block th:each="num:${#numbers.sequence(products.start, products.end)}" class="page-item ">
                             <th:block th:if="${num == products.getPg()}">
-                                <a class="page-link" style="color: black; background: #b9b9b9" th:href="@{/market/list(pg=${num}, cate = ${cate},  keyword=${keyword})}">[ [[${num}]] ]</a>
+                                <a class="page-link"  th:href="@{/market/list(pg=${num}, cate = ${cate},  keyword=${keyword})}">[[${num}]]</a>
                             </th:block>
                             <th:block th:if="${num != products.getPg()}">
-                                <a class="page-link " style="color: black"  th:href="@{/market/list( pg=${num}, cate = ${cate},  keyword=${keyword})}">[ [[${num}]] ]</a>
+                                <a class="page-link "  th:href="@{/market/list( pg=${num}, cate = ${cate},  keyword=${keyword})}">[[${num}]]</a>
                             </th:block>
                         </th:block>
                         <th:block th:if="${products.next}" class="page-item">
-                            <a class="page-link"   style="color: black" th:href="@{/market/list(pg=${products.end+1}, cate = ${cate},  keyword=${keyword})}">&#62;</a>
+                            <a class="page-link next"  th:href="@{/market/list(pg=${products.end+1}, cate = ${cate},  keyword=${keyword})}">&#62;</a>
                         </th:block>
                     </th:block>
 
                     <th:block th:if="${cate == null && keyword == null}">
                         <th:block th:if="${products.prev}" class="page-item ">
-                            <a  class="next" style="color: black" th:href="@{/market/list(pg=${products.start -1}, keyword=${keyword})}">&#60;</a>
+                            <a  class=" prev" th:href="@{/market/list(pg=${products.start -1}, keyword=${keyword})}">&#60;</a>
                         </th:block>
                         <th:block th:each="num:${#numbers.sequence(products.start, products.end)}" class="page-item ">
                             <th:block th:if="${num == products.getPg()}">
-                                <a class="page-link" style="color: black; background: #b9b9b9" th:href="@{/market/list(pg=${num},  keyword=${keyword})}">[ [[${num}]] ]</a>
+                                <a class="page-link" th:href="@{/market/list(pg=${num},  keyword=${keyword})}">[[${num}]]</a>
                             </th:block>
                             <th:block th:if="${num != products.getPg()}">
-                                <a class="page-link " style="color: black"  th:href="@{/market/list( pg=${num}, keyword=${keyword})}">[ [[${num}]] ]</a>
+                                <a class="page-link "  th:href="@{/market/list( pg=${num}, keyword=${keyword})}">[[${num}]]</a>
                             </th:block>
                         </th:block>
                         <th:block th:if="${products.next}" class="page-item">
-                            <a class="page-link"   style="color: black" th:href="@{/market/list(pg=${products.end+1}, keyword=${keyword})}">&#62;</a>
+                            <a class="page-link next"  th:href="@{/market/list(pg=${products.end+1}, keyword=${keyword})}">&#62;</a>
                         </th:block>
                     </th:block>
                 </p>

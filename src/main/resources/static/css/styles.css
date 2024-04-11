@@ -1,8 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&family=Orbit&family=Sunflower:wght@300&display=swap');
 /* 전체 스타일 초기화 */
 * {
   margin: 0;
   padding: 0;
-  font: normal 12px '돋움';
+  font: normal 12px "Noto Sans KR";
 }
 ul, ol {list-style: none;}
 a {text-decoration: none; color: #111;}
@@ -490,11 +491,41 @@ main > .info > div > .account {
 }
 
 #sub > .market > .list > .paging {
-  margin: 20px 0;
   text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center; /* 수직 중앙 정렬 */
 }
+
+#sub > .market > .list > .paging > .prev{
+  color: white;
+  background-color: #A8D031;
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+#sub > .market > .list > .paging > .next{
+  color: white;
+  background-color: #A8D031;
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
 #sub > .market > .list > .paging > a {
-  color: #999;
+  color: black;
+  background-color: #f0f0f0;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+  margin-right: 5px;
 }
 #sub > .market > .list > .paging > .on {
   color: #111;
@@ -937,7 +968,7 @@ input[type=number]::-webkit-outer-spin-button {
   height: auto;
   border-collapse: collapse;
   border-spacing: 0;
-  border-top: 2px solid #111;
+  border-top: 0px solid #111;
 }
 #board > .list > table tr {}
 #board > .list > table > caption {
@@ -947,8 +978,10 @@ input[type=number]::-webkit-outer-spin-button {
 #board > .list > table tr > th {
   width: auto;
   height: 40px;
-  background: #e5ecef;
+  background: #A8D031;
   border-bottom: 1px solid #d1dee2;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  color: white;
 }
 #board > .list > table tr > td {
   width: auto;
@@ -962,23 +995,61 @@ input[type=number]::-webkit-outer-spin-button {
 #board > .list > table tr > td:nth-child(4) {}
 #board > .list > table tr > td:nth-child(5) {}
 
+/* 페이지 네비게이션 요소 */
 #board > .list > .page {
+  margin-top: 10px; /* 페이지 네비게이션 요소 위 여백 설정 */
   text-align: center;
-  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center; /* 수직 중앙 정렬 */
 }
-#board > .list > .page > a {
-  display: inline-block;
-  padding: 8px;
-  border: 1px solid #d7d7d7;
-  background: #f2f2f2;
+
+/* 이전 버튼 */
+#board > .list > .page > .prev {
+  /* 스타일 추가 */
+  color: white;
+  background-color: #A8D031;
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s;
 }
-#board > .list > .page > .prev {}
-#board > .list > .page > .next {}
-#board > .list > .page > .num {}
-#board > .list > .page > .current {
-  border: 1px solid #6d6d6d;
-  background: #888;
-  color: #fff;
+
+/* 다음 버튼 */
+#board > .list > .page > .next {
+  /* 스타일 추가 */
+  color: white;
+  background-color: #A8D031;
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+/* 숫자 버튼 */
+#board > .list > .page > .num {
+  /* 스타일 추가 */
+  color: black;
+  background-color: #f0f0f0;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+  margin-right: 5px;
+}
+
+/* 현재 페이지 버튼 */
+#board > .list > .page > .num:current {
+  /* 작동안됨..ㅠㅠ */
+}
+
+#board > .list .btnWrite {
+  background-color: #f0f0f0; /* 버튼의 배경색을 원하는 색상으로 설정 */
+  color: #000000;
+  border: 1px solid #bebebe;
 }
 
 /* 글쓰기 */
