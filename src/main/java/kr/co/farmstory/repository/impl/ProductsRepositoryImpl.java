@@ -108,4 +108,61 @@ public class ProductsRepositoryImpl implements ProductsRepositoryCustom {
         // 페이징 처리를 위해 page 객체 리턴
         return new PageImpl<>(content, pageable, total);
     }
+
+    @Override
+    public Page<Tuple> selectProductsForMarket(ProductPageRequestDTO pageRequestDTO, Pageable pageable) {
+       try {
+           String type = pageRequestDTO.getCate();
+           String keyword = pageRequestDTO.getKeyword();
+
+           // 검색 종류에 따른 where 표현식 생성
+           BooleanExpression expression = null;
+
+           if (type.equals("1")) {
+               expression = qProducts.cateNo.eq(Integer.valueOf(type)).and(qProducts.prodName.contains(keyword));
+           } else if (type.equals("2")) {
+               expression = qProducts.cateNo.eq(Integer.valueOf(type)).and(qProducts.prodName.contains(keyword));
+           } else if (type.equals("3")) {
+               expression = qProducts.cateNo.eq(Integer.valueOf(type)).and(qProducts.prodName.contains(keyword));
+           } else {
+               expression = qProducts.prodName.contains(keyword);
+           }
+
+           QueryResults<Tuple> results = jpaQueryFactory
+                   .select(qProducts, qCategories.cateName)
+                   .from(qProducts)
+                   .join(qCategories)
+                   .on(qProducts.cateNo.eq(qCategories.cateNo))
+                   .where(expression)
+                   .offset(pageable.getOffset())
+                   .limit(pageable.getPageSize())
+                   .orderBy(qProducts.prodNo.desc())
+                   .fetchResults();
+
+           List<Tuple> content = results.getResults();
+           long total = results.getTotal();
+           return new PageImpl<>(content, pageable, total);
+       }catch (Exception e){
+           String keyword = pageRequestDTO.getKeyword();
+
+           // 검색 종류에 따른 where 표현식 생성
+           BooleanExpression expression = qProducts.prodName.contains(keyword);
+
+           QueryResults<Tuple> results = jpaQueryFactory
+                   .select(qProducts, qCategories.cateName)
+                   .from(qProducts)
+                   .join(qCategories)
+                   .on(qProducts.cateNo.eq(qCategories.cateNo))
+                   .where(expression)
+                   .offset(pageable.getOffset())
+                   .limit(pageable.getPageSize())
+                   .orderBy(qProducts.prodNo.desc())
+                   .fetchResults();
+
+           List<Tuple> content = results.getResults();
+           long total = results.getTotal();
+           return new PageImpl<>(content, pageable, total);
+       }
+        // 페이징 처리를 위해 page 객체 리턴
+    }
 }

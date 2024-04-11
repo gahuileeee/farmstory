@@ -30,18 +30,28 @@ public class MarketController {
     //상품 정보 리스트
     @GetMapping("/market/list")
     public  String marketList(Model model , ProductPageRequestDTO pageRequestDTO){
-        if(pageRequestDTO.getCate() == null){
+        log.info(pageRequestDTO.getCate()+"!!!");
+        if(pageRequestDTO.getCate() == null && pageRequestDTO.getKeyword() == null){
             ProductPageResponseDTO products = marketService.selectProducts(pageRequestDTO);
             model.addAttribute("products", products);
-        }else{
+        }else if(pageRequestDTO.getKeyword() == null && pageRequestDTO.getCate() != null){
             log.info(pageRequestDTO.getCate()+"!!");
             ProductPageResponseDTO products = marketService.selectProductsbyCate(pageRequestDTO);
             model.addAttribute("cate", pageRequestDTO.getCate());
             model.addAttribute("products", products);
+        }else if(pageRequestDTO.getKeyword() != null && pageRequestDTO.getKeyword() != null){
+            log.info("here!!");
+            ProductPageResponseDTO products = marketService.selectProductsForAdmin(pageRequestDTO);
+            model.addAttribute("keyword", pageRequestDTO.getKeyword());
+            model.addAttribute("cate", pageRequestDTO.getCate());
+            model.addAttribute("products", products);
+        }else{
+            ProductPageResponseDTO products = marketService.selectProductsForAdmin(pageRequestDTO);
+            model.addAttribute("keyword" , pageRequestDTO.getKeyword());
+            model.addAttribute("products", products);
         }
         return "/market/list";
     }
-
 
 
 

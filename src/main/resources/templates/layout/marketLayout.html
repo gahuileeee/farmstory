@@ -6,6 +6,7 @@
     <title>팜스토리::장보기</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}"/>
     <script th:src="@{/js/util.js}"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body>
 <div id="container">
@@ -25,7 +26,7 @@
         <img th:src="@{/assets/img/head_txt_img.png}" alt="3만원 이상 무료배송"/>
 
         <ul class="gnb">
-            <li><a th:href="@{/introduction/list(cate = hello)}">팜스토리소개</a></li>
+            <li><a th:href="@{/introduction/hello(cate = hello)}">팜스토리소개</a></li>
             <li><a th:href="@{/market/list}"><img th:src="@{/assets/img/head_menu_badge.png}" alt="30%"/>장바구니</a></li>
             <li><a th:href="@{/croptalk/list(cate = story)}">농작물이야기</a></li>
             <li><a th:href="@{/event/list(cate = event)}">이벤트</a></li>

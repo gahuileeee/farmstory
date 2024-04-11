@@ -24,13 +24,19 @@
                 //바로 결제
             btnOrder.onclick= function (e){
                 e.preventDefault();
-                const inputProd = document.getElementById('prodNumber');
-                inputProd.value = document.getElementById('prodNo').value;
+                try{
+                    const userForDirect = document.getElementById('userForDirect').value;
 
-                const inputCount = document.getElementById('countNo');
-                inputCount.value = document.getElementById('count').value;
+                    const inputProd = document.getElementById('prodNumber');
+                    inputProd.value = document.getElementById('prodNo').value;
 
-                buyDirect.click();
+                    const inputCount = document.getElementById('countNo');
+                    inputCount.value = document.getElementById('count').value;
+
+                    buyDirect.click();
+                }catch {
+                    alert('로그인 후 이용해주세요');
+                }
             }
 
 
@@ -40,14 +46,19 @@
                 //상품번호 + 상품 주문 수량 넘기기
                 const prodNo = document.getElementById('prodNo').value;
                 const count = document.getElementById('count').value;
-                const userId = document.getElementById('userId').value;
-                const jsonData = {prodNo: prodNo, count: count , userId : userId};
-                console.log(jsonData.count+"!!");
-                const response = await fetchPost('/farmstory/market/cart', jsonData)
-                console.log(response+"!!");
-                if(response.result === 'success'){
-                    console.log('성공!!');
-                    btnCartView.click();
+                var userId = null;
+                try {
+                   userId  = document.getElementById('userId').value;
+                    const jsonData = {prodNo: prodNo, count: count , userId : userId};
+                    console.log(jsonData.count+"!!");
+                    const response = await fetchPost('/farmstory/market/cart', jsonData)
+                    console.log(response+"!!");
+                    if(response.result === 'success'){
+                        console.log('성공!!');
+                        btnCartView.click();
+                    }
+                }catch{
+                    alert('로그인 후 이용해주세요')
                 }
             }
             function numberWithCommas(x) {
@@ -55,9 +66,7 @@
             }
             function totalPrice(){
                 let totalPrice = productPrice * (100 - prodDiscount) * 0.01 * count.value;
-                if(totalPrice< 30000){
-                    totalPrice +=5000;
-                }
+
                 total.innerText =numberWithCommas (totalPrice) +'원';
             }
         }
@@ -101,7 +110,9 @@
                 <td>구매수량</td>
                 <td>
                         <input type="hidden" id="prodNo" th:value="${product.getProdNo()}">
+                    <th:block th:if="${#authentication.principal != 'anonymousUser'}">
                         <input type="hidden" id="userId" th:value="${#authentication.principal.user.uid}">
+                    </th:block>
                         <input type="number" name="count" id="count" min="1" value="1">
                 </td>
             </tr>
@@ -115,12 +126,16 @@
             <a href="/" id="btnOrder" class="btn btnOrder">바로구매</a>
 
             <form th:action="@{/market/cart}" method="get">
+                <th:block th:if="${#authentication.principal != 'anonymousUser'}">
                 <input type="hidden" id="user" name="user" th:value="${#authentication.principal.user.uid}">
+                </th:block>
                 <button type="submit" id="btnCartView"></button>
             </form>
 
             <form th:action="@{/market/buyDirect}" method="get">
-                <input type="hidden"  name="user" th:value="${#authentication.principal.user.uid}">
+                <th:block th:if="${#authentication.principal != 'anonymousUser'}">
+                <input type="hidden"  name="user" id="userForDirect" th:value="${#authentication.principal.user.uid}">
+                </th:block>
                 <input type="hidden"  id="prodNumber" name="prodNumber" value="">
                 <input type="hidden"  id="countNo"  name="countNo" value="">
                 <button type="submit" id="buyDirect"></button>
