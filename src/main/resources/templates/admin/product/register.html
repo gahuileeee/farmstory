@@ -59,7 +59,7 @@
                     </tr>
                     <tr>
                         <td>가격</td>
-                        <td><input type="text" name="prodPrice" id="price" oninput="calculatePoint()"/></td>
+                        <td><input type="text" name="prodPrice" id="price" oninput="validateNumber(this)" onkeyup="calculatePoint()"/></td>
                     </tr>
                     <tr>
                         <td>포인트</td>
@@ -91,7 +91,7 @@
                     </tr>
                     <tr>
                         <td>재고</td>
-                        <td><input type="text" name="prodStock"/></td>
+                        <td><input type="text" oninput="validateNumber(this)"  name="prodStock"/></td>
                     </tr>
                     <tr>
                         <td>상품이미지</td>
