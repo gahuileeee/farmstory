@@ -20,6 +20,9 @@ public class FileDTO {
     private int download;           // 다운로드 횟수
     private LocalDateTime rdate;    // 생성일자
 
+    // 파일 경로 저장 필드 추가
+    private String filePath;
+
     public File toEntity(){
         return  File.builder()
                 .fno(fno)
@@ -28,6 +31,7 @@ public class FileDTO {
                 .sName(sName)
                 .download(download)
                 .rdate(rdate)
+                .filePath(filePath)
                 .build();
     }
 }

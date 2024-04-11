@@ -18,23 +18,25 @@
 
         }
     </script>
-    <div><img  th:src="@{/assets/img/sub_top_tit3.png}" alt="CROP TALK"></div>
-    <section class="croptalk">
+    <div><img  th:src="@{/assets/img/sub_top_tit3.png}" alt="COMMUNITY"></div>
+    <section class="community">
         <aside>
-            <img th:src="@{/assets/img/sub_aside_cate3_tit.png}" alt="농작물이야기"/>
+            <img th:src="@{/assets/img/sub_aside_cate3_tit.png}" alt="커뮤니티"/>
 
             <ul class="lnb">
-                <li class="" id="story"><a th:href="@{/croptalk/list(cate='story')}">농작물이야기</a></li>
-                <li class="" id="grow"><a th:href="@{/croptalk/list(cate='grow')}">텃밭가꾸기</a></li>
-                <li class="" id="school"><a th:href="@{/croptalk/list(cate='school')}">귀농학교</a></li>  <!-- on 추가 -->
+                <li class="" id="notice"><a th:href="@{/community/list(cate='notice')}">공지사항</a></li>
+                <li class="" id="menu"><a th:href="@{/community/list(cate='menu')}">오늘의식단</a></li>
+                <li class="" id="chef"><a th:href="@{/community/list(cate='chef')}">나도요리사</a></li>  <!-- on 추가 -->
+                <li class="" id="qna"><a th:href="@{/community/list(cate='qna')}">1:1고객문의</a></li>  <!-- on 추가 -->
+                <li class="" id="faq"><a th:href="@{/community/list(cate='faq')}">자주묻는질문</a></li>  <!-- on 추가 -->
             </ul>
 
         </aside>
         <article>
             <nav>
-                <img th:src="@{/assets/img/__${cateName.cate}__.png}" alt="농작물이야기"/> <!-- ??-->
+                <img th:src="@{/assets/img/__${cateName.cate}__.png}" alt="커뮤니티"/> <!-- ??-->
                 <p>
-                    HOME > 농작물이야기 > <em>[[${cateName.boardName}]]</em> <!-- 완료 -->
+                    HOME > 커뮤니티 > <em>[[${cateName.boardName}]]</em> <!-- 완료 -->
                 </p>
             </nav>
 
@@ -43,7 +45,7 @@
                 <section class="view">
 
                     <input type="hidden" name="nick" th:value="${article.nick}" />
-                    <form th:action="@{/croptalk/modify}" method="post" enctype="multipart/form-data" id="formModify">  <!--enctype선언해야 MultipartFile객체로 파일을 변환처리가능-->
+                    <form th:action="@{/community/modify}" method="post" enctype="multipart/form-data" id="formModify">  <!--enctype선언해야 MultipartFile객체로 파일을 변환처리가능-->
                         <input type="hidden" name="no" th:value="${article.no}" />
                         <input type="hidden" name="cate" th:value="${article.getCate()}" />
                     <table border="0">
@@ -80,7 +82,7 @@
                     <input type="hidden" th:value="${article}" name="articleDTO">
                     <!-- 폼 내용 생략 -->
                     <div style="text-align: right; margin-top: 10px;">
-                        <a th:href="@{/croptalk/view(cate=${cateName.cate}, no=${article.no})}" class="btn btnCancel">취소</a>
+                        <a th:href="@{/community/view(cate=${cateName.cate}, no=${article.no})}" class="btn btnCancel">취소</a>
                         <input type="button" id="modifyButton" value="수정완료" class="btn btnComplete"/>
                     </div>
                 </section>

@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/layout/articleLayout.html}">
@@ -11,10 +10,10 @@
             classOnTarget.classList.add("on");
         }
     </script>
-    <div><img  th:src="@{/assets/img/sub_top_tit5.png}" alt="COMMUNITY"></div>
+    <div><img  th:src="@{/assets/img/sub_top_tit3.png}" alt="COMMUNITY"></div>
     <section class="community">
         <aside>
-            <img th:src="@{/assets/img/sub_aside_cate5_tit.png}" alt="커뮤니티"/>
+            <img th:src="@{/assets/img/sub_aside_cate3_tit.png}" alt="커뮤니티"/>
 
             <ul class="lnb">
                 <li class="" id="notice"><a th:href="@{/community/list(cate='notice')}">공지사항</a></li>
@@ -54,14 +53,14 @@
                             <tr>
                                 <th>파일</th>
                                 <td>
-                                    <input type="file" name="fname" multiple="multiple" pl/><br>
+                                    <input type="file" name="files" multiple="multiple" pl/><br>
                                 </td>
                             </tr>
                         </table>
 
                         <div>
                             <a th:href="@{/community/list(cate=${cateName.cate})}" class="btn btnCancel">취소</a>
-                            <input type="submit" value="작성완료" class="btn btnComplete" />
+                            <input type="submit" value="작성완료" class="btn btnComplete" id="formFileMultiple" multiple/>
                         </div>
                     </form>
                 </section>

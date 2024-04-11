@@ -38,7 +38,7 @@
                     const parent = e.target.dataset.parent;
 
                     // 댓글 삭제 요청
-                    fetch(`/farmstory/croptalk/deleteComment/${no}`, {
+                    fetch(`/farmstory/community/deleteComment/${no}`, {
                         method: 'DELETE'
                     })
                         .then(response => {
@@ -85,7 +85,7 @@
                 };
 
                 // 댓글 추가 요청
-                fetch('/farmstory/croptalk/insertComment', {
+                fetch('/farmstory/community/insertComment', {
                     method: 'POST',
                     headers: { "Content-type": "application/json" },
                     body: JSON.stringify(jsonData)
@@ -172,7 +172,7 @@
                     formData.forEach((value, key) => jsonData[key] = value);
 
                     // 댓글 수정 요청
-                    fetch('/farmstory/croptalk/modifyComment', {
+                    fetch('/farmstory/community/modifyComment', {
                         method: 'PUT',
                         headers: { "Content-type": "application/json" },
                         body: JSON.stringify(jsonData)
@@ -219,23 +219,25 @@
 
 
     </script>
-    <div><img  th:src="@{/assets/img/sub_top_tit3.png}" alt="CROP TALK"></div>
-    <section class="croptalk">
+    <div><img  th:src="@{/assets/img/sub_top_tit3.png}" alt="COMMUNITY"></div>
+    <section class="community">
         <aside>
-            <img th:src="@{/assets/img/sub_aside_cate3_tit.png}" alt="농작물이야기"/>
+            <img th:src="@{/assets/img/sub_aside_cate3_tit.png}" alt="커뮤니티"/>
 
             <ul class="lnb">
-                <li class="" id="story"><a th:href="@{/croptalk/list(cate='story')}">농작물이야기</a></li>
-                <li class="" id="grow"><a th:href="@{/croptalk/list(cate='grow')}">텃밭가꾸기</a></li>
-                <li class="" id="school"><a th:href="@{/croptalk/list(cate='school')}">귀농학교</a></li>  <!-- on 추가 -->
+                <li class="" id="notice"><a th:href="@{/community/list(cate='notice')}">공지사항</a></li>
+                <li class="" id="menu"><a th:href="@{/community/list(cate='menu')}">오늘의식단</a></li>
+                <li class="" id="chef"><a th:href="@{/community/list(cate='chef')}">나도요리사</a></li>  <!-- on 추가 -->
+                <li class="" id="qna"><a th:href="@{/community/list(cate='qna')}">1:1고객문의</a></li>  <!-- on 추가 -->
+                <li class="" id="faq"><a th:href="@{/community/list(cate='faq')}">자주묻는질문</a></li>  <!-- on 추가 -->
             </ul>
 
         </aside>
         <article>
             <nav>
-                <img th:src="@{/assets/img/__${cateName.cate}__.png}" alt="농작물이야기"/> <!-- ??-->
+                <img th:src="@{/assets/img/__${cateName.cate}__.png}" alt="커뮤니티"/> <!-- ??-->
                 <p>
-                    HOME > 농작물이야기 > <em>[[${cateName.boardName}]]</em> <!-- 완료 -->
+                    HOME > 커뮤니티 > <em>[[${cateName.boardName}]]</em> <!-- 완료 -->
                 </p>
             </nav>
 
@@ -275,17 +277,17 @@
                         <!-- 삭제 버튼 -->
                         <th:block th:if="${#authentication.principal != 'anonymousUser'}">
                             <a th:if="${#authentication.principal.user.uid == articleDTO.writer}"
-                               th:href="@{/croptalk/delete(cate=${cateName.cate}, no=${articleDTO.getNo()})}" class="btn btnRemove">삭제</a>
+                               th:href="@{/community/delete(cate=${cateName.cate}, no=${articleDTO.getNo()})}" class="btn btnRemove">삭제</a>
                         </th:block>
                         <!-- 수정 버튼 -->
                         <th:block th:if="${#authentication.principal != 'anonymousUser'}">
                             <a th:if="${#authentication.principal.user.uid == articleDTO.writer}"
-                               th:href="@{/croptalk/modify(cate=${cateName.cate}, no=${articleDTO.getNo()})}" class="btn  btnModify">수정</a>
+                               th:href="@{/community/modify(cate=${cateName.cate}, no=${articleDTO.getNo()})}" class="btn  btnModify">수정</a>
                         </th:block>
 
 
 
-                        <a th:href="@{/croptalk/list(cate=${cateName.cate})}" class="btn btnList">목록</a>
+                        <a th:href="@{/community/list(cate=${cateName.cate})}" class="btn btnList">목록</a>
                     </div>
 
                     <!-- 댓글목록 -->
@@ -327,7 +329,7 @@
                     <th:block th:if="${#authorization.expression('isAuthenticated()')}">
                         <section class="commentForm">
                             <h3>댓글쓰기</h3>
-                            <form name="commentForm" th:action="@{/croptalk/insertComment}" method="post"  id="formModify">
+                            <form name="commentForm" th:action="@{/community/insertComment}" method="post"  id="formModify">
                                 <input type="hidden" name="parent" th:value="${articleDTO.no}">
                                 <input type="hidden" name="writer" th:value="${#authentication.principal.user.uid}">
                                 <textarea name="content" placeholder="댓글 입력"></textarea>

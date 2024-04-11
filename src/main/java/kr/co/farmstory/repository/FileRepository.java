@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface FileRepository extends JpaRepository<File, Integer> {
     public List<File> findFilesByAno(int no);
+
 }
