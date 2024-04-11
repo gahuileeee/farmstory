@@ -21,7 +21,9 @@ public class ProductPageRequestDTO {
     private int pg=1;
 
     @Builder.Default
-    private int size =10;
+    private int size =12;
+
+    private String cate;
 
     /* 검색을 위한 type, keyword 선언 */
     private String type;

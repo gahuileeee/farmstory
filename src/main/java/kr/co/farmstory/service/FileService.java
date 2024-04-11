@@ -1,13 +1,14 @@
 package kr.co.farmstory.service;
 
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import kr.co.farmstory.dto.ArticleDTO;
 import kr.co.farmstory.dto.FileDTO;
 import kr.co.farmstory.entity.Article;
+import kr.co.farmstory.repository.ArticleRepository;
 import kr.co.farmstory.repository.FileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -32,60 +33,41 @@ import java.util.*;
 public class FileService {
 
     private final FileRepository fileRepository;
+    private final ArticleRepository articleRepository;
+    private final ModelMapper modelMapper;
 
     @Value("${file.upload.path}")               // application.yml에서 값을 가져와 Bean에 주입(application.yml에 파일경로 설정 있음)
     private String fileUploadPath;
 
-    public List<FileDTO> fileUpload(ArticleDTO articleDTO){
-
-        // 파일 업로드 시스템 경로 구하기
-        String path = new File(fileUploadPath).getAbsolutePath();
-
-        // 파일 정보 리턴을 위한 리스트
-        List<FileDTO> files = new ArrayList<>();
-
-        log.info("fileUpload...1");
-
-        // 첨부한 파일 갯수만큼 반복 처리
+    public int fileUpload(ArticleDTO articleDTO)  {
+        String path = new File(fileUploadPath).getAbsolutePath();  //실제 업로드 할 시스템상의 경로 구하기
+        int ano = articleDTO.getNo();
+        int count = 0;
         for(MultipartFile mf : articleDTO.getFiles()){
-            log.info("fileUpload...2");
-
-            //파일 첨부 안하면 에러나기 때문에 if문으로 isEmpty()로 첨부여부 먼저 확인
-            if(!mf.isEmpty()) {
-
-                log.info("fileUpload...3");
+            if(mf.getOriginalFilename() !=null && mf.getOriginalFilename() != ""){
                 String oName = mf.getOriginalFilename();
+                String ext = oName.substring(oName.lastIndexOf(".")); //확장자
+                String sName = UUID.randomUUID().toString()+ ext;
 
-                log.info("fileUpload...4 : " + oName);
-
-                String ext = oName.substring(oName.lastIndexOf("."));
-                String sName = UUID.randomUUID().toString() + ext;
-
-                log.info("oName : " + oName);
-
-                try {
-                    // 저장
+                log.info("oName : "+oName);
+                try{
+                    //upload directory에 upload가 됨
                     mf.transferTo(new File(path, sName));
 
-                    // 파일 정보 생성
                     FileDTO fileDTO = FileDTO.builder()
+                            .ano(ano)
                             .oName(oName)
                             .sName(sName)
                             .build();
-
-                    // 리스트 저장
-                    files.add(fileDTO);
-
-                } catch (IOException e) {
-                    log.error("fileUpload : " + e.getMessage());
+                    fileRepository.save(fileDTO.toEntity());
+                    count++;
+                }catch (IOException e){
+                    log.error("fileUpload : "+e.getMessage());
                 }
             }
         }
-
-        // 저장한 파일 정보 리스트 반환
-        return files;
+        return count;
     }
-
 
     @Transactional
     public ResponseEntity<?> fileDownload(int fno)  {
@@ -127,5 +109,52 @@ public class FileService {
         resultMap.put("count", file.getDownload());
 
         return ResponseEntity.ok().body(resultMap);
+    }
+
+    @Transactional
+    public ResponseEntity deleteFile(List<Integer> list, int no){
+        //파일 수 변경
+        Article article= articleRepository.findById(no).get();
+        ArticleDTO articleDTO = modelMapper.map(article, ArticleDTO.class);
+        articleDTO.setFile(articleDTO.getFile() - list.size());
+        Article nArticle =modelMapper.map(articleDTO, Article.class);
+        log.info("!!"+nArticle.getFile());
+        articleRepository.save(nArticle);
+
+        //파일 삭제
+        String path = new File(fileUploadPath).getAbsolutePath();
+
+        for(int fno : list){
+            //DB에 삭제
+            kr.co.farmstory.entity.File file  = fileRepository.findById(fno).get();
+            String sName = file.getSName();
+            fileRepository.deleteById(fno);
+
+            //실제로 삭제
+            File deleteFile = new File(fileUploadPath+File.separator+ sName);
+            if(deleteFile.exists()){
+                deleteFile.delete();
+            }
+        }
+
+        Map<String, Object> map2 = new HashMap<>();
+        map2.put("delte", "success");
+
+        return ResponseEntity.ok().body(map2);
+    }
+
+    public  void deleteFiles(int ano){
+        String path = new File(fileUploadPath).getAbsolutePath();
+        List<kr.co.farmstory.entity.File> files = fileRepository.findFilesByAno(ano);
+        for(kr.co.farmstory.entity.File file : files){
+            String sName = file.getSName();
+            int fno = file.getFno();
+            fileRepository.deleteById(fno);
+
+            File deleteFile = new File(fileUploadPath+File.separator+sName);
+            if(deleteFile.exists()){
+                deleteFile.delete();
+            }
+        }
     }
 }

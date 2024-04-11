@@ -1,12 +1,12 @@
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns="http://www.w3.org/1999/html"
       layout:decorate="~{/admin/layout/adminLayout.html}">
 
     <section id="orderList" layout:fragment="content">
         <nav>
             <h3>주문목록</h3>
         </nav>
-
+            <article>
                 <table border="0">
                     <tr>
                         <th>주문번호</th>
@@ -23,7 +23,7 @@
                         <td>[[${order.delivery}]] 원</td>
                         <td>[[${order.totalFee}]] 원</td>
                         <td>[[${order.orderName}]]</td>
-                        <td>[[${order.orderDate}]]</td>
+                        <td th:text="${#temporals.format(order.orderDate, 'yyyy-MM-dd')}"></td>
                         <td><a th:href="@{/admin/order/detail(orderNo = ${order.orderNo})}">[상세확인]</a></td>
                     </tr>
                 </table>
@@ -45,5 +45,4 @@
                 </p>
             </article>
         </section>
-</main>
 </html>

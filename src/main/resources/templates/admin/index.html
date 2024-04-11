@@ -52,7 +52,7 @@
                         <td>[[${order.delivery}]] 원</td>
                         <td>[[${order.totalFee}]] 원</td>
                         <td>[[${order.orderName}]]</td>
-                        <td>[[${order.orderDate}]]</td>
+                        <td th:text="${#temporals.format(order.orderDate, 'yyyy-MM-dd')}"></td>
                         <td><a th:href="@{/admin/order/detail(orderNo = ${order.orderNo})}">[상세확인]</a></td>
                     </tr>
                 </table>
@@ -78,7 +78,14 @@
                         <td>[[${user.nick}]]</td>
                         <td>[[${user.hp}]]</td>
                         <td>[[${user.email}]]</td>
-                        <td>[[${user.grade}]]</td>
+                        <td th:switch="${user.grade}">
+                            <span th:case="1">Bronze</span>
+                            <span th:case="2">Silver</span>
+                            <span th:case="3">Gold</span>
+                            <span th:case="4">Platinum</span>
+                            <span th:case="5">Diamond</span>
+                            <span th:case="*" th:text="''">Unknown</span>
+                        </td>
                         <td th:text="${#temporals.format(user.regDate, 'yyyy-MM-dd')}"></td>
                     </tr>
                 </table>

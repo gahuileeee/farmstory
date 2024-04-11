@@ -2,22 +2,25 @@ package kr.co.farmstory.service;
 
 import com.querydsl.core.Tuple;
 import jakarta.transaction.Transactional;
-import kr.co.farmstory.dto.ArticleDTO;
-import kr.co.farmstory.dto.ArticlePageRequestDTO;
-import kr.co.farmstory.dto.ArticlePageResponseDTO;
-import kr.co.farmstory.dto.ConfigDTO;
+import kr.co.farmstory.dto.*;
 import kr.co.farmstory.entity.Article;
 import kr.co.farmstory.entity.Config;
+import kr.co.farmstory.entity.File;
 import kr.co.farmstory.repository.ArticleRepository;
 import kr.co.farmstory.repository.ConfigRepository;
+import kr.co.farmstory.repository.FileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -28,6 +31,8 @@ public class ArticleService {
 
     private final ArticleRepository articleRepository;
     private final ConfigRepository configRepository;
+    private final FileService fileService;
+    private final FileRepository fileRepository;
     private final ModelMapper modelMapper;
 
     //카테고리 검색(카테고리에 해당하는 Config 엔티티를 찾아 반환)
@@ -59,32 +64,6 @@ public class ArticleService {
                 })
                 .collect(Collectors.toList());
     }
-
-    // ArticleService 클래스 내부에 구현합니다.
-    public void insertArticle(ArticleDTO articleDTO) {
-        Article article = articleDTO.toEntity();
-        articleRepository.save(article);
-    }
-
-    public ArticleDTO findById(int no){
-
-        Optional<Article> optArticle = articleRepository.findById(no);
-
-        ArticleDTO articleDTO = null;
-
-        if(optArticle.isPresent()){
-
-            Article article = optArticle.get();
-            articleDTO = modelMapper.map(article, ArticleDTO.class);
-        }
-
-        return articleDTO;
-    }
-
-    public ArticlePageResponseDTO getArticles(ArticlePageRequestDTO requestDTO) {
-        return new ArticlePageResponseDTO();
-    }
-
 
     public ArticlePageResponseDTO selectArticles(ArticlePageRequestDTO pageRequestDTO){
 
@@ -149,6 +128,38 @@ public class ArticleService {
                 .total(total)
                 .build();
     }
+
+    public ArticleDTO findById(int no){
+
+        Optional<Article> optArticle = articleRepository.findById(no);
+
+        ArticleDTO articleDTO = null;
+
+        if(optArticle.isPresent()){
+
+            Article article = optArticle.get();
+            articleDTO = modelMapper.map(article, ArticleDTO.class);
+        }
+        return articleDTO;
+    }
+
+    public void insertArticle(ArticleDTO articleDTO){
+        articleDTO.setFile(articleDTO.getFiles().size());
+
+        for(MultipartFile mf : articleDTO.getFiles()){
+            if(mf.getOriginalFilename() ==null || mf.getOriginalFilename() == ""){
+                articleDTO.setFile(0);
+            }
+        }
+        Article article = modelMapper.map(articleDTO, Article.class);
+        log.info(article.toString());
+        Article savedArticle= articleRepository.save(article);
+        int ano = savedArticle.getNo();
+        articleDTO.setNo(ano);
+
+        fileService.fileUpload(articleDTO);
+    }
+
     public ArticleDTO selectArticle(int no){
         return modelMapper.map(articleRepository.findById(no), ArticleDTO.class);
     }
@@ -157,17 +168,17 @@ public class ArticleService {
         Article oArticle = articleRepository.findById(articleDTO.getNo()).get();
         ArticleDTO oArticleDTO = modelMapper.map(oArticle, ArticleDTO.class);
 
-
         oArticleDTO.setContent(articleDTO.getContent());
         oArticleDTO.setTitle(articleDTO.getTitle());
+        oArticleDTO.setFiles(articleDTO.getFiles());
 
+        int count = fileService.fileUpload(oArticleDTO);
+
+        oArticleDTO.setFile(oArticleDTO.getFile()+count);
 
         Article article = modelMapper.map(oArticleDTO, Article.class);
         articleRepository.save(article);
     }
-
-
-
 
     @Transactional
     public void deleteArticle (int no){
@@ -175,7 +186,45 @@ public class ArticleService {
         articleRepository.deleteArticlesByParent(no);
     }
 
+    //comment
+    public ResponseEntity insertComment(ArticleDTO articleDTO){
+        Article savedArticle =articleRepository.save(modelMapper.map(articleDTO,Article.class));
 
+        return ResponseEntity.ok().body(savedArticle);
+    }
+
+    public List<ArticleDTO> selectComment(int parent){
+        List<Tuple> lists =articleRepository.selectComments(parent);
+
+        return lists.stream()
+                .map(tuple -> {
+                    Article article = tuple.get(0 ,Article.class);
+                    String nick = tuple.get(1, String.class);
+                    article.setNick(nick);
+                    return modelMapper.map(article, ArticleDTO.class);
+                })
+                .toList();
+    }
+
+    public ResponseEntity deleteComment(int no){
+        articleRepository.deleteById(no);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("sucesss", "1");
+
+        return ResponseEntity.ok().body(map);
+    }
+
+    public ArticleDTO selectCommentByNo(int no){
+        return modelMapper.map(articleRepository.findById(no), ArticleDTO.class) ;
+    }
+
+    public ResponseEntity updateComment(ArticleDTO commentDTO){
+        Article article= articleRepository.save(modelMapper.map(commentDTO, Article.class));
+        Map<String, Object> map = new HashMap<>();
+        map.put("article", article);
+        return  ResponseEntity.ok().body(map);
+    }
 
 
 

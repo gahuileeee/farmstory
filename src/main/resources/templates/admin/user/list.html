@@ -42,19 +42,18 @@
     <article>
         <table border="0">
             <tr>
-                <th data-sortable="true" onclick="sort('uid')">아이디 <i class="fas fa-sort"></i></th>
-                <th data-sortable="true" onclick="sort('name')">이름 <i class="fas fa-sort"></i></th>
-                <th data-sortable="true" onclick="sort('nick')">별명 <i class="fas fa-sort"></i></th>
-                <th data-sortable="true" onclick="sort('email')">이메일 <i class="fas fa-sort"></i></th>
+                <th data-sortable="true" onclick="sort('uid')">아이디<br/> <i class="fas fa-sort"></i></th>
+                <th data-sortable="true" onclick="sort('name')">이름 <br/><i class="fas fa-sort"></i></th>
+                <th data-sortable="true" onclick="sort('email')">이메일 <br/><i class="fas fa-sort"></i></th>
                 <th data-sortable="true">휴대폰</th>
-                <th data-sortable="true" onclick="sort('grade')">등급 <i class="fas fa-sort"></i></th>
-                <th data-sortable="true" onclick="sort('regDate')">가입일 <i class="fas fa-sort"></i>  </th>
+                <th data-sortable="true" onclick="sort('grade')">등급 <br/><i class="fas fa-sort"></i></th>
+                <th data-sortable="true" onclick="sort('totalPrice')">총구매액 <br/><i class="fas fa-sort"></i></th>
+                <th data-sortable="true" onclick="sort('regDate')">가입일 <br/><i class="fas fa-sort"></i>  </th>
                 <th>확인</th>
             </tr>
             <tr th:each="users, index:${userPageResponseDTO.dtoList}" id="user">
                 <td>[[${users.uid}]]</td>
                 <td>[[${users.name}]]</td>
-                <td>[[${users.nick}]]</td>
                 <td>[[${users.email}]]</td>
                 <td>[[${users.hp}]]</td>
                 <td>
@@ -66,6 +65,7 @@
                         <option th:selected="${users.getGrade() eq '5'}" value="5">Diamond</option>
                     </select>
                 </td>
+                <td>[[${users.totalPrice}]]</td>
                 <td th:text="${#temporals.format(users.regDate, 'yyyy-MM-dd')}"></td>
                 <td><a th:href="@{/admin/user/detail(uid=${users.uid})}">[상세확인]</a></td>
             </tr>

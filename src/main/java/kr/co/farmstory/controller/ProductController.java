@@ -71,6 +71,14 @@ public class ProductController {
 
     }
 
+    @GetMapping("/admin/product/modify")
+    public String productDetail(@RequestParam("prodNo") int prodNo, Model model){
+        ProductsDTO productsDTO = productService.selectProduct(prodNo);
+        log.info(productsDTO.toString());
+        model.addAttribute("prod", productsDTO);
+        return "/admin/product/modify";
+    }
+
     @PutMapping("admin/product/{selectedProdList}")
     public ResponseEntity<?> deleteProd(@RequestBody Map<String, List<Integer>> map, HttpServletRequest req){
 
@@ -92,8 +100,6 @@ public class ProductController {
                     .status(HttpStatus.NOT_FOUND)
                     .body(errorResponse);
         }
-
-
     }
 
 }

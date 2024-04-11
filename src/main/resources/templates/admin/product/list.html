@@ -101,7 +101,7 @@
                 <td><input type="checkbox" name="selectedProd"/></td>
                 <td><img th:src="@{/uploads/__${products.image1}__}" class="thumb" alt="샘플1"></td>
                 <td>[[${products.prodNo}]]</td>
-                <td>[[${products.prodName}]]</td>
+                <td><a th:href="@{'/admin/product/modify?prodNo=' + ${products.prodNo}}">[[${products.prodName}]]</a></td>
                 <td>[[${products.cateName}]]</td>
                 <td>[[${products.prodPrice}]]원</td>
                 <td>[[${products.prodStock}]]</td>
@@ -132,3 +132,9 @@
 
 
 </html>
+<style>
+    table tr td a:hover {
+        text-decoration: underline; /* 호버 시 밑줄 추가 */
+        cursor: pointer; /* 호버 시 커서 모양 변경 */
+    }
+</style>

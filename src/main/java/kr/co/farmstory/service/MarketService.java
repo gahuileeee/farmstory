@@ -55,11 +55,35 @@ public class MarketService {
                 .total(total)
                 .build();
     }
+    //검색
+    public ProductPageResponseDTO  selectProductsForAdmin(ProductPageRequestDTO pageRequestDTO){
+        Pageable pageable = pageRequestDTO.getPageable("no");
+
+        Page<Tuple> pageArticle = productsRepository. selectProductsForMarket(pageRequestDTO , pageable);
+        log.info(pageArticle.getContent().toString()+"!!");
+        List<ProductsDTO> dtoList = pageArticle.getContent().stream()
+                .map(tuple -> {
+                    Products products = tuple.get(0 ,Products.class);
+                    String cateName = tuple.get(1, String.class);
+                    products.setCateName(cateName);
+                    return modelMapper.map(products, ProductsDTO.class);
+                })
+                .toList();
+        log.info(dtoList+" dto! !!");
+        int total = (int) pageArticle.getTotalElements();
+        return ProductPageResponseDTO.builder()
+                .productPageRequestDTO(pageRequestDTO)
+                .dtoList(dtoList)
+                .total(total)
+                .build();
+    }
+
+
     //카테고리 별 조회
     public ProductPageResponseDTO  selectProductsbyCate(ProductPageRequestDTO pageRequestDTO) {
         Pageable pageable = pageRequestDTO.getPageable("no");
 
-        Page<Tuple> pageArticle = productsRepository.selectProductsbyCate(pageRequestDTO , pageable);
+        Page<Tuple> pageArticle = productsRepository.selectProductsByCate(pageRequestDTO , pageable);
         log.info(pageArticle.getContent().toString()+"!!");
         List<ProductsDTO> dtoList = pageArticle.getContent().stream()
                 .map(tuple -> {

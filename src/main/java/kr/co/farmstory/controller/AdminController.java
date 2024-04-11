@@ -10,9 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -49,13 +47,15 @@ public class AdminController {
    //order/list -> orderadmin으로 옮김
 
     @GetMapping("/admin/user/list")
-    public String userLsit(Model model, UserPageRequestDTO userPageRequestDTO){
+    public String userList(Model model, UserPageRequestDTO userPageRequestDTO){
 
+
+        log.info("userList!!!");
         UserPageResponseDTO pageResponseDTO = null;
         pageResponseDTO = adminService.selectsUserForAdmin(userPageRequestDTO);
 
         model.addAttribute(pageResponseDTO);
-        log.info(pageResponseDTO.toString());
+        //log.info(pageResponseDTO.toString());
         return "/admin/user/list";
     }
 
@@ -70,7 +70,7 @@ public class AdminController {
     }
 
     @GetMapping("/admin/user/detail")
-    public String userDetail(Model model, String uid){
+    public String userDetail(@RequestParam("uid")String uid, Model model){
         UserDTO userDTO = adminService.selectUserForAdmin(uid);
         model.addAttribute("user", userDTO);
         return "/admin/user/detail";

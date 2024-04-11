@@ -100,7 +100,7 @@ public class AdminOrderService {
         List<Products> products  = new ArrayList<>();
         List<String> cates = new ArrayList<>();
         for(OrderItems orderItem : orderItems){
-            Products products1 = productsRepository.findById(orderItem.getItemNo()).get();
+            Products products1 = productsRepository.findById(orderItem.getProdNo()).get();
             products.add(products1);
             cates.add(categoriesRepository.findById(products1.getCateNo()).get().getCateName());
         }

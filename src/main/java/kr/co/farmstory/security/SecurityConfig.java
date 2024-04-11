@@ -38,8 +38,9 @@ public class SecurityConfig {
                 .requestMatchers("/").permitAll()
                 .requestMatchers("/article/**").permitAll()
                 .requestMatchers("/market/list").permitAll()
+                .requestMatchers("/market/view").permitAll()
                 .requestMatchers("/market/**").authenticated()
-                .requestMatchers("/admin/**").hasAnyAuthority("ADMIN")
+                .requestMatchers("/admin/**").permitAll()
                 .requestMatchers("/manager/**").hasAnyAuthority("ADMIN", "MANAGER")
                 .anyRequest().permitAll());
 

@@ -9,7 +9,79 @@
             //cateName이 일치하면 li ~~ 이쪽에 class = "on"을 주고싶다.
             const classOnTarget =  document.getElementById('[[${cateName.cate}]]');
             classOnTarget.classList.add("on");
+
+            // 파일 다운로드 카운트 동적처리
+            const fileLinks = document.getElementsByClassName('fileLink');
+
+            for (const fileLink of fileLinks) {
+
+                // 파일 다운로드 요청과 동시에 다운로드 카운트 요청
+                fileLink.onclick = async function () {
+                    const count = this.nextElementSibling.innerText;
+                    this.nextElementSibling.innerText = parseInt(count) + 1;
+                }
+            }
+
+            const commentList = document.getElementsByClassName('commentList')[0];
+            const btnRemove = commentList.getElementsByClassName('remove');
+            const btnSubmit = document.commentForm.submit;
+            const form = document.commentForm;
+
+            // 댓글 입력
+            btnSubmit.onclick = function(e){
+                e.preventDefault();
+
+                const parent = form.parent.value;
+                const writer = form.writer.value;
+                const content = form.content.value;
+
+                const jsonData = {
+                    "parent": parent,
+                    "writer": writer,
+                    "content": content
+                };
+
+                console.log(jsonData);
+
+                fetch('/farmstory/croptalk/insertComment', {
+                    method: 'POST',
+                    headers: {"Content-type": "application/json"},
+                    body: JSON.stringify(jsonData)
+                })
+
+
+                    .then((resp) => resp.json())
+                    .then((data) => {
+                        console.log(data);
+
+                        if(data.pk > 0){
+                            const today = new Date();
+                            const year = today.getFullYear();
+                            const month = today.getMonth() + 1;
+                            const date = today.getDate();
+
+                            // 태그 문자열 생성(JSP 표현언어와 Javascritp 템플릿 문자열의 간섭으로 \ 이스케이프 처리)
+                            const commentArticle = `<article>
+									                <span class="nick">${sessUser.nick}</span>
+									                <span class="date">\${year}-\${month}-\${date}</span>
+									                <p class="content">\${content}</p>
+									                <div>
+									                    <a href="#" data-no="\${data.pk}" data-parent="\${data.parent}" class="remove">삭제</a>
+									                    <a href="#" class="modify">수정</a>
+									                </div>
+									            </article>`;
+                            // 태그 문자열 삽입
+                            commentList.insertAdjacentHTML('beforeend', commentArticle);
+                        }
+
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+
+            }
         }
+
     </script>
     <div><img  th:src="@{/assets/img/sub_top_tit3.png}" alt="CROP TALK"></div>
     <section class="croptalk">
@@ -34,20 +106,20 @@
             <!-- 내용 시작 -->
             <div id="board">
                 <section class="view">
-                    <input  type="hidden" name="no" th:value="${articleDTO.getNo()}" />
-                    <input  type="hidden" name="cate" th:value="${cateName.getCate()}" />
+                    <input type="hidden" name="no" th:value="${articleDTO.getNo()}" />
+                    <input type="hidden" name="cate" th:value="${cateName.getCate()}" />
                     <input type="hidden" name="nick" th:value="${articleDTO.getNick()}" />
                     <table border="0">
                         <tr>
                             <th>제목</th>
                             <td><input type="text" name="title" th:value="${articleDTO.title}" readonly/></td>
                         </tr>
-                        <th:block th:if="${articleDTO.file > 0}">
+                        <th:block th:if="${articleDTO.fileList != null && not #lists.isEmpty(articleDTO.fileList)}">
                             <tr>
                                 <th>파일</th>
                                 <td>
-                                    <th:block th:each="file : ${articleDTO.fileDTOs}">
-                                        <p style="margin-top:6px;">
+                                    <th:block th:each="file : ${articleDTO.fileList}">
+                                        <p style="margin-top:4px;">
                                             <a th:href="@{/file/download/{fno}(fno=${file.fno})}" class="fileLink" th:data-fno="${file.fno}">[[${file.oName}]]</a>
                                             <span>[[${file.download}]]</span>회 다운로드
                                         </p>
@@ -101,18 +173,20 @@
                     </section>
 
                     <!-- 댓글쓰기 -->
+                    <th:block th:if="${#authorization.expression('isAuthenticated()')}">
                     <section class="commentForm">
                         <h3>댓글쓰기</h3>
-                        <form name="commentForm" action="#" method="post">
-                            <input type="hidden" name="parent" value="${articleDTO.no}">
-                            <input type="hidden" name="writer" value="${sessionScope.sessUser.uid}">
+                        <form name="commentForm" th:action="@{/croptalk/insertComment}" method="post"  id="formModify">
+                            <input type="hidden" name="parent" th:value="${articleDTO.no}">
+                            <input type="hidden" name="writer" th:value="${#authentication.principal.user.uid}">
                             <textarea name="content" placeholder="댓글 입력"></textarea>
                             <div>
-                                <a href="#" class="btn btnCancel">취소</a>
-                                <input type="submit" name="submit" value="작성완료" class="btn btnComplete"/>
+                                <a th:href="@{#}" class="btn btnCancel">취소</a>
+                                <input type="submit" name="submit" value="작성완료" id="btnSubmit" class="btn btnComplete"/>
                             </div>
                         </form>
                     </section>
+                    </th:block>
 
                 </section>
             </div>

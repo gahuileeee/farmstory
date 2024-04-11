@@ -14,19 +14,23 @@ a {text-decoration: none; color: #111;}
 }
 
 #resultName{
+
     font-weight: bold;
     font-size: 12px;
 }
 
 #resultUid{
+
     font-weight: bold;
     font-size: 12px;
 }
 
 #resultEmail{
+
     font-weight: bold;
     font-size: 12px;
 }
+
 
 #editAddrBtn{
     --bs-btn-color: #6c757d;
@@ -49,13 +53,16 @@ a {text-decoration: none; color: #111;}
     font-family: "Noto Sans KR", sans-serif;
     font-weight: bold;
     font-size: 12.5px;
+
     line-height: 1.7;
 }
 
 .text-center{
+
     font-family: "Black Han Sans", sans-serif;
     font-size: 40px;
 }
+
 
 
 

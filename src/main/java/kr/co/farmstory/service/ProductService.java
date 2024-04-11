@@ -11,6 +11,7 @@ import kr.co.farmstory.repository.ProdImageRepository;
 import kr.co.farmstory.repository.ProductsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.coobird.thumbnailator.Thumbnails;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -58,29 +59,6 @@ public class ProductService {
             }
         }
 
-
-
-        /*
-        if (image1 != null && !image1.isEmpty()) {
-            byte[] image1Bytes = image1.getBytes();
-            String image1Base64 = Base64.getEncoder().encodeToString(image1Bytes);
-            products.setImage1(image1Base64);
-        }
-
-        if (image2 != null && !image2.isEmpty()) {
-            byte[] image2Bytes = image2.getBytes();
-            String image2Base64 = Base64.getEncoder().encodeToString(image2Bytes);
-            products.setImage2(image2Base64);
-        }
-
-        if (image3 != null && !image3.isEmpty()) {
-            byte[] image3Bytes = image3.getBytes();
-            String image3Base64 = Base64.getEncoder().encodeToString(image3Bytes);
-            products.setImage3(image3Base64);
-        }
-        */
-
-
         log.info("registerProd....1"+ products);
 
         Products savedProduct = productsRepository.save(products);
@@ -95,6 +73,18 @@ public class ProductService {
 
         return savedProduct;
 
+    }
+
+    public ProductsDTO selectProduct(int prodNo){
+        Optional<Products> optProd = productsRepository.findById(prodNo);
+
+        ProductsDTO productsDTO = null;
+        if (optProd.isPresent()){
+            Products products = optProd.get();
+
+            productsDTO = modelMapper.map(products, ProductsDTO.class);
+        }
+        return productsDTO;
     }
 
     public ResponseEntity<?> deleteProducts(HttpServletRequest req, int prodNo){
@@ -130,32 +120,36 @@ public class ProductService {
 
         log.info("fileUploadPath..1 : " + path);
 
-        for(MultipartFile mf : files){
-            log.info("oName..2 : ");
+        for (int i = 0; i < files.size(); i++) {
+            MultipartFile mf = files.get(i);
 
-            if(!mf.isEmpty()){
-
+            if (!mf.isEmpty()) {
                 String oName = mf.getOriginalFilename();
-                String ext = oName.substring(oName.lastIndexOf(".")); //확장자
-                String sName = UUID.randomUUID().toString()+ ext;
-
-                log.info("sName..3 : "+sName);
+                String ext = oName.substring(oName.lastIndexOf(".")); // 확장자
+                String sName = UUID.randomUUID().toString() + ext;
 
                 try {
-                    // 저장
-                    mf.transferTo(new File(path, sName));
+                    File file = new File(path, sName);
 
-                    //파일 정보 생성(imageDB 에 들어갈)
+                    if (i == 0) {
+                        // 첫 번째 파일에 대해서만 썸네일 생성
+                        Thumbnails.of(mf.getInputStream())
+                                .size(150, 150) // 썸네일 크기 지정
+                                .toFile(file);
+                    } else {
+                        // 나머지 파일에 대해서는 원본 이미지 그대로 저장
+                        mf.transferTo(file);
+                    }
+
+                    // 파일 정보 생성(imageDB에 저장될 DTO)
                     ProdImageDTO prodImageDTO = ProdImageDTO.builder()
                             .oName(oName)
                             .sName(sName)
                             .build();
 
                     imageDTOS.add(prodImageDTO);
-                    log.info("fileUpload....4:" + prodImageDTO);
-
-                }catch (IOException e){
-                    log.error("fileUpload : " + e.getMessage());
+                } catch (IOException e) {
+                    log.error("Failed to upload file: " + e.getMessage());
                 }
             }
         }

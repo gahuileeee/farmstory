@@ -33,5 +33,6 @@ public class UserDTO {
     private LocalDateTime regDate;
     private LocalDateTime leaveDate;
     private int totalPoint;
+    private int totalPrice;
 
 }
