@@ -8,7 +8,7 @@
         <h3>유저 상세</h3>
     </nav>
     <article>
-        <form th:action="@{/user/modify}" method="post" name="userDetailForm">
+        <form action="#" method="post" name="userDetailForm">
             <table border="0">
                 <tr>
                     <td>아이디</td>
@@ -19,31 +19,31 @@
                 <tr>
                     <td>이름</td>
                     <td>
-                        [[${user.name}]]
+                        <input class="inputName" type="text" id="inputName" name="name" th:value="${user.name}" />
                     </td>
                 </tr>
                 <tr>
                     <td>별명</td>
                     <td>
-                        [[${user.nick}]]
+                        <input class="inputNick" type="text" id="inputNick" name="nick" th:value="${user.nick}" />
                     </td>
                 </tr>
                 <tr>
                     <td>이메일</td>
                     <td>
-                        [[${user.email}]]
+                        <input class="inputEmail" type="text" id="inputEmail" name="email" th:value="${user.email}" />
                     </td>
                 </tr>
                 <tr>
                     <td>휴대폰</td>
                     <td>
-                        [[${user.hp}]]
+                        <input class="inputHp" type="text" id="inputHp" name="hp" th:value="${user.hp}" />
                     </td>
                 </tr>
                 <tr>
                     <td>등급</td>
                     <td>
-                        <select name="grade" disabled onchange="saveGrade(this)" th:data-uid="${user.uid}">
+                        <select name="grade" onchange="saveGrade(this)" th:data-uid="${user.uid}">
                             <option th:selected="${user.getGrade() eq '1'}" value="1">Bronze</option>
                             <option th:selected="${user.getGrade() eq '2'}" value="2">Silver</option>
                             <option th:selected="${user.getGrade() eq '3'}" value="3">Gold</option>
@@ -55,17 +55,17 @@
                 <tr>
                     <td rowspan="3">주소</td>
                     <td>
-                        [[${user.zip}]]
+                        <input class="inputZip" type="text" id="inputZip" name="zip" readonly th:value="${user.zip}" />
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        [[${user.addr1}]]
+                        <input class="inputAddr1" type="text" id="inputAddr1" name="addr1" readonly th:value="${user.addr1}" />
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        [[${user.addr2}]]
+                        <input class="inputAddr2" type="text" id="inputAddr2" name="addr2" th:value="${user.addr2}" />
                     </td>
                 </tr>
                 <tr>
@@ -75,19 +75,13 @@
                 <tr>
                     <td>적립포인트</td>
                     <td>
-                        [[${user.totalPoint}]]
-                    </td>
-                </tr>
-                <tr>
-                    <td>총 구매금액</td>
-                    <td>
-                        [[${user.totalPrice}]]
+                        <input class="inputPoint" type="text" id="inputPoint" name="totalPoint" readonly th:value="${user.totalPoint}" />
                     </td>
                 </tr>
             </table>
             <p>
-                <a th:href="@{/admin/user/list}" class="btnCancel">뒤로가기</a>
-                <!-- <input type="submit" id="btnSubmit" value="수정완료"/> -->
+                <a th:href="@{/admin/user/list}" class="btnCancel">취소</a>
+                <input type="submit" id="btnSubmit" value="수정완료"/>
             </p>
         </form>
     </article>

@@ -1,7 +1,6 @@
 package kr.co.farmstory.repository;
 
 import com.querydsl.core.Tuple;
-import kr.co.farmstory.dto.UserDTO;
 import kr.co.farmstory.dto.UserPageRequestDTO;
 import kr.co.farmstory.entity.User;
 import kr.co.farmstory.repository.custum.UserRepositoryCustom;
@@ -23,6 +22,5 @@ public interface UserRepository extends JpaRepository<User, String>, UserReposit
     public Optional<User> findUserByUidAndEmail(String uid, String email);
 
     public Page<Tuple> selectsUsers(UserPageRequestDTO userPageRequestDTO, Pageable pageable);
-    public Tuple selectUser(String uid);
 
 }

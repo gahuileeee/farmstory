@@ -71,12 +71,9 @@ public class ProductController {
 
     }
 
-    @GetMapping("/admin/product/modify")
-    public String productDetail(@RequestParam("prodNo") int prodNo, Model model){
-        ProductsDTO productsDTO = productService.selectProduct(prodNo);
-        log.info(productsDTO.toString());
-        model.addAttribute("prod", productsDTO);
-        return "/admin/product/modify";
+    @GetMapping("/admin/product/detail/{prodNo}")
+    public String productDetail(){
+        return "/admin/product/tetail";
     }
 
     @PutMapping("admin/product/{selectedProdList}")
