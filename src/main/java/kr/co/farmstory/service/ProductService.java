@@ -15,7 +15,7 @@ import net.coobird.thumbnailator.Thumbnails;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.ResponseEntity;ㅇㄷ
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -111,12 +111,13 @@ public class ProductService {
 
     @Value("${file.upload.path}")
     private  String fileUploadPath;
-    // 'file:' 접두사 제거
 
     public List<ProdImageDTO> fileUpload(List<MultipartFile> files){
+        
             if (fileUploadPath.startsWith("file:")) {
         fileUploadPath =  fileUploadPath.substring("file:".length());
-        }
+        };
+        
         String path = new File(fileUploadPath).getAbsolutePath();
 
         // 이미지 정보 리턴을 위한 리스트
@@ -165,6 +166,11 @@ public class ProductService {
 
         List<ProdImage> prodImages = prodImageRepository.findBypNo(prodNo);
         log.info("deleteProdAtService..1:" + prodImages);
+
+            if (fileUploadPath.startsWith("file:")) {
+        fileUploadPath =  fileUploadPath.substring("file:".length());
+        };
+        
 
         for(ProdImage prodImage : prodImages){
             //ProdImageDTO prodImageDTO = modelMapper.map(prodImage, ProdImageDTO.class);
