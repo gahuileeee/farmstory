@@ -18,14 +18,16 @@ public class MainController {
 
     @GetMapping(value = {"/", "/index"})
     public String index(Authentication authentication, Model model){
-        model.addAttribute("grows", articleRepository.findTop5ByCate("grow"));
-        model.addAttribute("school", articleRepository.findTop5ByCate("school"));
-        model.addAttribute("story", articleRepository.findTop5ByCate("story"));
+        // 각 카테고리에 해당하는 최신 게시글 가져오기
+        model.addAttribute("grow", articleRepository.findTop5ByCateOrderByRdateDesc("grow"));
+        model.addAttribute("school", articleRepository.findTop5ByCateOrderByRdateDesc("school"));
+        model.addAttribute("story", articleRepository.findTop5ByCateOrderByRdateDesc("story"));
 
-        model.addAttribute("notice", articleRepository.findTop3ByCate("notice"));
-        model.addAttribute("qna", articleRepository.findTop3ByCate("qna"));
-        model.addAttribute("faq", articleRepository.findTop3ByCate("faq"));
+        // 기타 카테고리에 해당하는 최신 게시글 가져오기
+        model.addAttribute("notice", articleRepository.findTop3ByCateOrderByRdateDesc("notice"));
+        model.addAttribute("qna", articleRepository.findTop3ByCateOrderByRdateDesc("qna"));
+        model.addAttribute("faq", articleRepository.findTop3ByCateOrderByRdateDesc("faq"));
+
         return "/index";
-
     }
 }
