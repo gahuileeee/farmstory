@@ -111,8 +111,12 @@ public class ProductService {
 
     @Value("${file.upload.path}")
     private  String fileUploadPath;
+    // 'file:' 접두사 제거
 
     public List<ProdImageDTO> fileUpload(List<MultipartFile> files){
+            if (fileUploadPath.startsWith("file:")) {
+        fileUploadPath =  fileUploadPath.substring("file:".length());
+        }
         String path = new File(fileUploadPath).getAbsolutePath();
 
         // 이미지 정보 리턴을 위한 리스트
