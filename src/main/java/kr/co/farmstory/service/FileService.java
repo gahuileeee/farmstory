@@ -41,6 +41,10 @@ public class FileService {
     private String fileUploadPath;
 
     public int fileUpload(ArticleDTO articleDTO)  {
+         if (fileUploadPath.startsWith("file:")) {
+        fileUploadPath =  fileUploadPath.substring("file:".length());
+        };
+        
         String path = new File(fileUploadPath).getAbsolutePath();  //실제 업로드 할 시스템상의 경로 구하기
         int ano = articleDTO.getNo();
         int count = 0;
@@ -77,6 +81,10 @@ public class FileService {
         kr.co.farmstory.entity.File file = fileRepository.findById(fno).get();
 
         try {
+                if (fileUploadPath.startsWith("file:")) {
+        fileUploadPath =  fileUploadPath.substring("file:".length());
+        };
+            
             Path path = Paths.get(fileUploadPath + file.getSName());
             String contentType = Files.probeContentType(path);
 
@@ -114,6 +122,11 @@ public class FileService {
 
     // 여러파일삭제(게시글 삭제)
     public void deleteFiles(int ano){
+
+            if (fileUploadPath.startsWith("file:")) {
+        fileUploadPath =  fileUploadPath.substring("file:".length());
+        };
+        
         String path = new File(fileUploadPath).getAbsolutePath();
         List<kr.co.farmstory.entity.File> files = fileRepository.findFilesByAno(ano);
         for(kr.co.farmstory.entity.File file : files){
